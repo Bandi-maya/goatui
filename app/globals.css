@@ -93,39 +93,111 @@ border-color: hsl(var(--border));
 
 }
 
+/* ==========================================================
+GOATUI DESIGN SYSTEM V2
+Theme: Leather Black + Wheat
+Brand: Blue
+========================================================== */
+
+:root {
+/* Backgrounds */
+--background: 42 45% 94%;
+--foreground: 25 15% 12%;
+
+/* Cards */
+--card: 40 35% 98%;
+--card-foreground: 25 15% 12%;
+
+/* Popovers */
+--popover: 40 35% 98%;
+--popover-foreground: 25 15% 12%;
+
+/* Brand */
+--primary: 217 91% 60%;
+--primary-foreground: 0 0% 100%;
+
+/* Secondary */
+--secondary: 42 30% 90%;
+--secondary-foreground: 25 15% 12%;
+
+/* Muted */
+--muted: 42 25% 88%;
+--muted-foreground: 30 10% 40%;
+
+/* Accent */
+--accent: 42 30% 90%;
+--accent-foreground: 25 15% 12%;
+
+/* States */
+--destructive: 0 84% 60%;
+--destructive-foreground: 0 0% 100%;
+
+--success: 142 71% 45%;
+--warning: 38 92% 50%;
+
+/* Borders */
+--border: 35 20% 82%;
+--input: 35 20% 82%;
+
+/* Focus */
+--ring: 217 91% 60%;
+
+/* Surface */
+--surface: 42 25% 90%;
+--surface-foreground: 25 15% 12%;
+
+/* Sidebar */
+--sidebar: 40 35% 96%;
+--sidebar-foreground: 25 15% 12%;
+
+/* Radius */
+--radius: 1rem;
+}
+
+/* ==========================================================
+DARK MODE (LEATHER BLACK)
+========================================================== */
+
 .dark {
---background: 222 47% 5%;
---foreground: 0 0% 98%;
+--background: 24 18% 6%;
+--foreground: 42 25% 92%;
 
---card: 222 35% 8%;
---card-foreground: 0 0% 98%;
+--card: 24 18% 9%;
+--card-foreground: 42 25% 92%;
 
---popover: 222 35% 8%;
---popover-foreground: 0 0% 98%;
+--popover: 24 18% 10%;
+--popover-foreground: 42 25% 92%;
 
 --primary: 217 91% 60%;
 --primary-foreground: 0 0% 100%;
 
---secondary: 222 30% 10%;
---secondary-foreground: 0 0% 98%;
+--secondary: 24 15% 12%;
+--secondary-foreground: 42 25% 92%;
 
---muted: 222 30% 10%;
---muted-foreground: 215 20% 65%;
+--muted: 24 12% 14%;
+--muted-foreground: 40 12% 65%;
 
---accent: 222 30% 10%;
---accent-foreground: 0 0% 98%;
+--accent: 24 15% 12%;
+--accent-foreground: 42 25% 92%;
 
 --destructive: 0 63% 31%;
 --destructive-foreground: 0 0% 100%;
 
---border: 217 19% 17%;
---input: 217 19% 17%;
+--success: 142 71% 45%;
+--warning: 38 92% 50%;
+
+--border: 24 10% 18%;
+--input: 24 10% 18%;
+
 --ring: 217 91% 60%;
 
---surface: 222 30% 10%;
---surface-foreground: 0 0% 98%;
+--surface: 24 15% 11%;
+--surface-foreground: 42 25% 92%;
 
+--sidebar: 24 18% 8%;
+--sidebar-foreground: 42 25% 92%;
 }
+
 }
 
 @layer base {
