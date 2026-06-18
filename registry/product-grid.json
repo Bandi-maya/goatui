@@ -1,0 +1,15 @@
+{
+  "name": "product-grid",
+  "type": "registry:ui",
+  "title": "Product Grid",
+  "description": "Product Grid component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/product-grid.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "11-e-commerce",
+  "tags": ["product-grid"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "year-picker",
+  "type": "registry:ui",
+  "title": "Year Picker",
+  "description": "Year Picker component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/year-picker.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "2-form-components",
+  "tags": ["year-picker"]
+}

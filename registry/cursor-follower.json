@@ -1,0 +1,15 @@
+{
+  "name": "cursor-follower",
+  "type": "registry:ui",
+  "title": "Cursor Follower",
+  "description": "Cursor Follower component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/cursor-follower.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "14-creative",
+  "tags": ["cursor-follower"]
+}

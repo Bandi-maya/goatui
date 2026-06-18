@@ -1,0 +1,15 @@
+{
+  "name": "next-export",
+  "type": "registry:ui",
+  "title": "Next Export",
+  "description": "Next Export component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/next-export.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "16-studio",
+  "tags": ["next-export"]
+}

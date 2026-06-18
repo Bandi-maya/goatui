@@ -1,0 +1,15 @@
+{
+  "name": "split-button",
+  "type": "registry:ui",
+  "title": "Split Button",
+  "description": "Split Button component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/split-button.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "1-foundation",
+  "tags": ["split-button"]
+}

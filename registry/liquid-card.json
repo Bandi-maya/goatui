@@ -1,0 +1,15 @@
+{
+  "name": "liquid-card",
+  "type": "registry:ui",
+  "title": "Liquid Card",
+  "description": "Liquid Card component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/liquid-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "14-creative",
+  "tags": ["liquid-card"]
+}

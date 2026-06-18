@@ -1,0 +1,15 @@
+{
+  "name": "spinner",
+  "type": "registry:ui",
+  "title": "Spinner",
+  "description": "Spinner component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/spinner.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "6-feedback",
+  "tags": ["spinner"]
+}

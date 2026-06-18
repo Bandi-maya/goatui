@@ -1,0 +1,15 @@
+{
+  "name": "stepper",
+  "type": "registry:ui",
+  "title": "Stepper",
+  "description": "Stepper component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/stepper.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "3-navigation",
+  "tags": ["stepper"]
+}

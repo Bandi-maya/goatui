@@ -1,0 +1,15 @@
+{
+  "name": "compare",
+  "type": "registry:ui",
+  "title": "Compare",
+  "description": "Compare component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/compare.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "11-e-commerce",
+  "tags": ["compare"]
+}

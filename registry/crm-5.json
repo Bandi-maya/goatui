@@ -1,0 +1,15 @@
+{
+  "name": "crm-5",
+  "type": "registry:ui",
+  "title": "CRM 5",
+  "description": "CRM 5 component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/crm-5.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "13-saas-blocks",
+  "tags": ["crm-5"]
+}

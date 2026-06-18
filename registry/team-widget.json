@@ -1,0 +1,15 @@
+{
+  "name": "team-widget",
+  "type": "registry:ui",
+  "title": "Team Widget",
+  "description": "Team Widget component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/team-widget.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "8-dashboard",
+  "tags": ["team-widget"]
+}

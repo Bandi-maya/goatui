@@ -1,0 +1,15 @@
+{
+  "name": "virtual-table",
+  "type": "registry:ui",
+  "title": "Virtual Table",
+  "description": "Virtual Table component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/virtual-table.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "5-data-display",
+  "tags": ["virtual-table"]
+}

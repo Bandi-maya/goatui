@@ -1,0 +1,15 @@
+{
+  "name": "gradient-text",
+  "type": "registry:ui",
+  "title": "Gradient Text",
+  "description": "Gradient Text component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/gradient-text.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "14-creative",
+  "tags": ["gradient-text"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "tree-select",
+  "type": "registry:ui",
+  "title": "Tree Select",
+  "description": "Tree Select component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/tree-select.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "2-form-components",
+  "tags": ["tree-select"]
+}

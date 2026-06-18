@@ -1,0 +1,15 @@
+{
+  "name": "snackbar",
+  "type": "registry:ui",
+  "title": "Snackbar",
+  "description": "Snackbar component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/snackbar.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "6-feedback",
+  "tags": ["snackbar"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "checkbox",
+  "type": "registry:ui",
+  "title": "Checkbox",
+  "description": "A control that allows the user to toggle between checked and not checked",
+  "dependencies": ["@radix-ui/react-checkbox", "lucide-react"],
+  "files": [
+    {
+      "path": "ui/checkbox.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "foundation",
+  "tags": ["checkbox", "form", "toggle"]
+}

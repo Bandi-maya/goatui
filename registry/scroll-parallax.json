@@ -1,0 +1,15 @@
+{
+  "name": "scroll-parallax",
+  "type": "registry:ui",
+  "title": "Scroll Parallax",
+  "description": "Scroll Parallax component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/scroll-parallax.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "15-3d",
+  "tags": ["scroll-parallax"]
+}

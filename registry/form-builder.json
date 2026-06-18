@@ -1,0 +1,15 @@
+{
+  "name": "form-builder",
+  "type": "registry:ui",
+  "title": "Form Builder",
+  "description": "Form Builder component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/form-builder.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "16-studio",
+  "tags": ["form-builder"]
+}

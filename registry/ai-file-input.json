@@ -1,0 +1,15 @@
+{
+  "name": "ai-file-input",
+  "type": "registry:ui",
+  "title": "AI File Input",
+  "description": "AI File Input component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/ai-file-input.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "2-form-components",
+  "tags": ["ai-file-input"]
+}

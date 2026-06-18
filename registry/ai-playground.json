@@ -1,0 +1,15 @@
+{
+  "name": "ai-playground",
+  "type": "registry:ui",
+  "title": "AI Playground",
+  "description": "AI Playground component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/ai-playground.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "9-ai-components",
+  "tags": ["ai-playground"]
+}

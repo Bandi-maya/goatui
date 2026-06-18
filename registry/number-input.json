@@ -1,0 +1,15 @@
+{
+  "name": "number-input",
+  "type": "registry:ui",
+  "title": "Number Input",
+  "description": "Number Input component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/number-input.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "1-foundation",
+  "tags": ["number-input"]
+}

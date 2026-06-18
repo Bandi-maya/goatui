@@ -1,0 +1,15 @@
+{
+  "name": "testimonial-12",
+  "type": "registry:ui",
+  "title": "Testimonial 12",
+  "description": "Testimonial 12 component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/testimonial-12.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "12-marketing",
+  "tags": ["testimonial-12"]
+}

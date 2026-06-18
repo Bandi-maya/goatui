@@ -1,0 +1,15 @@
+{
+  "name": "validation-message",
+  "type": "registry:ui",
+  "title": "Validation Message",
+  "description": "Validation Message component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/validation-message.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "2-form-components",
+  "tags": ["validation-message"]
+}

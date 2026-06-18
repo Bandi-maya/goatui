@@ -1,0 +1,15 @@
+{
+  "name": "pie-chart",
+  "type": "registry:ui",
+  "title": "Pie Chart",
+  "description": "Pie Chart component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/pie-chart.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "8-dashboard",
+  "tags": ["pie-chart"]
+}

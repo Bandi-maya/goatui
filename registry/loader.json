@@ -1,0 +1,15 @@
+{
+  "name": "loader",
+  "type": "registry:ui",
+  "title": "Loader",
+  "description": "Loader component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/loader.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "6-feedback",
+  "tags": ["loader"]
+}

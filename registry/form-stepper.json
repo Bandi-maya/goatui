@@ -1,0 +1,15 @@
+{
+  "name": "form-stepper",
+  "type": "registry:ui",
+  "title": "Form Stepper",
+  "description": "Form Stepper component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/form-stepper.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "2-form-components",
+  "tags": ["form-stepper"]
+}

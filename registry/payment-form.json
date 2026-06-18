@@ -1,0 +1,15 @@
+{
+  "name": "payment-form",
+  "type": "registry:ui",
+  "title": "Payment Form",
+  "description": "Payment Form component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/payment-form.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "11-e-commerce",
+  "tags": ["payment-form"]
+}

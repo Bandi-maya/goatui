@@ -1,0 +1,15 @@
+{
+  "name": "kanban-list",
+  "type": "registry:ui",
+  "title": "Kanban List",
+  "description": "Kanban List component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/kanban-list.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "5-data-display",
+  "tags": ["kanban-list"]
+}

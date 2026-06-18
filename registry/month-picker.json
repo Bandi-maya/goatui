@@ -1,0 +1,15 @@
+{
+  "name": "month-picker",
+  "type": "registry:ui",
+  "title": "Month Picker",
+  "description": "Month Picker component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/month-picker.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "2-form-components",
+  "tags": ["month-picker"]
+}

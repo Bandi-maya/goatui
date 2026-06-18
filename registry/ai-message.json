@@ -1,0 +1,15 @@
+{
+  "name": "ai-message",
+  "type": "registry:ui",
+  "title": "AI Message",
+  "description": "AI Message component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/ai-message.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "9-ai-components",
+  "tags": ["ai-message"]
+}

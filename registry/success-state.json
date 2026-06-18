@@ -1,0 +1,15 @@
+{
+  "name": "success-state",
+  "type": "registry:ui",
+  "title": "Success State",
+  "description": "Success State component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/success-state.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "2-form-components",
+  "tags": ["success-state"]
+}

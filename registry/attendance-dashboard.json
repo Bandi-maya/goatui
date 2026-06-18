@@ -1,0 +1,15 @@
+{
+  "name": "attendance-dashboard",
+  "type": "registry:ui",
+  "title": "Attendance Dashboard",
+  "description": "Attendance Dashboard component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/attendance-dashboard.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "13-saas-blocks",
+  "tags": ["attendance-dashboard"]
+}

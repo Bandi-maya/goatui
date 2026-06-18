@@ -1,0 +1,15 @@
+{
+  "name": "activity-feed",
+  "type": "registry:ui",
+  "title": "Activity Feed",
+  "description": "Activity Feed component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/activity-feed.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "5-data-display",
+  "tags": ["activity-feed"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "status",
+  "type": "registry:ui",
+  "title": "Status",
+  "description": "Status component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/status.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "1-foundation",
+  "tags": ["status"]
+}

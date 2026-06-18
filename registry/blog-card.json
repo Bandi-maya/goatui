@@ -1,0 +1,15 @@
+{
+  "name": "blog-card",
+  "type": "registry:ui",
+  "title": "Blog Card",
+  "description": "Blog Card component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/blog-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "5-data-display",
+  "tags": ["blog-card"]
+}

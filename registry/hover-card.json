@@ -1,0 +1,15 @@
+{
+  "name": "hover-card",
+  "type": "registry:ui",
+  "title": "Hover Card",
+  "description": "Hover Card component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/hover-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "7-overlay",
+  "tags": ["hover-card"]
+}

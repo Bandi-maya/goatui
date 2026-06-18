@@ -1,0 +1,15 @@
+{
+  "name": "3d-hero",
+  "type": "registry:ui",
+  "title": "3D Hero",
+  "description": "3D Hero component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/3d-hero.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "15-3d",
+  "tags": ["3d-hero"]
+}

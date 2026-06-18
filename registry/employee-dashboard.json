@@ -1,0 +1,15 @@
+{
+  "name": "employee-dashboard",
+  "type": "registry:ui",
+  "title": "Employee Dashboard",
+  "description": "Employee Dashboard component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/employee-dashboard.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "13-saas-blocks",
+  "tags": ["employee-dashboard"]
+}

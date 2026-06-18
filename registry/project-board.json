@@ -1,0 +1,15 @@
+{
+  "name": "project-board",
+  "type": "registry:ui",
+  "title": "Project Board",
+  "description": "Project Board component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/project-board.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "13-saas-blocks",
+  "tags": ["project-board"]
+}

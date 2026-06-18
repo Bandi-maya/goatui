@@ -1,0 +1,15 @@
+{
+  "name": "floating-menu",
+  "type": "registry:ui",
+  "title": "Floating Menu",
+  "description": "Floating Menu component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/floating-menu.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "3-navigation",
+  "tags": ["floating-menu"]
+}

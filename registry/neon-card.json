@@ -1,0 +1,15 @@
+{
+  "name": "neon-card",
+  "type": "registry:ui",
+  "title": "Neon Card",
+  "description": "Neon Card component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/neon-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "14-creative",
+  "tags": ["neon-card"]
+}

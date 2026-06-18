@@ -1,0 +1,15 @@
+{
+  "name": "hero-5",
+  "type": "registry:ui",
+  "title": "Hero 5",
+  "description": "Hero 5 component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/hero-5.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "12-marketing",
+  "tags": ["hero-5"]
+}

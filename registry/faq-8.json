@@ -1,0 +1,15 @@
+{
+  "name": "faq-8",
+  "type": "registry:ui",
+  "title": "FAQ 8",
+  "description": "FAQ 8 component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/faq-8.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "12-marketing",
+  "tags": ["faq-8"]
+}

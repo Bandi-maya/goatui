@@ -1,0 +1,15 @@
+{
+  "name": "ai-prompt-input",
+  "type": "registry:ui",
+  "title": "AI Prompt Input",
+  "description": "AI Prompt Input component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/ai-prompt-input.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "2-form-components",
+  "tags": ["ai-prompt-input"]
+}

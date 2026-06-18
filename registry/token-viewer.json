@@ -1,0 +1,15 @@
+{
+  "name": "token-viewer",
+  "type": "registry:ui",
+  "title": "Token Viewer",
+  "description": "Token Viewer component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/token-viewer.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "9-ai-components",
+  "tags": ["token-viewer"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "breadcrumb",
+  "type": "registry:ui",
+  "title": "Breadcrumb",
+  "description": "Breadcrumb component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/breadcrumb.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "3-navigation",
+  "tags": ["breadcrumb"]
+}

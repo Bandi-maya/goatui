@@ -1,0 +1,15 @@
+{
+  "name": "action-menu",
+  "type": "registry:ui",
+  "title": "Action Menu",
+  "description": "Action Menu component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/action-menu.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "3-navigation",
+  "tags": ["action-menu"]
+}

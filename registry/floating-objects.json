@@ -1,0 +1,15 @@
+{
+  "name": "floating-objects",
+  "type": "registry:ui",
+  "title": "Floating Objects",
+  "description": "Floating Objects component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/floating-objects.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "15-3d",
+  "tags": ["floating-objects"]
+}

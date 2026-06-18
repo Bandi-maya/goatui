@@ -1,0 +1,15 @@
+{
+  "name": "hero-builder",
+  "type": "registry:ui",
+  "title": "Hero Builder",
+  "description": "Hero Builder component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/hero-builder.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "16-studio",
+  "tags": ["hero-builder"]
+}

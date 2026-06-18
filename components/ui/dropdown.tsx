@@ -1,0 +1,17 @@
+import * as React from "react"
+import { cn } from "@/lib/utils"
+
+export interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <div ref={ref} className={cn("p-4 border rounded-md text-center text-muted-foreground", className)} {...props}>
+        Dropdown component stub
+      </div>
+    )
+  }
+)
+Dropdown.displayName = "Dropdown"
+
+export { Dropdown }

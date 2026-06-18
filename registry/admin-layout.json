@@ -1,0 +1,15 @@
+{
+  "name": "admin-layout",
+  "type": "registry:ui",
+  "title": "Admin Layout",
+  "description": "Admin Layout component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/admin-layout.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "4-layout",
+  "tags": ["admin-layout"]
+}

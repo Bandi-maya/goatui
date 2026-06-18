@@ -1,0 +1,15 @@
+{
+  "name": "sprint-board",
+  "type": "registry:ui",
+  "title": "Sprint Board",
+  "description": "Sprint Board component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/sprint-board.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "13-saas-blocks",
+  "tags": ["sprint-board"]
+}

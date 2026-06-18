@@ -1,0 +1,15 @@
+{
+  "name": "saas-layout",
+  "type": "registry:ui",
+  "title": "SaaS Layout",
+  "description": "SaaS Layout component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/saas-layout.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "4-layout",
+  "tags": ["saas-layout"]
+}

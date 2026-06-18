@@ -1,0 +1,15 @@
+{
+  "name": "agent-card",
+  "type": "registry:ui",
+  "title": "Agent Card",
+  "description": "Agent Card component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/agent-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "9-ai-components",
+  "tags": ["agent-card"]
+}

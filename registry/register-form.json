@@ -1,0 +1,15 @@
+{
+  "name": "register-form",
+  "type": "registry:ui",
+  "title": "Register Form",
+  "description": "Register Form component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/register-form.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "10-authentication",
+  "tags": ["register-form"]
+}

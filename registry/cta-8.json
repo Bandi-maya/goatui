@@ -1,0 +1,15 @@
+{
+  "name": "cta-8",
+  "type": "registry:ui",
+  "title": "CTA 8",
+  "description": "CTA 8 component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/cta-8.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "12-marketing",
+  "tags": ["cta-8"]
+}

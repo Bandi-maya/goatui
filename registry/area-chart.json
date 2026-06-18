@@ -1,0 +1,15 @@
+{
+  "name": "area-chart",
+  "type": "registry:ui",
+  "title": "Area Chart",
+  "description": "Area Chart component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/area-chart.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "8-dashboard",
+  "tags": ["area-chart"]
+}

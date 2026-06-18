@@ -1,0 +1,15 @@
+{
+  "name": "file-upload",
+  "type": "registry:ui",
+  "title": "File Upload",
+  "description": "File Upload component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/file-upload.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "2-form-components",
+  "tags": ["file-upload"]
+}

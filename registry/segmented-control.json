@@ -1,0 +1,15 @@
+{
+  "name": "segmented-control",
+  "type": "registry:ui",
+  "title": "Segmented Control",
+  "description": "Segmented Control component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/segmented-control.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "1-foundation",
+  "tags": ["segmented-control"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "cta-10",
+  "type": "registry:ui",
+  "title": "CTA 10",
+  "description": "CTA 10 component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/cta-10.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "12-marketing",
+  "tags": ["cta-10"]
+}

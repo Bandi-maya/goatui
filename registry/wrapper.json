@@ -1,0 +1,15 @@
+{
+  "name": "wrapper",
+  "type": "registry:ui",
+  "title": "Wrapper",
+  "description": "Wrapper component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/wrapper.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "4-layout",
+  "tags": ["wrapper"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "responsive-grid",
+  "type": "registry:ui",
+  "title": "Responsive Grid",
+  "description": "Responsive Grid component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/responsive-grid.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "4-layout",
+  "tags": ["responsive-grid"]
+}

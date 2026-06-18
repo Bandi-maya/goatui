@@ -1,0 +1,15 @@
+{
+  "name": "3d-product-viewer",
+  "type": "registry:ui",
+  "title": "3D Product Viewer",
+  "description": "3D Product Viewer component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/3d-product-viewer.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "15-3d",
+  "tags": ["3d-product-viewer"]
+}

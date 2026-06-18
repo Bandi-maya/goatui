@@ -1,0 +1,15 @@
+{
+  "name": "form-group",
+  "type": "registry:ui",
+  "title": "Form Group",
+  "description": "Form Group component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/form-group.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "2-form-components",
+  "tags": ["form-group"]
+}

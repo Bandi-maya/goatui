@@ -1,0 +1,15 @@
+{
+  "name": "model-selector",
+  "type": "registry:ui",
+  "title": "Model Selector",
+  "description": "Model Selector component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/model-selector.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "9-ai-components",
+  "tags": ["model-selector"]
+}

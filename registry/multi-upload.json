@@ -1,0 +1,15 @@
+{
+  "name": "multi-upload",
+  "type": "registry:ui",
+  "title": "Multi Upload",
+  "description": "Multi Upload component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/multi-upload.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "2-form-components",
+  "tags": ["multi-upload"]
+}

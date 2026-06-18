@@ -1,0 +1,15 @@
+{
+  "name": "mega-menu",
+  "type": "registry:ui",
+  "title": "Mega Menu",
+  "description": "Mega Menu component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/mega-menu.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "3-navigation",
+  "tags": ["mega-menu"]
+}

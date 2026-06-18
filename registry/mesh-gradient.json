@@ -1,0 +1,15 @@
+{
+  "name": "mesh-gradient",
+  "type": "registry:ui",
+  "title": "Mesh Gradient",
+  "description": "Mesh Gradient component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/mesh-gradient.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "14-creative",
+  "tags": ["mesh-gradient"]
+}

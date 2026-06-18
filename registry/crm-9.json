@@ -1,0 +1,15 @@
+{
+  "name": "crm-9",
+  "type": "registry:ui",
+  "title": "CRM 9",
+  "description": "CRM 9 component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/crm-9.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "13-saas-blocks",
+  "tags": ["crm-9"]
+}

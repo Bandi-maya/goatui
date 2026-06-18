@@ -1,0 +1,15 @@
+{
+  "name": "datetime-picker",
+  "type": "registry:ui",
+  "title": "DateTime Picker",
+  "description": "DateTime Picker component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/datetime-picker.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "2-form-components",
+  "tags": ["datetime-picker"]
+}

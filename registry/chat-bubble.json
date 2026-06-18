@@ -1,0 +1,15 @@
+{
+  "name": "chat-bubble",
+  "type": "registry:ui",
+  "title": "Chat Bubble",
+  "description": "Chat Bubble component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/chat-bubble.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "9-ai-components",
+  "tags": ["chat-bubble"]
+}

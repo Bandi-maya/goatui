@@ -1,0 +1,15 @@
+{
+  "name": "pricing-card",
+  "type": "registry:ui",
+  "title": "Pricing Card",
+  "description": "Pricing Card component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/pricing-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "5-data-display",
+  "tags": ["pricing-card"]
+}

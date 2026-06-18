@@ -1,0 +1,15 @@
+{
+  "name": "team-card",
+  "type": "registry:ui",
+  "title": "Team Card",
+  "description": "Team Card component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/team-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "5-data-display",
+  "tags": ["team-card"]
+}

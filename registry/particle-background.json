@@ -1,0 +1,15 @@
+{
+  "name": "particle-background",
+  "type": "registry:ui",
+  "title": "Particle Background",
+  "description": "Particle Background component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/particle-background.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "14-creative",
+  "tags": ["particle-background"]
+}

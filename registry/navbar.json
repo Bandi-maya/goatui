@@ -1,0 +1,15 @@
+{
+  "name": "navbar",
+  "type": "registry:ui",
+  "title": "Navbar",
+  "description": "Navbar component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/navbar.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "3-navigation",
+  "tags": ["navbar"]
+}

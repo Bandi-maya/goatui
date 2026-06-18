@@ -1,0 +1,15 @@
+{
+  "name": "aurora-background",
+  "type": "registry:ui",
+  "title": "Aurora Background",
+  "description": "Aurora Background component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/aurora-background.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "14-creative",
+  "tags": ["aurora-background"]
+}

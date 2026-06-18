@@ -1,0 +1,15 @@
+{
+  "name": "pills",
+  "type": "registry:ui",
+  "title": "Pills",
+  "description": "Pills component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/pills.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "3-navigation",
+  "tags": ["pills"]
+}

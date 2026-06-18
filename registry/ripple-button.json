@@ -1,0 +1,15 @@
+{
+  "name": "ripple-button",
+  "type": "registry:ui",
+  "title": "Ripple Button",
+  "description": "Ripple Button component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/ripple-button.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "1-foundation",
+  "tags": ["ripple-button"]
+}

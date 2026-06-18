@@ -1,0 +1,15 @@
+{
+  "name": "orbit-scene",
+  "type": "registry:ui",
+  "title": "Orbit Scene",
+  "description": "Orbit Scene component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/orbit-scene.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "15-3d",
+  "tags": ["orbit-scene"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "pricing-2",
+  "type": "registry:ui",
+  "title": "Pricing 2",
+  "description": "Pricing 2 component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/pricing-2.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "12-marketing",
+  "tags": ["pricing-2"]
+}

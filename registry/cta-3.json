@@ -1,0 +1,15 @@
+{
+  "name": "cta-3",
+  "type": "registry:ui",
+  "title": "CTA 3",
+  "description": "CTA 3 component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/cta-3.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "12-marketing",
+  "tags": ["cta-3"]
+}

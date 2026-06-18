@@ -1,0 +1,15 @@
+{
+  "name": "cta-2",
+  "type": "registry:ui",
+  "title": "CTA 2",
+  "description": "CTA 2 component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/cta-2.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "12-marketing",
+  "tags": ["cta-2"]
+}

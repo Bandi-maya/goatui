@@ -1,0 +1,15 @@
+{
+  "name": "revenue-card",
+  "type": "registry:ui",
+  "title": "Revenue Card",
+  "description": "Revenue Card component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/revenue-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "8-dashboard",
+  "tags": ["revenue-card"]
+}

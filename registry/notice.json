@@ -1,0 +1,15 @@
+{
+  "name": "notice",
+  "type": "registry:ui",
+  "title": "Notice",
+  "description": "Notice component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/notice.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "6-feedback",
+  "tags": ["notice"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "text-reveal",
+  "type": "registry:ui",
+  "title": "Text Reveal",
+  "description": "Text Reveal component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/text-reveal.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "14-creative",
+  "tags": ["text-reveal"]
+}

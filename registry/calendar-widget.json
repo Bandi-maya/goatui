@@ -1,0 +1,15 @@
+{
+  "name": "calendar-widget",
+  "type": "registry:ui",
+  "title": "Calendar Widget",
+  "description": "Calendar Widget component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/calendar-widget.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "8-dashboard",
+  "tags": ["calendar-widget"]
+}

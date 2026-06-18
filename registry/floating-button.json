@@ -1,0 +1,15 @@
+{
+  "name": "floating-button",
+  "type": "registry:ui",
+  "title": "Floating Button",
+  "description": "Floating Button component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/floating-button.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "1-foundation",
+  "tags": ["floating-button"]
+}

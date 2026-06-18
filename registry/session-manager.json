@@ -1,0 +1,15 @@
+{
+  "name": "session-manager",
+  "type": "registry:ui",
+  "title": "Session Manager",
+  "description": "Session Manager component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/session-manager.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "10-authentication",
+  "tags": ["session-manager"]
+}

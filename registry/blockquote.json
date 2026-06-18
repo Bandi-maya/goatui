@@ -1,0 +1,15 @@
+{
+  "name": "blockquote",
+  "type": "registry:ui",
+  "title": "Blockquote",
+  "description": "Blockquote component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/blockquote.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "1-foundation",
+  "tags": ["blockquote"]
+}

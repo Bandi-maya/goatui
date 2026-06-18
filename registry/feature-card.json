@@ -1,0 +1,15 @@
+{
+  "name": "feature-card",
+  "type": "registry:ui",
+  "title": "Feature Card",
+  "description": "Feature Card component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/feature-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "5-data-display",
+  "tags": ["feature-card"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "testimonial-card",
+  "type": "registry:ui",
+  "title": "Testimonial Card",
+  "description": "Testimonial Card component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/testimonial-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "5-data-display",
+  "tags": ["testimonial-card"]
+}

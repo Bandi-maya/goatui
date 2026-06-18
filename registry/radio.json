@@ -1,0 +1,15 @@
+{
+  "name": "radio",
+  "type": "registry:ui",
+  "title": "Radio",
+  "description": "Radio component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/radio.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "1-foundation",
+  "tags": ["radio"]
+}

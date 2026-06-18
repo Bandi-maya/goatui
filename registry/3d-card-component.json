@@ -1,0 +1,15 @@
+{
+  "name": "3d-card-component",
+  "type": "registry:ui",
+  "title": "3D Card Component",
+  "description": "3D Card Component component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/3d-card-component.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "14-creative",
+  "tags": ["3d-card-component"]
+}

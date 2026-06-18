@@ -1,0 +1,15 @@
+{
+  "name": "topbar",
+  "type": "registry:ui",
+  "title": "Topbar",
+  "description": "Topbar component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/topbar.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "3-navigation",
+  "tags": ["topbar"]
+}

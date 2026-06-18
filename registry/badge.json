@@ -1,0 +1,15 @@
+{
+  "name": "badge",
+  "type": "registry:ui",
+  "title": "Badge",
+  "description": "Displays a badge or chip",
+  "dependencies": ["class-variance-authority"],
+  "files": [
+    {
+      "path": "ui/badge.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "foundation",
+  "tags": ["badge", "chip", "label"]
+}

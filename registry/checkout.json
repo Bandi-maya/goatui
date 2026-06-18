@@ -1,0 +1,15 @@
+{
+  "name": "checkout",
+  "type": "registry:ui",
+  "title": "Checkout",
+  "description": "Checkout component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/checkout.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "11-e-commerce",
+  "tags": ["checkout"]
+}

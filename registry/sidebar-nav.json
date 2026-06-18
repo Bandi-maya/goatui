@@ -1,0 +1,15 @@
+{
+  "name": "sidebar-nav",
+  "type": "registry:ui",
+  "title": "Sidebar Nav",
+  "description": "Sidebar Nav component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/sidebar-nav.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "3-navigation",
+  "tags": ["sidebar-nav"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "faq-2",
+  "type": "registry:ui",
+  "title": "FAQ 2",
+  "description": "FAQ 2 component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/faq-2.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "12-marketing",
+  "tags": ["faq-2"]
+}

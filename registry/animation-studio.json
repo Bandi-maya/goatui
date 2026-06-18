@@ -1,0 +1,15 @@
+{
+  "name": "animation-studio",
+  "type": "registry:ui",
+  "title": "Animation Studio",
+  "description": "Animation Studio component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/animation-studio.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "16-studio",
+  "tags": ["animation-studio"]
+}

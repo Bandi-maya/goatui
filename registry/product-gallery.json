@@ -1,0 +1,15 @@
+{
+  "name": "product-gallery",
+  "type": "registry:ui",
+  "title": "Product Gallery",
+  "description": "Product Gallery component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/product-gallery.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "11-e-commerce",
+  "tags": ["product-gallery"]
+}

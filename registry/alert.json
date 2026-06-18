@@ -1,0 +1,15 @@
+{
+  "name": "alert",
+  "type": "registry:ui",
+  "title": "Alert",
+  "description": "Alert component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/alert.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "6-feedback",
+  "tags": ["alert"]
+}

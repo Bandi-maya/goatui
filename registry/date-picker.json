@@ -1,0 +1,15 @@
+{
+  "name": "date-picker",
+  "type": "registry:ui",
+  "title": "Date Picker",
+  "description": "Date Picker component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/date-picker.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "2-form-components",
+  "tags": ["date-picker"]
+}

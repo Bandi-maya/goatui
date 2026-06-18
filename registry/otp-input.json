@@ -1,0 +1,15 @@
+{
+  "name": "otp-input",
+  "type": "registry:ui",
+  "title": "OTP Input",
+  "description": "OTP Input component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/otp-input.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "1-foundation",
+  "tags": ["otp-input"]
+}

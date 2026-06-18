@@ -1,0 +1,15 @@
+{
+  "name": "line-chart",
+  "type": "registry:ui",
+  "title": "Line Chart",
+  "description": "Line Chart component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/line-chart.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "8-dashboard",
+  "tags": ["line-chart"]
+}

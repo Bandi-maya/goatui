@@ -1,0 +1,15 @@
+{
+  "name": "sheet",
+  "type": "registry:ui",
+  "title": "Sheet",
+  "description": "Sheet component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/sheet.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "7-overlay",
+  "tags": ["sheet"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "time-picker",
+  "type": "registry:ui",
+  "title": "Time Picker",
+  "description": "Time Picker component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/time-picker.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "2-form-components",
+  "tags": ["time-picker"]
+}

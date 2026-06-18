@@ -1,0 +1,15 @@
+{
+  "name": "mobile-drawer",
+  "type": "registry:ui",
+  "title": "Mobile Drawer",
+  "description": "Mobile Drawer component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/mobile-drawer.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "3-navigation",
+  "tags": ["mobile-drawer"]
+}

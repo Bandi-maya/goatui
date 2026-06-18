@@ -1,0 +1,15 @@
+{
+  "name": "dashboard-1",
+  "type": "registry:ui",
+  "title": "Dashboard 1",
+  "description": "Dashboard 1 component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/dashboard-1.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "13-saas-blocks",
+  "tags": ["dashboard-1"]
+}

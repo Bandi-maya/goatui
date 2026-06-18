@@ -1,0 +1,15 @@
+{
+  "name": "gooey-menu",
+  "type": "registry:ui",
+  "title": "Gooey Menu",
+  "description": "Gooey Menu component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/gooey-menu.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "14-creative",
+  "tags": ["gooey-menu"]
+}

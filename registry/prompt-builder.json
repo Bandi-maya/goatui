@@ -1,0 +1,15 @@
+{
+  "name": "prompt-builder",
+  "type": "registry:ui",
+  "title": "Prompt Builder",
+  "description": "Prompt Builder component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/prompt-builder.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "9-ai-components",
+  "tags": ["prompt-builder"]
+}

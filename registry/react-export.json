@@ -1,0 +1,15 @@
+{
+  "name": "react-export",
+  "type": "registry:ui",
+  "title": "React Export",
+  "description": "React Export component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/react-export.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "16-studio",
+  "tags": ["react-export"]
+}

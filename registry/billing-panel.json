@@ -1,0 +1,15 @@
+{
+  "name": "billing-panel",
+  "type": "registry:ui",
+  "title": "Billing Panel",
+  "description": "Billing Panel component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/billing-panel.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "11-e-commerce",
+  "tags": ["billing-panel"]
+}

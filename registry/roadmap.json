@@ -1,0 +1,15 @@
+{
+  "name": "roadmap",
+  "type": "registry:ui",
+  "title": "Roadmap",
+  "description": "Roadmap component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/roadmap.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "13-saas-blocks",
+  "tags": ["roadmap"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "switch",
+  "type": "registry:ui",
+  "title": "Switch",
+  "description": "Switch component",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/switch.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "category": "1-foundation",
+  "tags": ["switch"]
+}
