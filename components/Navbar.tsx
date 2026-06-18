@@ -57,29 +57,11 @@ export default function Navbar() {
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-1">
-            <Link href="/">
-              <Button
-                variant={isActive("/") ? "secondary" : "ghost"}
-                size="sm"
-                className="text-sm font-medium"
-              >
-                Home
-              </Button>
-            </Link>
-            <Link href="/about">
-              <Button
-                variant={isActive("/about") ? "secondary" : "ghost"}
-                size="sm"
-                className="text-sm font-medium"
-              >
-                About
-              </Button>
-            </Link>
             <Link href="/docs">
               <Button
                 variant={isActive("/docs") || pathname?.startsWith("/docs") ? "secondary" : "ghost"}
                 size="sm"
-                className="text-sm font-medium"
+                className="text-sm font-semibold"
               >
                 Docs
               </Button>
@@ -88,9 +70,45 @@ export default function Navbar() {
               <Button
                 variant={isActive("/components") || pathname?.startsWith("/components") ? "secondary" : "ghost"}
                 size="sm"
-                className="text-sm font-medium"
+                className="text-sm font-semibold"
               >
                 Components
+              </Button>
+            </Link>
+            <Link href="/blocks">
+              <Button
+                variant={isActive("/blocks") ? "secondary" : "ghost"}
+                size="sm"
+                className="text-sm font-semibold"
+              >
+                Blocks
+              </Button>
+            </Link>
+            <Link href="/templates">
+              <Button
+                variant={isActive("/templates") ? "secondary" : "ghost"}
+                size="sm"
+                className="text-sm font-semibold"
+              >
+                Templates
+              </Button>
+            </Link>
+            <Link href="/pricing">
+              <Button
+                variant={isActive("/pricing") ? "secondary" : "ghost"}
+                size="sm"
+                className="text-sm font-semibold"
+              >
+                Pricing
+              </Button>
+            </Link>
+            <Link href="/changelog">
+              <Button
+                variant={isActive("/changelog") ? "secondary" : "ghost"}
+                size="sm"
+                className="text-sm font-semibold"
+              >
+                Changelog
               </Button>
             </Link>
           </nav>
