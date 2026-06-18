@@ -1,54 +1,90 @@
-"use client";
+"use client"
 
-import Navbar from "./Navbar";
+import * as React from "react"
+import Navbar from "./Navbar"
+import Link from "next/link"
+import {  MessageSquare, Heart } from "lucide-react"
 
 interface LayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground transition-colors duration-200">
-      {/* Navbar */}
+    <div className="flex min-h-screen flex-col bg-background text-foreground transition-colors duration-300">
+      {/* Top Header */}
       <Navbar />
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col">{children}</main>
+      <main className="flex-1 w-full">{children}</main>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-card/40 py-8 md:py-12 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-6 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-3.5 w-3.5"
-              >
-                <path d="M16 3c1 0 2 1 3 3 1.5 3 .5 6-1 8.5L12 21l-6-6.5c-1.5-2.5-2.5-5.5-1-8.5 1-2 2-3 3-3" />
-                <path d="M12 12c.5-1.5 1.5-2.5 3-2.5" />
-                <path d="M12 12C11.5 10.5 10.5 9.5 9 9.5" />
-              </svg>
+      <footer className="w-full border-t border-border bg-card/40 py-12 px-6 sm:px-8 mt-auto">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Brand column */}
+            <div className="space-y-4 text-left">
+              <Link href="/" className="flex items-center gap-2">
+                <div className="h-6 w-6 rounded bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white">
+                  <span className="font-extrabold text-[10px]">G</span>
+                </div>
+                <span className="font-extrabold text-xs tracking-tight text-foreground">
+                  GOATUI
+                </span>
+              </Link>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Enterprise-grade React component ecosystem. Built with absolute visual precision and modern developer accessibility.
+              </p>
+              <div className="flex items-center gap-3">
+                
+                <a href="#" className="text-muted-foreground hover:text-foreground"><MessageSquare className="h-4 w-4" /></a>
+              </div>
             </div>
-            <span className="font-bold text-base tracking-tight text-foreground">
-              Goat <span className="text-primary font-medium">UI</span>
-            </span>
-            <span className="text-muted-foreground/30 text-sm">|</span>
-            <p className="text-xs text-muted-foreground">
-              &copy; {new Date().getFullYear()} Goat UI. Built for modern developer experiences.
-            </p>
+
+            {/* Links column 1 */}
+            <div className="space-y-3.5 text-left">
+              <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Product</h4>
+              <ul className="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                <li><Link href="/components" className="hover:text-foreground">Components</Link></li>
+                <li><Link href="/blocks" className="hover:text-foreground">Blocks</Link></li>
+                <li><Link href="/templates" className="hover:text-foreground">Templates</Link></li>
+                <li><Link href="/pricing" className="hover:text-foreground">Pricing Plans</Link></li>
+              </ul>
+            </div>
+
+            {/* Links column 2 */}
+            <div className="space-y-3.5 text-left">
+              <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Resources</h4>
+              <ul className="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                <li><Link href="/docs" className="hover:text-foreground">Documentation</Link></li>
+                <li><Link href="/docs/guide" className="hover:text-foreground">Getting Started</Link></li>
+                <li><Link href="/changelog" className="hover:text-foreground">Changelog Updates</Link></li>
+                <li><Link href="/showcase" className="hover:text-foreground">Community Showcase</Link></li>
+              </ul>
+            </div>
+
+            {/* Links column 3 */}
+            <div className="space-y-3.5 text-left">
+              <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Company</h4>
+              <ul className="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                <li><a href="#" className="hover:text-foreground">About Us</a></li>
+                <li><a href="#" className="hover:text-foreground">Careers</a></li>
+                <li><a href="#" className="hover:text-foreground">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-foreground">Terms of Service</a></li>
+              </ul>
+            </div>
           </div>
-          <div className="flex items-center gap-6 text-xs font-medium text-muted-foreground">
-            <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-primary transition-colors">Contact</a>
+
+          <div className="mt-8 border-t border-border/80 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-muted-foreground font-semibold">
+            <span>&copy; {new Date().getFullYear()} GOATUI. All rights reserved.</span>
+            <div className="flex items-center gap-1">
+              <span>Made with</span>
+              <Heart className="h-3 w-3 text-red-500 fill-red-500" />
+              <span>for developer productivity.</span>
+            </div>
           </div>
         </div>
       </footer>
     </div>
-  );
+  )
 }

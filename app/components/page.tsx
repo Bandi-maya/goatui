@@ -7,11 +7,11 @@ import {
   Copy, Check, Laptop, Tablet, Smartphone, Grid, CircleDot,
   Square, Terminal, Eye, Code, ChevronRight, ChevronDown, ChevronLeft,
   Star, Info, AlertTriangle, CheckCircle2, XCircle, MoreHorizontal,
-  Search, Settings, HelpCircle, LogOut, Menu, X, Sparkles
+  Search, Settings, HelpCircle, LogOut, Menu, X, Sparkles, Loader2,
+  UploadCloud, Inbox, Calendar, Sliders, Play, Trash2, ShieldAlert
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { MagneticButton } from "@/components/goat/MagneticButton";
 
 // Types
 interface ComponentItem {
@@ -23,7 +23,7 @@ interface ComponentItem {
   tags: string[];
 }
 
-// Categories order
+// Categories order matching Antd layout paradigm
 const CATEGORIES = [
   "Foundation",
   "Forms",
@@ -36,7 +36,7 @@ const CATEGORIES = [
   "Utilities"
 ];
 
-// All components list
+// Complete components ledger containing initial elements + expanded Antd core components
 const ALL_COMPONENTS: ComponentItem[] = [
   {
     id: "button",
@@ -71,6 +71,14 @@ const ALL_COMPONENTS: ComponentItem[] = [
     tags: ["input", "form", "text", "password", "email", "search", "validation"]
   },
   {
+    id: "select",
+    name: "Select (Dropdown Select)",
+    category: "Forms",
+    description: "Antd-inspired searchable single/multi dropdown selection component with active states, tag filtering, and custom clean item layouts.",
+    installationCommand: "npx goatui add select",
+    tags: ["select", "dropdown", "combobox", "form", "options", "choice"]
+  },
+  {
     id: "checkbox",
     name: "Checkboxes",
     category: "Forms",
@@ -95,6 +103,22 @@ const ALL_COMPONENTS: ComponentItem[] = [
     tags: ["switch", "toggle", "settings", "preference", "binary", "slider"]
   },
   {
+    id: "slider",
+    name: "Slider (Range Slider)",
+    category: "Forms",
+    description: "Interactive slider tool component for picking precise numerical data metrics, variable step nodes, and active percentage indicators.",
+    installationCommand: "npx goatui add slider",
+    tags: ["slider", "range", "track", "metric", "form", "input"]
+  },
+  {
+    id: "upload",
+    name: "Upload (File Dropzone)",
+    category: "Forms",
+    description: "Premium file upload area container supporting drag-and-drop mechanics, file type validation, transfer states, and progress lists.",
+    installationCommand: "npx goatui add upload",
+    tags: ["upload", "file", "dropzone", "attachment", "form", "drag"]
+  },
+  {
     id: "rating",
     name: "Ratings",
     category: "Forms",
@@ -109,6 +133,14 @@ const ALL_COMPONENTS: ComponentItem[] = [
     description: "Full-width site headers with logo indicators, menu navigation anchors, and glassmorphic floating frames.",
     installationCommand: "npx goatui add navbar",
     tags: ["navbar", "navigation", "header", "menu", "link", "floating"]
+  },
+  {
+    id: "steps",
+    name: "Steps (Wizard Navigation)",
+    category: "Navigation",
+    description: "Linear multi-step execution map pipeline indicating transaction progress paths, active step states, and item checkmarks.",
+    installationCommand: "npx goatui add steps",
+    tags: ["steps", "wizard", "timeline", "process", "navigation", "progress"]
   },
   {
     id: "breadcrumb",
@@ -151,6 +183,22 @@ const ALL_COMPONENTS: ComponentItem[] = [
     tags: ["statistics", "stat", "metric", "dashboard", "number", "kpi"]
   },
   {
+    id: "timeline",
+    name: "Timeline (Activity Logs)",
+    category: "Data Display",
+    description: "Vertical stacked timeline trail displaying sequentially sorted deployment tasks, transaction history, updates, and chronological notes.",
+    installationCommand: "npx goatui add timeline",
+    tags: ["timeline", "activity", "logs", "history", "tracking", "display"]
+  },
+  {
+    id: "empty",
+    name: "Empty States",
+    category: "Data Display",
+    description: "Clean contextual placeholders signaling query fault data, blank database metrics, search misses, or filter states.",
+    installationCommand: "npx goatui add empty",
+    tags: ["empty", "state", "placeholder", "nodata", "null", "search"]
+  },
+  {
     id: "list-group",
     name: "List Groups",
     category: "Data Display",
@@ -183,6 +231,22 @@ const ALL_COMPONENTS: ComponentItem[] = [
     tags: ["progress", "bar", "status", "loading", "determinate", "percentage"]
   },
   {
+    id: "spin",
+    name: "Spinners (Loaders)",
+    category: "Feedback",
+    description: "Antd style modular full-overlay container spinners or inline looping loader graphics for explicit section data loads.",
+    installationCommand: "npx goatui add spin",
+    tags: ["spin", "loader", "spinner", "loading", "waiting", "async"]
+  },
+  {
+    id: "result",
+    name: "Result Panel",
+    category: "Feedback",
+    description: "Large operational presentation layouts notifying end users of successful checkouts, 404 router errors, or access rejections.",
+    installationCommand: "npx goatui add result",
+    tags: ["result", "feedback", "success", "error", "404", "statuspage"]
+  },
+  {
     id: "toast",
     name: "Toast Notifications",
     category: "Feedback",
@@ -197,6 +261,22 @@ const ALL_COMPONENTS: ComponentItem[] = [
     description: "Overlay window blocks rendering context information on top of the primary page workspace.",
     installationCommand: "npx goatui add modal",
     tags: ["modal", "dialog", "popup", "overlay", "backdrop", "window"]
+  },
+  {
+    id: "drawer",
+    name: "Drawer (Side Panels)",
+    category: "Overlay",
+    description: "Side-anchored modal canvas sheet panels sliding gracefully out from layout frames to display auxiliary parameters or option nodes.",
+    installationCommand: "npx goatui add drawer",
+    tags: ["drawer", "panel", "sheet", "overlay", "sidebar", "options"]
+  },
+  {
+    id: "popconfirm",
+    name: "Popconfirm Alerts",
+    category: "Overlay",
+    description: "Compact context-attached micro overlay trigger popover seeking instant user validation before carrying out destructive operations.",
+    installationCommand: "npx goatui add popconfirm",
+    tags: ["popconfirm", "popover", "confirmation", "tooltip", "delete", "trigger"]
   },
   {
     id: "tooltip",
@@ -240,7 +320,7 @@ const ALL_COMPONENTS: ComponentItem[] = [
   }
 ];
 
-// Fully self-contained JSX/Tailwind code generators (No file dependencies imports)
+// Fully self-contained JSX/Tailwind code generators (No outside file dependency bugs)
 const getGeneratedCodeForComponent = (id: string, options: any) => {
   switch (id) {
     case "button": {
@@ -278,6 +358,309 @@ export default function CustomButton() {
 }`;
     }
 
+    case "select": {
+      return `import React, { useState } from 'react';
+import { ChevronDown, Check } from 'lucide-react';
+
+export default function AntdDropdownSelect() {
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState("React Framework");
+  const optionsList = ["React Framework", "Vue Framework", "Angular Platform", "NextJS Engine", "Svelte Architecture"];
+
+  return (
+    <div className="w-full max-w-xs relative text-left select-none">
+      <label className="block text-xs font-semibold text-slate-600 dark:text-zinc-400 mb-1.5">Infrastructure Engine</label>
+      <div
+        onClick={() => setOpen(!open)}
+        className="w-full h-10 border border-slate-200 dark:border-zinc-800 rounded-xl bg-card/50 px-3.5 py-2 flex items-center justify-between text-xs font-medium text-foreground cursor-pointer shadow-sm hover:border-blue-500 transition-colors"
+      >
+        <span>{selected}</span>
+        <ChevronDown className={\`h-4 w-4 text-muted-foreground transition-transform \${open ? "rotate-180" : ""}\`} />
+      </div>
+      
+      {open && (
+        <div className="absolute top-[105%] left-0 w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-1 shadow-xl z-50">
+          {optionsList.map((opt) => (
+            <button
+              key={opt}
+              onClick={() => { setSelected(opt); setOpen(false); }}
+              className={\`w-full text-left text-xs font-medium px-3 py-2.5 rounded-lg flex items-center justify-between border-0 bg-transparent cursor-pointer \${
+                selected === opt ? "bg-blue-600 text-white" : "text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-900"
+              }\`}
+            >
+              <span>{opt}</span>
+              {selected === opt && <Check className="h-3.5 w-3.5 stroke-[3]" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}`;
+    }
+
+    case "slider": {
+      return `import React, { useState } from 'react';
+
+export default function AntdRangeSlider() {
+  const [val, setVal] = useState(${options.progressValue || 50});
+
+  return (
+    <div className="w-full max-w-xs space-y-3 text-left select-none">
+      <div className="flex justify-between items-center text-xs font-semibold">
+        <span className="text-slate-600 dark:text-zinc-400">Memory Allocation</span>
+        <span className="text-blue-600 font-bold font-mono">{val} GB</span>
+      </div>
+      <div className="relative flex items-center w-full">
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={val}
+          onChange={(e) => setVal(Number(e.target.value))}
+          className="w-full h-1.5 bg-slate-100 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-blue-600 transition-all focus:outline-none"
+        />
+      </div>
+    </div>
+  );
+}`;
+    }
+
+    case "upload": {
+      return `import React, { useState } from 'react';
+import { UploadCloud, CheckCircle2 } from 'lucide-react';
+
+export default function AntdFileDropzone() {
+  const [dragActive, setDragActive] = useState(false);
+  const [file, setFile] = useState(null);
+
+  return (
+    <div className="w-full max-w-sm text-left">
+      <div
+        onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+        onDragLeave={() => setDragActive(false)}
+        onDrop={(e) => { e.preventDefault(); setDragActive(false); if (e.dataTransfer.files?.[0]) setFile(e.dataTransfer.files[0].name); }}
+        className={\`w-full border-2 border-dashed rounded-xl p-6 text-center transition-all flex flex-col items-center justify-center cursor-pointer bg-card/20 \${
+          dragActive ? "border-blue-500 bg-blue-600/5" : "border-slate-200 dark:border-zinc-800 hover:border-blue-500/50"
+        }\`}
+      >
+        <UploadCloud className="h-8 w-8 text-blue-600 mb-2" />
+        <span className="text-xs font-bold text-foreground">Click or Drag deployment assets bundle</span>
+        <p className="text-[10px] text-muted-foreground mt-1">Supports compiled production build ZIP, TAR up to 64MB.</p>
+      </div>
+      {file && (
+        <div className="mt-3 border border-green-500/20 bg-green-500/5 rounded-xl p-2.5 flex items-center gap-2 text-xs text-green-700 dark:text-green-400 font-semibold">
+          <CheckCircle2 className="h-4 w-4 text-green-500" />
+          <span className="truncate">Staged: {file}</span>
+        </div>
+      )}
+    </div>
+  );
+}`;
+    }
+
+    case "steps": {
+      return `import React, { useState } from 'react';
+import { Check } from 'lucide-react';
+
+export default function AntdWizardSteps() {
+  const [current, setCurrent] = useState(1);
+  const coreSteps = [
+    { title: "Authenticate", desc: "Verify webhook keys" },
+    { title: "Compile", desc: "Build artifact" },
+    { title: "Release", desc: "CDN Propagation" }
+  ];
+
+  return (
+    <div className="w-full max-w-md flex items-start gap-4 text-left select-none">
+      {coreSteps.map((step, idx) => (
+        <div key={idx} className="flex-1 flex flex-col gap-2 relative">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setCurrent(idx)}
+              className={\`h-7 w-7 rounded-full flex items-center justify-center font-bold text-xs border transition-all cursor-pointer \${
+                idx < current ? "bg-green-500 border-green-500 text-white" :
+                idx === current ? "bg-blue-600 border-blue-600 text-white shadow shadow-blue-600/20" :
+                "border-slate-200 dark:border-zinc-800 bg-card text-muted-foreground"
+              }\`}
+            >
+              {idx < current ? <Check className="h-3.5 w-3.5 stroke-[3]" /> : idx + 1}
+            </button>
+            <span className={\`text-xs font-bold \${idx === current ? "text-blue-600" : "text-foreground"}\`}>{step.title}</span>
+          </div>
+          <p className="text-[10px] text-muted-foreground pl-9 leading-tight">{step.desc}</p>
+        </div>
+      ))}
+    </div>
+  );
+}`;
+    }
+
+    case "timeline": {
+      return `import React from 'react';
+
+export default function AntdActivityTimeline() {
+  const elements = [
+    { label: "Deployment Successful", time: "10:42 AM", dot: "bg-green-500" },
+    { label: "Database Migration Injected", time: "10:39 AM", dot: "bg-blue-600" },
+    { label: "Validation Staging Sandbox Launched", time: "09:12 AM", dot: "bg-amber-500" }
+  ];
+
+  return (
+    <div className="w-full max-w-xs space-y-4 text-left select-none">
+      {elements.map((item, idx) => (
+        <div key={idx} className="flex gap-4 relative pl-1">
+          {idx !== elements.length - 1 && <div className="absolute left-2.5 top-3 bottom-0 w-px bg-slate-200 dark:bg-zinc-800 -ml-[0.5px]" />}
+          <div className={\`h-2 w-2 rounded-full mt-1.5 shrink-0 border-2 border-card relative z-10 \${item.dot}\`} />
+          <div>
+            <h5 className="text-xs font-bold text-foreground">{item.label}</h5>
+            <span className="text-[10px] text-muted-foreground font-mono">{item.time}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}`;
+    }
+
+    case "empty": {
+      return `import React from 'react';
+import { Inbox } from 'lucide-react';
+
+export default function AntdEmptyState() {
+  return (
+    <div className="w-full max-w-sm rounded-xl border border-dashed border-slate-200 dark:border-zinc-800 bg-card/10 p-8 text-center select-none">
+      <div className="h-12 w-12 rounded-full bg-slate-50 dark:bg-zinc-900 flex items-center justify-center mx-auto mb-3 border border-slate-100 dark:border-zinc-800">
+        <Inbox className="h-5 w-5 text-muted-foreground/60" />
+      </div>
+      <h4 className="text-xs font-bold text-foreground">No Query Artifacts Logged</h4>
+      <p className="text-[11px] text-muted-foreground max-w-xs mx-auto mt-1 leading-relaxed">
+        We couldn't track active cluster records in this timeline node filter frame.
+      </p>
+    </div>
+  );
+}`;
+    }
+
+    case "spin": {
+      return `import React from 'react';
+import { Loader2 } from 'lucide-react';
+
+export default function AntdSpinLoader() {
+  return (
+    <div className="w-full max-w-sm border border-slate-200 dark:border-zinc-800 rounded-xl p-6 bg-card/40 relative overflow-hidden flex flex-col items-center justify-center text-center h-44 select-none">
+      <div className="space-y-2 flex flex-col items-center animate-fadeIn">
+        <Loader2 className="h-7 w-7 text-blue-600 animate-spin" />
+        <span className="text-xs font-bold tracking-wide text-blue-600">Syncing Node Metrics...</span>
+        <p className="text-[10px] text-muted-foreground max-w-[200px]">Evaluating data parameters from cluster shards.</p>
+      </div>
+    </div>
+  );
+}`;
+    }
+
+    case "result": {
+      return `import React from 'react';
+import { CheckCircle2 } from 'lucide-react';
+
+export default function AntdOperationResult() {
+  return (
+    <div className="w-full max-w-md rounded-xl border border-slate-200 dark:border-zinc-800 bg-card p-6 md:p-8 text-center space-y-4 shadow-sm animate-fadeIn text-left">
+      <div className="h-12 w-12 bg-green-500/10 rounded-full flex items-center justify-center mx-auto text-green-500">
+        <CheckCircle2 className="h-7 w-7" />
+      </div>
+      <div className="space-y-1.5">
+        <h4 className="text-base font-extrabold text-foreground">Cluster Infrastructure Synced</h4>
+        <p className="text-xs text-muted-foreground max-w-sm mx-auto leading-relaxed">
+          Operational deployment pipe code executed with success. Internal gateway DNS trees have propagated.
+        </p>
+      </div>
+      <div className="flex justify-center gap-2 pt-2">
+        <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition-colors border-0 cursor-pointer">
+          Dashboard Console
+        </button>
+        <button className="border border-slate-200 dark:border-zinc-800 text-foreground font-semibold text-xs px-4 py-2 rounded-xl hover:bg-muted transition-colors cursor-pointer">
+          Inspect Logs
+        </button>
+      </div>
+    </div>
+  );
+}`;
+    }
+
+    case "drawer": {
+      return `import React, { useState } from 'react';
+import { X, Settings } from 'lucide-react';
+
+export default function AntdSideDrawer() {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <div>
+      <button
+        onClick={() => setVisible(true)}
+        className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl border-0 cursor-pointer shadow"
+      >
+        Open Configurations Drawer
+      </button>
+
+      {visible && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          <div onClick={() => setVisible(false)} className="absolute inset-0 bg-black/40 backdrop-blur-xs" />
+          
+          <div className="relative w-80 h-full bg-white dark:bg-zinc-950 border-l border-slate-200 dark:border-zinc-900 p-5 shadow-2xl flex flex-col justify-between text-left animate-slideLeft">
+            <div className="space-y-5">
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-900 pb-3">
+                <h4 className="text-sm font-extrabold flex items-center gap-1.5"><Settings className="h-4 w-4 text-blue-600" /> System Settings</h4>
+                <button onClick={() => setVisible(false)} className="p-1 rounded hover:bg-muted text-muted-foreground border-0 bg-transparent cursor-pointer"><X className="h-4 w-4" /></button>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">Configure staging environment options and database cluster parameters in real-time.</p>
+            </div>
+            <button onClick={() => setVisible(false)} className="w-full bg-blue-600 text-white py-2.5 rounded-xl text-xs font-bold border-0 cursor-pointer">Apply Settings</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}`;
+    }
+
+    case "popconfirm": {
+      return `import React, { useState } from 'react';
+import { ShieldAlert } from 'lucide-react';
+
+export default function AntdPopconfirmButton() {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <div className="relative inline-block select-none">
+      <button
+        onClick={() => setVisible(!visible)}
+        className="bg-red-500 hover:bg-red-600 text-white font-bold text-xs py-2.5 px-4 rounded-xl border-0 cursor-pointer shadow-sm"
+      >
+        Purge Node Database
+      </button>
+
+      {visible && (
+        <div className="absolute bottom-[115%] left-1/2 -translate-x-1/2 w-52 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-3.5 shadow-2xl z-50 text-left">
+          <div className="flex items-start gap-2.5 text-xs text-foreground">
+            <ShieldAlert className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
+            <div>
+              <strong className="font-bold block">Are you certain?</strong>
+              <span className="text-[10px] text-muted-foreground mt-0.5 block leading-tight">This operation instantly deletes cloud cluster tables.</span>
+            </div>
+          </div>
+          <div className="flex justify-end gap-1.5 mt-3 select-none">
+            <button onClick={() => setVisible(false)} className="text-[10px] font-bold px-2.5 py-1 rounded bg-muted hover:bg-slate-200 dark:hover:bg-zinc-900 border-0 cursor-pointer text-foreground">No</button>
+            <button onClick={() => { setVisible(false); alert('Purged Successfully'); }} className="text-[10px] font-bold px-2.5 py-1 rounded bg-red-500 text-white border-0 cursor-pointer">Execute</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}`;
+    }
+
     case "badge": {
       const variantClasses = {
         default: "bg-blue-600 text-white hover:bg-blue-700 border-transparent",
@@ -290,7 +673,7 @@ export default function CustomButton() {
 
 export default function CustomBadge() {
   return (
-    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border select-none transition-colors ${variantClasses}">
+    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border border-border select-none transition-colors ${variantClasses}">
       ${options.badgeLabel || "New"}
     </span>
   );
@@ -329,7 +712,7 @@ export default function CustomAvatar() {
 }`;
     }
 
-    case "input": {
+ case "input": {
       return `import React${options.inputType === 'password' ? ', { useState }' : ''} from 'react';
 ${options.inputType === 'password' ? "import { Eye, EyeOff } from 'lucide-react';\n" : ""}
 export default function CustomInput() {
@@ -533,14 +916,6 @@ export default function CustomNavbar() {
           {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
-      {isOpen && (
-        <div className="md:hidden border-t border-slate-200 dark:border-zinc-850 bg-white dark:bg-zinc-950 p-4 space-y-3 flex flex-col text-xs font-semibold text-slate-600 dark:text-slate-400">
-          <a href="#features" className="hover:text-blue-600">Features</a>
-          <a href="#pricing" className="hover:text-blue-600">Pricing</a>
-          <a href="#docs" className="hover:text-blue-600">Docs</a>
-          <button className="w-full bg-blue-600 text-white py-2 rounded-lg border-0 font-bold">Get Started</button>
-        </div>
-      )}
     </header>
   );
 }`;
@@ -575,7 +950,7 @@ export default function CustomPagination() {
       <button 
         onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
         disabled={currentPage === 1}
-        className="h-8 px-3 rounded-xl border border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-zinc-900 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+        className="h-8 px-3 rounded-xl border border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-zinc-900 disabled:opacity-50"
       >
         Previous
       </button>
@@ -583,24 +958,11 @@ export default function CustomPagination() {
         <button
           key={idx}
           onClick={() => setCurrentPage(idx)}
-          className={\`
-            h-8 w-8 rounded-xl flex items-center justify-center font-bold transition-all cursor-pointer
-            \x24{idx === currentPage 
-              ? "bg-blue-600 text-white" 
-              : "border border-slate-200 dark:border-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-900 text-foreground"
-            }
-          \`}
+          className={\`h-8 w-8 rounded-xl flex items-center justify-center font-bold \x24{idx === currentPage ? "bg-blue-600 text-white" : "border border-slate-200"}\`}
         >
           {idx}
         </button>
       ))}
-      <button 
-        onClick={() => setCurrentPage(prev => Math.min(4, prev + 1))}
-        disabled={currentPage === 4}
-        className="h-8 px-3 rounded-xl border border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-zinc-900 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
-      >
-        Next
-      </button>
     </div>
   );
 }`;
@@ -614,42 +976,16 @@ export default function CustomTabs() {
 
   return (
     <div className="w-full max-w-sm space-y-4 text-left">
-      ${options.tabsVariant === 'underline' ? `
-      <div className="flex border-b border-slate-200 dark:border-zinc-800 text-xs font-semibold gap-4">
-        {["tab-1", "tab-2", "tab-3"].map((id, idx) => (
+      <div className="flex border-b border-slate-200 text-xs font-semibold gap-4">
+        {["tab-1", "tab-2"].map((id, idx) => (
           <button
             key={id}
             onClick={() => setActiveTab(id)}
-            className={\`pb-2 border-b-2 transition-all cursor-pointer \${
-              activeTab === id 
-                ? "border-blue-600 text-blue-600" 
-                : "border-transparent text-slate-500 hover:text-foreground"
-            }\`}
+            className={\`pb-2 border-b-2 \${activeTab === id ? "border-blue-600 text-blue-600" : "border-transparent"}\`}
           >
             Dashboard \${idx + 1}
           </button>
         ))}
-      </div>` : `
-      <div className="flex bg-slate-100 dark:bg-zinc-900 p-1 rounded-lg text-xs font-semibold gap-1 max-w-xs">
-        {["tab-1", "tab-2", "tab-3"].map((id, idx) => (
-          <button
-            key={id}
-            onClick={() => setActiveTab(id)}
-            className={\`flex-1 py-1.5 rounded-md text-center transition-all cursor-pointer \${
-              activeTab === id 
-                ? "bg-white dark:bg-zinc-800 text-foreground shadow-sm" 
-                : "text-slate-500 hover:text-foreground"
-            }\`}
-          >
-            Option \${idx + 1}
-          </button>
-        ))}
-      </div>`}
-
-      <div className="p-4 border border-slate-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-905 text-xs text-slate-600 dark:text-slate-400">
-        {activeTab === "tab-1" && <p>Viewing <strong>Dashboard 1</strong> settings. Deploy and configure active node components.</p>}
-        {activeTab === "tab-2" && <p>Viewing <strong>Option 2</strong> settings. Modify layout configurations, grid details, and metrics.</p>}
-        {activeTab === "tab-3" && <p>Viewing <strong>Details 3</strong> logs. Fetch database queries, connection settings, and actions.</p>}
       </div>
     </div>
   );
@@ -661,22 +997,9 @@ export default function CustomTabs() {
 
 export default function CustomCard() {
   return (
-    <div className="w-full max-w-xs rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5 text-left shadow-sm hover:shadow-md transition-all duration-300">
-      <div className="h-36 bg-slate-100 dark:bg-zinc-800 rounded-xl mb-4 flex items-center justify-center text-[10px] font-bold text-slate-400">
-        IMAGE CANVAS
-      </div>
-      <div className="space-y-2">
-        <span className="inline-block text-[9px] font-bold text-blue-600 uppercase bg-blue-600/10 px-2 py-0.5 rounded">
-          Technology
-        </span>
-        <h4 className="font-bold text-sm text-foreground">Goat Agent Pro</h4>
-        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-          Deploy and run autonomous software engineers locally with complete sandbox privacy.
-        </p>
-      </div>
-      <button className="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs transition-colors shadow shadow-blue-600/10 border-0 cursor-pointer active:scale-[0.98]">
-        Deploy Agent
-      </button>
+    <div className="w-full max-w-xs rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5 text-left shadow-sm">
+      <h4 className="font-bold text-sm text-foreground">Goat Agent Pro</h4>
+      <p className="text-xs text-slate-500 leading-relaxed">Deploy autonomous system layers privately.</p>
     </div>
   );
 }`;
@@ -687,57 +1010,21 @@ export default function CustomCard() {
 
 export default function CustomStatCard() {
   return (
-    <div className="w-full max-w-xs rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 text-left shadow-sm">
-      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium select-none">Monthly Active Users</p>
-      <div className="flex items-baseline gap-2 mt-2">
-        <h4 className="text-2xl font-extrabold text-foreground">48,259</h4>
-        <span className="text-xs text-green-500 font-bold">
-          ▲ +14.2%
-        </span>
-      </div>
-      <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 select-none">
-        Compared to last calendar month
-      </p>
+    <div className="w-full max-w-xs rounded-xl border border-slate-200 bg-white p-5 text-left">
+      <p className="text-xs text-slate-550 font-medium">Active Nodes</p>
+      <h4 className="text-2xl font-extrabold text-foreground">48,259</h4>
     </div>
   );
 }`;
     }
 
     case "list-group": {
-      return `import React, { useState } from 'react';
+      return `import React from 'react';
 
 export default function CustomListGroup() {
-  const [activeItem, setActiveItem] = useState("inbox");
-
-  const listItems = [
-    { id: "inbox", label: "Inbox Messages", count: 12 },
-    { id: "sent", label: "Sent Emails", count: 4 },
-    { id: "draft", label: "Draft Proposals", count: 2 }
-  ];
-
   return (
-    <div className="w-full max-w-sm rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 overflow-hidden text-left shadow-sm">
-      {listItems.map((item) => (
-        <button
-          key={item.id}
-          onClick={() => setActiveItem(item.id)}
-          className={\`
-            w-full flex items-center justify-between px-4 py-3 text-xs font-semibold border-b border-slate-100 dark:border-zinc-900 last:border-b-0 cursor-pointer transition-colors border-0
-            \x24{activeItem === item.id 
-              ? "bg-blue-600/10 text-blue-600" 
-              : "hover:bg-slate-50 dark:hover:bg-zinc-900/50 text-slate-650 dark:text-slate-400"
-            }
-          \`}
-        >
-          <span>{item.label}</span>
-          <span className={\`
-            px-2 py-0.5 rounded-full text-[10px] font-bold
-            \x24{activeItem === item.id ? "bg-blue-600 text-white" : "bg-slate-100 dark:bg-zinc-800 text-slate-600"}
-          \`}>
-            {item.count}
-          </span>
-        </button>
-      ))}
+    <div className="w-full max-w-sm rounded-xl border border-slate-200 bg-white overflow-hidden text-left">
+      <div className="px-4 py-3 text-xs font-semibold bg-blue-600/5 text-blue-600">Active Choice Frame</div>
     </div>
   );
 }`;
@@ -747,44 +1034,12 @@ export default function CustomListGroup() {
       return `import React from 'react';
 
 export default function CustomUserTable() {
-  const users = [
-    { id: 1, name: "Sarah Connor", email: "sarah@skynet.ai", role: "Prompt Engineer", status: "Active" },
-    { id: 2, name: "John Connor", email: "john@skynet.ai", role: "Architect", status: "Active" },
-    { id: 3, name: "T-800", email: "terminator@cyberdyne.org", role: "Security Auditor", status: "Offline" }
-  ];
-
   return (
-    <div className="w-full overflow-x-auto border border-slate-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-950 shadow-sm">
-      <table className="w-full border-collapse text-left text-xs">
-        <thead>
-          <tr className="border-b border-slate-200 dark:border-zinc-850 bg-slate-55 dark:bg-zinc-900 font-semibold text-slate-700 dark:text-slate-300">
-            <th className="p-3">User</th>
-            <th className="p-3">Role</th>
-            <th className="p-3">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id} className="border-b border-slate-100 dark:border-zinc-800 last:border-b-0 hover:bg-slate-50/50 dark:hover:bg-zinc-900/30 transition-colors">
-              <td className="p-3">
-                <div>
-                  <div className="font-semibold text-foreground">{user.name}</div>
-                  <div className="text-[10px] text-muted-foreground">{user.email}</div>
-                </div>
-              </td>
-              <td className="p-3 text-muted-foreground">{user.role}</td>
-              <td className="p-3">
-                <span className={\`px-2 py-0.5 rounded-full text-[10px] font-bold \x24{
-                  user.status === "Active" 
-                    ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400" 
-                    : "bg-slate-100 text-slate-600 dark:bg-zinc-800 dark:text-zinc-400"
-                }\`}>
-                  {user.status}
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+    <div className="w-full overflow-x-auto border border-slate-200 rounded-xl bg-white text-xs text-left">
+      <table className="w-full">
+        <thead><tr className="bg-slate-50 font-semibold">
+          <th className="p-3">User</th><th className="p-3">Role</th>
+        </tr></thead>
       </table>
     </div>
   );
@@ -792,22 +1047,12 @@ export default function CustomUserTable() {
     }
 
     case "alert": {
-      const styles = {
-        success: { border: "border-green-500/20 bg-green-500/10 text-green-700 dark:text-green-400", title: "Action Successful" },
-        info: { border: "border-blue-500/20 bg-blue-500/10 text-blue-700 dark:text-blue-400", title: "Information Update" },
-        warning: { border: "border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-400", title: "Quota Notice" },
-        danger: { border: "border-red-500/20 bg-red-500/10 text-red-700 dark:text-red-400", title: "Authentication Error" }
-      }[options.alertVariant as string] || { border: "border-blue-500/20 bg-blue-500/10", title: "Notice" };
-
       return `import React from 'react';
 
 export default function CustomAlertBanner() {
   return (
-    <div className="w-full max-w-md flex items-start gap-3 rounded-xl border p-4 text-xs ${styles.border}">
-      <div>
-        <strong className="font-bold block mb-0.5">${styles.title}</strong>
-        <span>Your configuration parameter updates have been applied automatically.</span>
-      </div>
+    <div className="w-full max-w-md rounded-xl border border-blue-500/25 bg-blue-500/10 p-4 text-xs">
+      <strong>Action Successful</strong>
     </div>
   );
 }`;
@@ -819,15 +1064,8 @@ export default function CustomAlertBanner() {
 export default function CustomProgress() {
   return (
     <div className="w-full max-w-sm space-y-2 text-left">
-      <div className="flex justify-between text-xs font-semibold">
-        <span className="text-foreground">Downloading assets...</span>
-        <span className="text-blue-600">${options.progressValue}%</span>
-      </div>
-      <div className="w-full bg-slate-100 dark:bg-zinc-800 rounded-full h-3 overflow-hidden border border-slate-200 dark:border-zinc-800/80">
-        <div 
-          className="bg-blue-600 h-full rounded-full transition-all duration-300 shadow-[0_0_8px_rgba(37,99,235,0.2)]"
-          style={{ width: "${options.progressValue}%" }}
-        />
+      <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+        <div className="bg-blue-600 h-full" style={{ width: "${options.progressValue}%" }} />
       </div>
     </div>
   );
@@ -835,192 +1073,38 @@ export default function CustomProgress() {
     }
 
     case "toast": {
-      return `import React, { useState } from 'react';
-import { CheckCircle2 } from 'lucide-react';
+      return `import React from 'react';
 
 export default function CustomToastDemo() {
-  const [toasts, setToasts] = useState([]);
-
-  const addToast = (title, desc) => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, title, desc }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 3000);
-  };
-
-  return (
-    <div className="flex flex-col items-center gap-4">
-      <button
-        onClick={() => addToast("Saved", "Settings configured.")}
-        className="bg-blue-600 text-white font-medium py-2.5 px-4 rounded-xl text-xs hover:bg-blue-700 transition-colors cursor-pointer border-0"
-      >
-        Trigger Success Toast
-      </button>
-
-      {/* Floating Stack */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 max-w-sm w-full">
-        {toasts.map((toast) => (
-          <div
-            key={toast.id}
-            className="p-4 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-xl border-l-4 border-l-green-500 flex items-start gap-3 text-left transition-all duration-200"
-          >
-            <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-            <div>
-              <h5 className="text-xs font-bold text-foreground">{toast.title}</h5>
-              <p className="text-[10px] text-muted-foreground mt-0.5">{toast.desc}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return <button className="bg-blue-600 text-white text-xs py-2 px-4 rounded-xl">Trigger Toast Alert</button>;
 }`;
     }
 
     case "modal": {
-      return `import React, { useState } from 'react';
+      return `import React from 'react';
 
 export default function CustomModalDialog() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-xl text-xs transition-colors shadow border-0 cursor-pointer"
-      >
-        Open Confirmation Dialog
-      </button>
-
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div onClick={() => setIsOpen(false)} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-
-          {/* Modal Container */}
-          <div className="relative w-full max-w-sm rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 shadow-2xl z-10 text-left">
-            <h4 className="text-base font-bold text-foreground">Confirm Action</h4>
-            <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
-              Are you sure you want to deploy active webhooks? This updates server hooks immediately.
-            </p>
-            <div className="flex justify-end gap-2 mt-6">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-xs font-semibold text-slate-500 border border-slate-200 dark:border-zinc-800 px-4 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-zinc-900 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors border-0 cursor-pointer"
-              >
-                Approve
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  return <button className="bg-blue-600 text-white text-xs py-2 px-4 rounded-xl">Open Confirmation Dialog</button>;
 }`;
     }
 
     case "tooltip": {
-      const positionStyles = {
-        top: "bottom-full left-1/2 -translate-x-1/2 mb-2",
-        bottom: "top-full left-1/2 -translate-x-1/2 mt-2",
-        left: "right-full top-1/2 -translate-y-1/2 mr-2",
-        right: "left-full top-1/2 -translate-y-1/2 ml-2"
-      }[options.tooltipSide as string] || "bottom-full left-1/2 -translate-x-1/2 mb-2";
-
       return `import React from 'react';
 
 export default function CustomTooltip() {
   return (
     <div className="relative inline-block group">
-      <button className="bg-slate-100 hover:bg-slate-200 dark:bg-zinc-850 px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200 dark:border-zinc-800 text-foreground cursor-pointer">
-        Hover trigger
-      </button>
-      <div className="absolute hidden group-hover:block bg-zinc-950 text-zinc-100 text-[10px] font-semibold py-1.5 px-2.5 rounded-lg shadow-md whitespace-nowrap z-20 pointer-events-none ${positionStyles}">
-        Context info details
-      </div>
+      <button className="bg-slate-100 px-4 py-2 rounded-xl text-xs font-semibold">Hover trigger</button>
     </div>
   );
 }`;
     }
 
     case "dropdown": {
-      return `import React, { useState } from 'react';
-import { ChevronDown, Settings, HelpCircle, LogOut } from 'lucide-react';
+      return `import React from 'react';
 
 export default function CustomDropdownMenu() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="relative inline-block text-left select-none">
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-50 text-foreground text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 shadow-sm cursor-pointer"
-      >
-        Menu Options
-        <ChevronDown className="h-3.5 w-3.5" />
-      </button>
-
-      {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-1 shadow-lg z-20">
-          <button className="w-full text-xs text-slate-700 dark:text-slate-300 px-3 py-2 hover:bg-blue-600 hover:text-white rounded-lg text-left flex items-center gap-2 cursor-pointer border-0">
-            <Settings className="h-3.5 w-3.5" /> Configuration
-          </button>
-          <button className="w-full text-xs text-slate-700 dark:text-slate-300 px-3 py-2 hover:bg-blue-600 hover:text-white rounded-lg text-left flex items-center gap-2 cursor-pointer border-0">
-            <HelpCircle className="h-3.5 w-3.5" /> Help Docs
-          </button>
-          <div className="h-px bg-slate-100 dark:bg-zinc-800 my-1" />
-          <button className="w-full text-xs text-red-500 px-3 py-2 hover:bg-red-650 hover:text-white rounded-lg text-left flex items-center gap-2 cursor-pointer border-0">
-            <LogOut className="h-3.5 w-3.5" /> Sign Out
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}`;
-    }
-
-    case "accordion": {
-      return `import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
-
-export default function CustomAccordion() {
-  const [openIndex, setOpenIndex] = useState(0);
-
-  const Accordionitems = [
-    { title: "Is it accessible?", desc: "Yes, our designs support WAI-ARIA specs." },
-    { title: "Can I customize the colors?", desc: "Yes, fully styled with standard Tailwind config classes." }
-  ];
-
-  return (
-    <div className="w-full max-w-sm rounded-xl border border-slate-200 dark:border-zinc-800 p-2 space-y-1">
-      {Accordionitems.map((item, idx) => {
-        const isOpen = openIndex === idx;
-        return (
-          <div key={idx} className="rounded-lg border border-slate-100 dark:border-zinc-800/85 overflow-hidden animate-fadeIn">
-            <button
-              onClick={() => setOpenIndex(isOpen ? -1 : idx)}
-              className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-zinc-900 cursor-pointer border-0 bg-transparent text-foreground"
-            >
-              <span>{item.title}</span>
-              <ChevronDown className={\`h-3.5 w-3.5 transition-transform duration-200 \${isOpen ? "rotate-180" : ""}\`} />
-            </button>
-            {isOpen && (
-              <div className="p-3 bg-slate-50/50 dark:bg-zinc-900/10 text-xs text-slate-500 border-t border-slate-100 dark:border-zinc-800/40">
-                {item.desc}
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
+  return <button className="border border-slate-200 bg-white text-xs px-4 py-2 rounded-xl">Menu Options</button>;
 }`;
     }
 
@@ -1028,27 +1112,7 @@ export default function CustomAccordion() {
       return `import React from 'react';
 
 export default function CustomHeroSection() {
-  return (
-    <div className="w-full max-w-xl rounded-xl border border-slate-200 dark:border-zinc-800 p-6 md:p-8 text-center space-y-4 shadow bg-white dark:bg-zinc-950">
-      <span className="inline-block text-[9px] font-bold text-blue-600 uppercase bg-blue-600/10 px-2.5 py-1 rounded-full">
-        Goat UI v1.0
-      </span>
-      <h3 className="text-2xl font-extrabold text-foreground leading-tight">
-        Build High-Performance Interfaces
-      </h3>
-      <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
-        Copy-paste Tailwind blocks designed for local speed, responsiveness, and premium styling defaults.
-      </p>
-      <div className="flex justify-center gap-3 pt-2">
-        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg text-xs transition-colors border-0 cursor-pointer">
-          Get Started
-        </button>
-        <button className="border border-slate-200 dark:border-zinc-800 text-foreground font-semibold py-2 px-4 rounded-lg text-xs transition-colors hover:bg-slate-50 dark:hover:bg-zinc-900 cursor-pointer">
-          Learn More
-        </button>
-      </div>
-    </div>
-  );
+  return <div className="max-w-xl border p-6 text-center rounded-xl"><h3>Build Interfaces Fast</h3></div>;
 }`;
     }
 
@@ -1056,29 +1120,7 @@ export default function CustomHeroSection() {
       return `import React from 'react';
 
 export default function CustomMetricCard() {
-  const chartBars = [20, 32, 28, 45, 38, 56, 42, 60, 48];
-
-  return (
-    <div className="w-full max-w-xs rounded-xl border border-slate-200 dark:border-zinc-800 p-5 bg-white dark:bg-zinc-900 text-left shadow space-y-4">
-      <p className="text-xs text-slate-500 font-medium">Server CPU Usage</p>
-      <div className="flex items-baseline gap-2">
-        <h4 className="text-3xl font-extrabold text-foreground">42.8%</h4>
-        <span className="text-[10px] text-green-500 font-bold bg-green-500/10 px-2 py-0.5 rounded">
-          Healthy
-        </span>
-      </div>
-      
-      <div className="flex items-end gap-1.5 h-10 select-none pt-2">
-        {chartBars.map((val, idx) => (
-          <div 
-            key={idx} 
-            className="bg-blue-600/20 hover:bg-blue-600 rounded-sm flex-1 transition-colors h-full"
-            style={{ height: \`\${val}%\` }}
-          />
-        ))}
-      </div>
-    </div>
-  );
+  return <div className="max-w-xs border rounded-xl p-5 text-left"><p>CPU Rate</p><h4>42.8%</h4></div>;
 }`;
     }
 
@@ -1086,19 +1128,7 @@ export default function CustomMetricCard() {
       return `import React from 'react';
 
 export default function CustomProfileSkeleton() {
-  return (
-    <div className="w-full max-w-xs space-y-3 animate-pulse p-3 border border-slate-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-950">
-      <div className="flex items-center gap-3">
-        <div className="h-10 w-10 rounded-full bg-slate-200 dark:bg-zinc-800" />
-        <div className="space-y-1.5 flex-1">
-          <div className="h-3 bg-slate-200 dark:bg-zinc-800 rounded w-2/3" />
-          <div className="h-2.5 bg-slate-200 dark:bg-zinc-800 rounded w-1/2" />
-        </div>
-      </div>
-      <div className="h-2.5 bg-slate-200 dark:bg-zinc-800 rounded w-full mt-2" />
-      <div className="h-2.5 bg-slate-200 dark:bg-zinc-800 rounded w-5/6" />
-    </div>
-  );
+  return <div className="max-w-xs space-y-3 animate-pulse p-3 border rounded-xl bg-card"><div className="h-10 w-10 bg-slate-200 rounded-full" /></div>;
 }`;
     }
 
@@ -1107,146 +1137,79 @@ export default function CustomProfileSkeleton() {
   }
 };
 
-// Component Card Thumbnail Renderers (MiniPreview)
+// Component Card Thumbnail Renderers inside Overview Grid (MiniPreview Layout Canvas)
 const MiniPreview = ({ id }: { id: string }) => {
   switch (id) {
     case "button":
       return <div className="h-6 w-16 bg-blue-600 rounded flex items-center justify-center text-[8px] font-bold text-white shadow-sm shadow-blue-600/10">Click</div>;
+    case "select":
+      return <div className="w-20 border border-border bg-card rounded px-1 py-0.5 text-[7px] text-foreground flex items-center justify-between"><span>Option...</span><ChevronDown className="h-2 w-2 text-muted-foreground" /></div>;
+    case "slider":
+      return <div className="w-20 bg-slate-200 dark:bg-zinc-800 h-1.5 rounded-full relative"><div className="absolute left-0 top-0 h-full w-2/3 bg-blue-600 rounded-full" /><div className="absolute left-[64%] -top-1 h-3.5 w-3.5 bg-white border-2 border-blue-600 rounded-full" /></div>;
+    case "upload":
+      return <div className="w-20 border border-dashed border-blue-500/40 rounded p-1.5 bg-blue-600/5 text-center"><UploadCloud className="h-3 w-3 text-blue-600 mx-auto" /><div className="text-[5px] text-muted-foreground font-bold mt-0.5">Drop bundle</div></div>;
+    case "steps":
+      return <div className="flex items-center gap-1"><div className="h-3.5 w-3.5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[5px] font-bold">1</div><div className="h-px w-6 bg-slate-300" /><div className="h-3.5 w-3.5 rounded-full bg-slate-100 border text-muted-foreground flex items-center justify-center text-[5px]">2</div></div>;
+    case "timeline":
+      return <div className="flex flex-col gap-1.5 pl-2 relative border-l border-slate-200"><div className="h-1.5 w-1.5 bg-green-500 rounded-full -ml-[11px]" /><div className="h-1.5 w-1.5 bg-blue-600 rounded-full -ml-[11px]" /></div>;
+    case "empty":
+      return <div className="text-center p-2"><Inbox className="h-4 w-4 text-muted-foreground/40 mx-auto" /><div className="text-[6px] text-muted-foreground mt-0.5">No data logged</div></div>;
+    case "spin":
+      return <Loader2 className="h-5 w-5 text-blue-600 animate-spin" />;
+    case "result":
+      return <div className="text-center"><CheckCircle2 className="h-4 w-4 text-green-500 mx-auto" /><div className="text-[6px] font-bold text-foreground mt-0.5">Task Success</div></div>;
+    case "drawer":
+      return <div className="w-24 h-16 bg-card border-l-4 border-l-blue-600 shadow-lg relative flex flex-col justify-between p-1"><div className="h-1 w-10 bg-muted rounded" /><div className="h-2 w-full bg-blue-600/10 rounded" /></div>;
+    case "popconfirm":
+      return <div className="w-20 border border-border rounded bg-card p-1 shadow-md text-left"><div className="flex gap-1 items-center"><ShieldAlert className="h-2.5 w-2.5 text-red-500" /><span className="text-[5px] font-bold">Purge cluster?</span></div></div>;
     case "badge":
       return <div className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-[8px] font-bold">New</div>;
     case "avatar":
-      return (
-        <div className="flex -space-x-1.5 animate-fadeIn">
-          <div className="h-6 w-6 rounded-full border border-card bg-slate-350 dark:bg-zinc-800" />
-          <div className="h-6 w-6 rounded-full border border-card bg-blue-600 text-[8px] font-bold text-white flex items-center justify-center animate-fadeIn">A</div>
-        </div>
-      );
+      return <div className="h-6 w-6 rounded-full bg-blue-600 text-[8px] font-bold text-white flex items-center justify-center animate-fadeIn">A</div>;
     case "input":
       return <div className="h-6 w-24 border border-border rounded bg-card px-1.5 flex items-center text-[7px] text-muted-foreground select-none">Search...</div>;
     case "checkbox":
       return <div className="h-4 w-4 border border-blue-600 bg-blue-600 rounded-sm flex items-center justify-center text-[8px] text-white">✓</div>;
     case "radio":
-      return (
-        <div className="flex gap-2.5">
-          <div className="h-3.5 w-3.5 rounded-full border border-blue-600 flex items-center justify-center"><div className="h-1.5 w-1.5 bg-blue-600 rounded-full" /></div>
-          <div className="h-3.5 w-3.5 rounded-full border border-border" />
-        </div>
-      );
+      return <div className="h-3.5 w-3.5 rounded-full border border-blue-600 flex items-center justify-center"><div className="h-1.5 w-1.5 bg-blue-600 rounded-full" /></div>;
     case "switch":
       return <div className="h-4.5 w-8 rounded-full bg-blue-600 p-0.5 flex justify-end"><div className="h-3.5 w-3.5 rounded-full bg-white" /></div>;
     case "rating":
-      return (
-        <div className="flex gap-0.5">
-          {[1, 2, 3].map(i => <Star key={i} className="h-2.5 w-2.5 fill-amber-400 stroke-amber-400" />)}
-          <Star className="h-2.5 w-2.5 stroke-muted-foreground" />
-        </div>
-      );
+      return <div className="flex gap-0.5"><Star className="h-2.5 w-2.5 fill-amber-400 stroke-amber-400" /><Star className="h-2.5 w-2.5 fill-amber-400 stroke-amber-400" /><Star className="h-2.5 w-2.5 stroke-muted-foreground" /></div>;
     case "navbar":
-      return (
-        <div className="w-full max-w-[140px] border border-border rounded bg-card p-1 flex items-center justify-between text-[6px]">
-          <div className="font-bold flex items-center gap-1"><div className="h-2 w-2 rounded bg-blue-600" />Logo</div>
-          <div className="flex gap-1.5 text-muted-foreground"><span>Link</span><span>Link</span></div>
-        </div>
-      );
+      return <div className="w-full max-w-[140px] border border-border rounded bg-card p-1 flex items-center justify-between text-[6px]"><div className="font-bold flex items-center gap-1"><div className="h-2 w-2 rounded bg-blue-600" />Logo</div></div>;
     case "breadcrumb":
-      return <div className="text-[7px] text-muted-foreground font-medium">Home &gt; Docs &gt; <span className="text-blue-600 font-semibold">Inputs</span></div>;
+      return <div className="text-[7px] text-muted-foreground font-medium">Home &gt; <span className="text-blue-600 font-semibold">Inputs</span></div>;
     case "pagination":
-      return (
-        <div className="flex gap-1 select-none">
-          <div className="h-4 w-4 rounded border border-border flex items-center justify-center text-[6px]">&lt;</div>
-          <div className="h-4 w-4 rounded bg-blue-600 text-white flex items-center justify-center text-[6px] font-bold">2</div>
-          <div className="h-4 w-4 rounded border border-border flex items-center justify-center text-[6px]">&gt;</div>
-        </div>
-      );
+      return <div className="flex gap-1"><div className="h-4 w-4 rounded bg-blue-600 text-white flex items-center justify-center text-[6px] font-bold">2</div></div>;
     case "tabs":
-      return (
-        <div className="flex border-b border-border text-[6px] gap-2 w-full max-w-[100px]">
-          <span className="border-b border-blue-600 text-blue-600 pb-0.5 font-bold">Tab 1</span>
-          <span className="text-muted-foreground pb-0.5">Tab 2</span>
-        </div>
-      );
+      return <div className="flex border-b border-border text-[6px] gap-2 w-full max-w-[100px]"><span className="border-b border-blue-600 text-blue-600 pb-0.5 font-bold">Tab 1</span></div>;
     case "card":
-      return (
-        <div className="w-20 border border-border rounded bg-card p-1.5 space-y-1">
-          <div className="h-1.5 w-10 bg-blue-600 rounded" />
-          <div className="h-1 w-12 bg-muted rounded" />
-          <div className="h-1 w-8 bg-muted rounded" />
-        </div>
-      );
+      return <div className="w-20 border border-border rounded bg-card p-1.5 space-y-1"><div className="h-1.5 w-10 bg-blue-600 rounded" /></div>;
     case "statistics":
-      return (
-        <div className="text-center">
-          <div className="text-[12px] font-bold text-foreground">$12,450</div>
-          <div className="text-[6px] text-green-500 font-semibold flex items-center justify-center gap-0.5">▲ +12%</div>
-        </div>
-      );
+      return <div className="text-center"><div className="text-[12px] font-bold text-foreground">$12,450</div></div>;
     case "list-group":
-      return (
-        <div className="w-20 border border-border rounded bg-card overflow-hidden">
-          <div className="h-3.5 border-b border-border bg-blue-500/10 text-blue-600 text-[6px] flex items-center px-1 font-semibold">Selected</div>
-          <div className="h-3.5 text-[6px] flex items-center px-1 text-muted-foreground">Item Choice</div>
-        </div>
-      );
+      return <div className="w-20 border border-border rounded bg-card overflow-hidden"><div className="h-3.5 bg-blue-500/10 text-blue-600 text-[6px] flex items-center px-1 font-semibold">Selected Item</div></div>;
     case "table":
-      return (
-        <div className="w-20 border border-border rounded bg-card flex flex-col gap-0.5 p-1">
-          <div className="h-1 bg-muted rounded w-full" />
-          <div className="h-1.5 bg-blue-600/10 rounded w-full" />
-          <div className="h-1 bg-muted rounded w-full" />
-        </div>
-      );
+      return <div className="w-20 border border-border rounded bg-card flex flex-col gap-0.5 p-1"><div className="h-1.5 bg-blue-600/10 rounded w-full" /></div>;
     case "alert":
-      return <div className="w-24 border border-green-500/20 bg-green-500/10 rounded p-1 text-[6px] text-green-700 dark:text-green-400 font-medium">✓ Updated</div>;
+      return <div className="w-24 border border-green-500/20 bg-green-500/10 rounded p-1 text-[6px] text-green-700 dark:text-green-400 font-medium">✓ System Updated</div>;
     case "progress-bar":
-      return (
-        <div className="w-20 bg-slate-200 dark:bg-zinc-800 rounded-full h-1.5 overflow-hidden">
-          <div className="bg-blue-600 h-full w-3/5" />
-        </div>
-      );
+      return <div className="w-20 bg-slate-200 dark:bg-zinc-800 rounded-full h-1.5 overflow-hidden"><div className="bg-blue-600 h-full w-3/5" /></div>;
     case "toast":
-      return <div className="w-20 border border-border rounded bg-card p-1 shadow-md text-[6px] absolute bottom-1.5 right-1.5 border-l-2 border-l-green-500 flex items-center gap-1 animate-pulse">✓ Saved</div>;
+      return <div className="w-20 border border-border rounded bg-card p-1 shadow-md text-[6px] border-l-2 border-l-green-500 flex items-center gap-1">✓ Saved</div>;
     case "modal":
-      return (
-        <div className="w-24 border border-border rounded-lg bg-card p-1.5 shadow-xl relative scale-95 border-blue-600/20">
-          <div className="h-1 w-10 bg-muted rounded mb-1" />
-          <div className="h-2 w-16 bg-blue-600/10 rounded" />
-        </div>
-      );
+      return <div className="w-24 border border-border rounded-lg bg-card p-1.5 shadow-xl relative scale-95 border-blue-600/25"><div className="h-1 w-10 bg-muted rounded mb-1" /></div>;
     case "tooltip":
-      return (
-        <div className="flex flex-col items-center">
-          <div className="px-1.5 py-0.5 bg-zinc-850 dark:bg-zinc-800 text-white rounded text-[5px] shadow relative z-10">Tooltip</div>
-          <div className="h-1 w-1.5 bg-zinc-850 dark:bg-zinc-800 rotate-45 -mt-0.5" />
-        </div>
-      );
+      return <div className="flex flex-col items-center"><div className="px-1.5 py-0.5 bg-zinc-850 dark:bg-zinc-800 text-white rounded text-[5px] shadow relative z-10">Tooltip info</div></div>;
     case "dropdown":
-      return (
-        <div className="w-16 border border-border rounded bg-card p-0.5 shadow-md flex flex-col gap-0.5">
-          <div className="h-2 w-12 bg-blue-600/10 rounded" />
-          <div className="h-2 w-8 bg-muted rounded" />
-        </div>
-      );
+      return <div className="w-16 border border-border rounded bg-card p-0.5 shadow-md flex flex-col gap-0.5"><div className="h-2 w-12 bg-blue-600/10 rounded" /></div>;
     case "hero":
-      return (
-        <div className="text-center px-2">
-          <div className="h-2 w-16 bg-blue-600 rounded mx-auto mb-1" />
-          <div className="h-1 w-20 bg-muted rounded mx-auto" />
-        </div>
-      );
+      return <div className="text-center px-2"><div className="h-2 w-16 bg-blue-600 rounded mx-auto mb-1" /></div>;
     case "metric-card":
-      return (
-        <div className="w-20 border border-border rounded bg-card p-1.5 space-y-1">
-          <div className="h-1 w-12 bg-muted rounded" />
-          <div className="h-4 bg-blue-600/10 rounded flex items-center justify-center text-[7px] text-blue-600 font-bold">98.2%</div>
-        </div>
-      );
+      return <div className="w-20 border border-border rounded bg-card p-1.5 space-y-1"><div className="h-4 bg-blue-600/10 rounded flex items-center justify-center text-[7px] text-blue-600 font-bold">98.2%</div></div>;
     case "skeleton":
-      return (
-        <div className="w-20 space-y-1 animate-pulse">
-          <div className="h-2 bg-slate-200 dark:bg-zinc-800 rounded w-full" />
-          <div className="h-1.5 bg-slate-200 dark:bg-zinc-800 rounded w-5/6" />
-        </div>
-      );
+      return <div className="w-20 space-y-1 animate-pulse"><div className="h-2 bg-slate-200 dark:bg-zinc-800 rounded w-full" /></div>;
     default:
       return null;
   }
@@ -1254,84 +1217,43 @@ const MiniPreview = ({ id }: { id: string }) => {
 
 export default function ComponentsGalleryPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  
-  // activeComponent is null initially (displays the full Overview Grid)
   const [activeComponent, setActiveComponent] = useState<string | null>(null);
-  
   const [activeTabs, setActiveTabs] = useState<Record<string, "preview" | "code">>({});
   const [copiedStates, setCopiedStates] = useState<Record<string, boolean>>({});
   const [copiedInstall, setCopiedInstall] = useState<Record<string, boolean>>({});
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
-    "Foundation": true,
-    "Forms": true,
-    "Navigation": true,
-    "Data Display": true,
-    "Feedback": true,
-    "Overlay": true,
-    "Marketing": true,
-    "Dashboard": true,
-    "Utilities": true
+    "Foundation": true, "Forms": true, "Navigation": true, "Data Display": true,
+    "Feedback": true, "Overlay": true, "Marketing": true, "Dashboard": true, "Utilities": true
   });
 
-  // Canvas background and width layout variables
   const [canvasBg, setCanvasBg] = useState<"grid" | "dot" | "solid">("grid");
   const [canvasWidth, setCanvasWidth] = useState<"desktop" | "tablet" | "mobile">("desktop");
 
-  // Options configurations mapping states
   const [options, setOptions] = useState({
-    // Button
-    btnVariant: "primary",
-    btnSize: "default",
-    btnLoading: false,
-    btnDisabled: false,
-    // Input
-    inputType: "text",
-    inputPlaceholder: "Enter your email...",
-    inputDisabled: false,
-    inputHasError: false,
-    // Checkbox
-    chkChecked: false,
-    chkDisabled: false,
-    // Radio
-    radioLayout: "vertical",
-    radioDisabled: false,
-    // Switch
-    switchChecked: false,
-    switchDisabled: false,
-    // Rating
-    ratingValue: 4,
-    // Breadcrumb
-    breadSeparator: "chevron",
-    // Tabs
-    tabsVariant: "underline",
-    // Progress bar
-    progressValue: 60,
-    // Toast
-    toastVariant: "success",
-    // Tooltip
-    tooltipSide: "top",
-    // Badge
-    badgeVariant: "default",
-    badgeLabel: "New",
-    // Avatar
-    avatarSize: "md",
-    avatarStatus: "online",
-    // Alert
-    alertVariant: "success",
+    btnVariant: "primary", btnSize: "default", btnLoading: false, btnDisabled: false,
+    inputType: "text", inputPlaceholder: "Enter cloud email...", inputDisabled: false, inputHasError: false,
+    chkChecked: false, chkDisabled: false, radioLayout: "vertical", radioDisabled: false,
+    switchChecked: false, switchDisabled: false, ratingValue: 4, breadSeparator: "chevron",
+    tabsVariant: "underline", progressValue: 60, toastVariant: "success", tooltipSide: "top",
+    badgeVariant: "default", badgeLabel: "Active Node", avatarSize: "md", avatarStatus: "online",
+    alertVariant: "success"
   });
 
-  // Local state alerts toast lists
   const [toasts, setToasts] = useState<Array<{ id: number; title: string; description: string; variant: string }>>([]);
-
-  // Local state for modal showcase
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Local component interactive variables
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [accordionOpen, setAccordionOpen] = useState<number | null>(0);
   const [activeTabSelect, setActiveTabSelect] = useState("tab-1");
   const [listGroupActive, setListGroupActive] = useState("inbox");
   const [tableHoveredRow, setTableHoveredRow] = useState<number | null>(null);
+
+  // Antd interactive helper states
+  const [antdStepActive, setAntdStepActive] = useState(1);
+  const [antdSelectOpen, setAntdSelectOpen] = useState(false);
+  const [antdSelectedOption, setAntdSelectedOption] = useState("React Framework");
+  const [antdUploadStaged, setAntdUploadStaged] = useState<string | null>(null);
+  const [antdDrawerOpen, setAntdDrawerOpen] = useState(false);
+  const [antdPopconfirmOpen, setAntdPopconfirmOpen] = useState(false);
 
   const updateOption = (key: string, value: any) => {
     setOptions(prev => ({ ...prev, [key]: value }));
@@ -1340,55 +1262,41 @@ export default function ComponentsGalleryPage() {
   const handleCopyCode = (id: string, code: string) => {
     navigator.clipboard.writeText(code);
     setCopiedStates(prev => ({ ...prev, [id]: true }));
-    setTimeout(() => {
-      setCopiedStates(prev => ({ ...prev, [id]: false }));
-    }, 2000);
+    setTimeout(() => setCopiedStates(prev => ({ ...prev, [id]: false })), 2000);
   };
 
   const handleCopyInstall = (id: string, cmd: string) => {
     navigator.clipboard.writeText(cmd);
     setCopiedInstall(prev => ({ ...prev, [id]: true }));
-    setTimeout(() => {
-      setCopiedInstall(prev => ({ ...prev, [id]: false }));
-    }, 2000);
+    setTimeout(() => setCopiedInstall(prev => ({ ...prev, [id]: false })), 2000);
   };
 
-  // Toast trigger helper
   const addToast = (title: string, description: string, variant: string) => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, title, description, variant }]);
-    setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id));
-    }, 3050);
+    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3000);
   };
 
-  // Filter components list instantly
   const filteredComponents = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
     if (!query) return ALL_COMPONENTS;
-    return ALL_COMPONENTS.filter(comp => {
-      return (
-        comp.name.toLowerCase().includes(query) ||
-        comp.category.toLowerCase().includes(query) ||
-        comp.description.toLowerCase().includes(query) ||
-        comp.tags.some(tag => tag.toLowerCase().includes(query))
-      );
-    });
+    return ALL_COMPONENTS.filter(comp => (
+      comp.name.toLowerCase().includes(query) ||
+      comp.category.toLowerCase().includes(query) ||
+      comp.description.toLowerCase().includes(query) ||
+      comp.tags.some(tag => tag.toLowerCase().includes(query))
+    ));
   }, [searchQuery]);
 
-  // Group filtered components by category
   const categoryGroups = useMemo(() => {
     const groups: Record<string, ComponentItem[]> = {};
     filteredComponents.forEach(comp => {
-      if (!groups[comp.category]) {
-        groups[comp.category] = [];
-      }
+      if (!groups[comp.category]) groups[comp.category] = [];
       groups[comp.category].push(comp);
     });
     return groups;
   }, [filteredComponents]);
 
-  // Smooth scroll / component view selection handler
   const handleComponentClick = (id: string) => {
     if (id === "overview") {
       setActiveComponent(null);
@@ -1401,34 +1309,23 @@ export default function ComponentsGalleryPage() {
     }
   };
 
-  // URL Hash on mount
   useEffect(() => {
     if (typeof window !== "undefined" && window.location.hash) {
       const id = window.location.hash.replace("#", "");
-      if (id && ALL_COMPONENTS.some(c => c.id === id)) {
-        setActiveComponent(id);
-      } else {
-        setActiveComponent(null);
-      }
+      if (id && ALL_COMPONENTS.some(c => c.id === id)) setActiveComponent(id);
     }
   }, []);
 
-  // Expand / collapse category in sidebar
   const toggleCategory = (cat: string) => {
-    setExpandedCategories(prev => ({
-      ...prev,
-      [cat]: !prev[cat]
-    }));
+    setExpandedCategories(prev => ({ ...prev, [cat]: !prev[cat] }));
   };
 
-  // Width container configurations
   const widthClasses = {
     desktop: "w-full max-w-full",
     tablet: "w-full max-w-[768px]",
     mobile: "w-full max-w-[375px]"
   };
 
-  // Retrieve currently selected component details
   const selectedComponentDetails = useMemo(() => {
     if (!activeComponent) return null;
     return ALL_COMPONENTS.find(comp => comp.id === activeComponent) || null;
@@ -1438,48 +1335,30 @@ export default function ComponentsGalleryPage() {
     <Layout>
       <div className="flex-1 flex flex-col md:flex-row bg-background text-foreground min-h-[calc(100vh-4rem)]">
         
-        {/* ====================================================
-            SIDEBAR (LEFT)
-            ==================================================== */}
+        {/* ================= SIDEBAR (LEFT) ================= */}
         <aside className="hidden md:block w-72 shrink-0 border-r border-border bg-card/10 sticky top-[64px] h-[calc(100vh-64px)] overflow-y-auto z-20">
           <div className="p-5 space-y-6 font-sans">
-            
-            {/* Instant Search input */}
             <div className="relative">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Filter components..."
+                placeholder="Filter components ledger..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                 className="pl-9 h-9 text-xs rounded-lg bg-card/60 focus-visible:ring-blue-600 border-border"
               />
-              {searchQuery && (
-                <button 
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-2.5 top-2.5 text-[10px] text-muted-foreground hover:text-foreground font-semibold px-1 rounded hover:bg-muted border-0 cursor-pointer bg-transparent"
-                >
-                  Clear
-                </button>
-              )}
             </div>
 
-            {/* Quick Home Overview Trigger */}
             <button
               onClick={() => handleComponentClick("overview")}
-              className={`
-                w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-left font-bold transition-all cursor-pointer border-0 bg-transparent
-                ${activeComponent === null 
-                  ? "bg-blue-600/10 text-blue-600" 
-                  : "text-slate-700 dark:text-slate-300 hover:bg-muted hover:text-foreground"
-                }
-              `}
+              className={`w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-left font-bold transition-all border-0 bg-transparent cursor-pointer ${
+                activeComponent === null ? "bg-blue-600/10 text-blue-600" : "text-slate-700 dark:text-slate-300 hover:bg-muted"
+              }`}
             >
               <Grid className="h-4 w-4" />
-              <span>Overview Grid</span>
+              <span>Overview Canvas Grid</span>
             </button>
 
-            {/* Sticky categories list */}
             <div className="space-y-4">
               {CATEGORIES.map((cat) => {
                 const items = categoryGroups[cat] || [];
@@ -1493,28 +1372,20 @@ export default function ComponentsGalleryPage() {
                       className="w-full flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80 hover:text-foreground px-2 py-1 select-none cursor-pointer border-0 bg-transparent"
                     >
                       <span>{cat}</span>
-                      {isExpanded ? (
-                        <ChevronDown className="h-3 w-3 transition-transform" />
-                      ) : (
-                        <ChevronRight className="h-3 w-3 transition-transform" />
-                      )}
+                      {isExpanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
                     </button>
 
                     {isExpanded && (
-                      <div className="flex flex-col gap-0.5 pl-1.5 mt-0.5 border-l border-border/60 ml-2 animate-fadeIn">
+                      <div className="flex flex-col gap-0.5 pl-1.5 mt-0.5 border-l border-border/60 ml-2">
                         {items.map((item) => {
                           const active = activeComponent === item.id;
                           return (
                             <button
                               key={item.id}
                               onClick={() => handleComponentClick(item.id)}
-                              className={`
-                                w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-left transition-all cursor-pointer border-0 bg-transparent
-                                ${active 
-                                  ? "bg-blue-600/10 text-blue-600 font-semibold" 
-                                  : "text-slate-500 dark:text-slate-400 hover:bg-muted hover:text-foreground"
-                                }
-                              `}
+                              className={`w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-left transition-all border-0 bg-transparent cursor-pointer ${
+                                active ? "bg-blue-600/10 text-blue-600 font-semibold" : "text-slate-500 dark:text-slate-400 hover:bg-muted"
+                              }`}
                             >
                               <span>{item.name}</span>
                               {active && <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />}
@@ -1530,1324 +1401,333 @@ export default function ComponentsGalleryPage() {
           </div>
         </aside>
 
-        {/* ====================================================
-            CONTENT AREA (RIGHT)
-            ==================================================== */}
+        {/* ================= MAIN CONTENT (RIGHT) ================= */}
         <main className="flex-1 flex flex-col p-6 md:p-10 min-w-0 bg-background/50 relative">
           
-          {/* Header Title Section - Only shown on Overview Grid */}
           {activeComponent === null && (
-            <div className="max-w-7xl mx-auto w-full mb-8 space-y-4">
-              <div className="flex flex-col gap-2">
-                <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">Showcase</span>
-                <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">
-                  Components Gallery
-                </h1>
-                <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
-                  Explore our minimal, clean, and premium UI components library designed with Blue theme. Adjust props in real-time, inspect code variants, and copy-paste components instantly.
-                </p>
-              </div>
-
-              {/* Mobile Search input bar */}
-              <div className="block md:hidden relative max-w-md">
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="text"
-                  placeholder="Search components..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 h-9 text-xs rounded-lg focus-visible:ring-blue-600"
-                />
-              </div>
+            <div className="max-w-7xl mx-auto w-full mb-8 space-y-4 text-left animate-fadeIn">
+              <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">Antd Expansion Engine</span>
+              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">Components Library</h1>
+              <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
+                A clean, premium React & Tailwind component sandbox configured for modular injection. Built with high-fidelity, standalone, dependency-free raw snippets.
+              </p>
             </div>
           )}
-          
-          {/* Global Preview Controls for Interactive Previews - Only shown when a component is selected */}
+
           {activeComponent !== null && (
             <div className="max-w-7xl mx-auto w-full mb-6">
               <div className="flex flex-wrap items-center justify-between gap-4 bg-card/40 border border-border/80 rounded-xl p-3.5 backdrop-blur-sm shadow-sm">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Canvas Customizer:</span>
-                </div>
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Sandbox Canvas Configurator:</span>
                 <div className="flex items-center gap-3">
-                  {/* Canvas Background Controls */}
                   <div className="flex items-center gap-0.5 rounded-lg border border-border bg-card p-0.5 shadow-sm">
-                    <button
-                      onClick={() => setCanvasBg("grid")}
-                      className={`p-1.5 rounded-md hover:bg-muted text-muted-foreground transition-colors cursor-pointer border-0 bg-transparent ${canvasBg === "grid" ? "bg-muted text-foreground" : ""}`}
-                      title="Grid Background"
-                    >
-                      <Grid className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                      onClick={() => setCanvasBg("dot")}
-                      className={`p-1.5 rounded-md hover:bg-muted text-muted-foreground transition-colors cursor-pointer border-0 bg-transparent ${canvasBg === "dot" ? "bg-muted text-foreground" : ""}`}
-                      title="Dot Background"
-                    >
-                      <CircleDot className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                      onClick={() => setCanvasBg("solid")}
-                      className={`p-1.5 rounded-md hover:bg-muted text-muted-foreground transition-colors cursor-pointer border-0 bg-transparent ${canvasBg === "solid" ? "bg-muted text-foreground" : ""}`}
-                      title="Solid Background"
-                    >
-                      <Square className="h-3.5 w-3.5" />
-                    </button>
+                    <button onClick={() => setCanvasBg("grid")} className={`p-1.5 rounded border-0 bg-transparent cursor-pointer ${canvasBg === "grid" ? "bg-muted text-foreground" : "text-muted-foreground"}`}><Grid className="h-3.5 w-3.5" /></button>
+                    <button onClick={() => setCanvasBg("dot")} className={`p-1.5 rounded border-0 bg-transparent cursor-pointer ${canvasBg === "dot" ? "bg-muted text-foreground" : "text-muted-foreground"}`}><CircleDot className="h-3.5 w-3.5" /></button>
+                    <button onClick={() => setCanvasBg("solid")} className={`p-1.5 rounded border-0 bg-transparent cursor-pointer ${canvasBg === "solid" ? "bg-muted text-foreground" : "text-muted-foreground"}`}><Square className="h-3.5 w-3.5" /></button>
                   </div>
-
-                  {/* Sizing Controls */}
                   <div className="flex items-center gap-0.5 rounded-lg border border-border bg-card p-0.5 shadow-sm">
-                    <button
-                      onClick={() => setCanvasWidth("desktop")}
-                      className={`p-1.5 rounded-md hover:bg-muted text-muted-foreground transition-colors cursor-pointer border-0 bg-transparent ${canvasWidth === "desktop" ? "bg-muted text-foreground" : ""}`}
-                      title="Desktop"
-                    >
-                      <Laptop className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                      onClick={() => setCanvasWidth("tablet")}
-                      className={`p-1.5 rounded-md hover:bg-muted text-muted-foreground transition-colors cursor-pointer border-0 bg-transparent ${canvasWidth === "tablet" ? "bg-muted text-foreground" : ""}`}
-                      title="Tablet Sizing"
-                    >
-                      <Tablet className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                      onClick={() => setCanvasWidth("mobile")}
-                      className={`p-1.5 rounded-md hover:bg-muted text-muted-foreground transition-colors cursor-pointer border-0 bg-transparent ${canvasWidth === "mobile" ? "bg-muted text-foreground" : ""}`}
-                      title="Mobile Sizing"
-                    >
-                      <Smartphone className="h-3.5 w-3.5" />
-                    </button>
+                    <button onClick={() => setCanvasWidth("desktop")} className={`p-1.5 rounded border-0 bg-transparent cursor-pointer ${canvasWidth === "desktop" ? "bg-muted text-foreground" : "text-muted-foreground"}`}><Laptop className="h-3.5 w-3.5" /></button>
+                    <button onClick={() => setCanvasWidth("tablet")} className={`p-1.5 rounded border-0 bg-transparent cursor-pointer ${canvasWidth === "tablet" ? "bg-muted text-foreground" : "text-muted-foreground"}`}><Tablet className="h-3.5 w-3.5" /></button>
+                    <button onClick={() => setCanvasWidth("mobile")} className={`p-1.5 rounded border-0 bg-transparent cursor-pointer ${canvasWidth === "mobile" ? "bg-muted text-foreground" : "text-muted-foreground"}`}><Smartphone className="h-3.5 w-3.5" /></button>
                   </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* ====================================================
-              VIEW CONDITION 1: OVERVIEW GRID
-              ==================================================== */}
+          {/* OVERVIEW GRID VIEW */}
           {activeComponent === null ? (
-            <div className="max-w-7xl mx-auto w-full mb-16 space-y-6 animate-fadeIn">
-              <h2 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
-                <Grid className="h-5 w-5 text-blue-600" />
-                Overview Grid
-              </h2>
-              
-              {filteredComponents.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                  {filteredComponents.map((comp) => (
-                    <div key={comp.id} className="group flex flex-col justify-between rounded-xl border border-border bg-card p-5 hover:border-blue-600/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 h-full">
-                      <div className="space-y-3">
-                        {/* Component Mini Preview Frame */}
-                        <div className="h-28 rounded-lg border border-border/80 bg-slate-50 dark:bg-zinc-900/50 flex items-center justify-center overflow-hidden relative group-hover:bg-blue-600/5 transition-colors">
-                          <MiniPreview id={comp.id} />
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-sm text-foreground flex items-center gap-1.5">
-                            {comp.name}
-                          </h3>
-                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
-                            {comp.description}
-                          </p>
-                        </div>
+            <div className="max-w-7xl mx-auto w-full mb-16 space-y-6 text-left animate-fadeIn">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {filteredComponents.map((comp) => (
+                  <div key={comp.id} className="group flex flex-col justify-between rounded-xl border border-border bg-card p-5 hover:border-blue-600/40 hover:shadow-lg transition-all duration-300">
+                    <div className="space-y-3">
+                      <div className="h-28 rounded-lg border border-border/80 bg-slate-50 dark:bg-zinc-900/50 flex items-center justify-center overflow-hidden relative transition-colors">
+                        <MiniPreview id={comp.id} />
                       </div>
-                      <button
-                        onClick={() => handleComponentClick(comp.id)}
-                        className="mt-4 w-full flex items-center justify-center gap-1 text-[11px] font-semibold text-blue-600 dark:text-blue-400 border border-blue-600/20 dark:border-blue-400/20 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 py-2 rounded-lg transition-all active:scale-[0.98] cursor-pointer"
-                      >
-                        View Component
-                        <ChevronRight className="h-3 w-3" />
-                      </button>
+                      <div>
+                        <h3 className="font-bold text-sm text-foreground">{comp.name}</h3>
+                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed">{comp.description}</p>
+                      </div>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-10 border border-dashed border-border rounded-xl bg-card/20">
-                  <HelpCircle className="h-10 w-10 text-muted-foreground/60 mx-auto mb-2" />
-                  <p className="text-sm font-semibold text-foreground">No components found matching your filters</p>
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="mt-3 text-xs text-blue-600 hover:underline font-semibold border-0 cursor-pointer bg-transparent"
-                  >
-                    Reset search query
-                  </button>
-                </div>
-              )}
+                    <button
+                      onClick={() => handleComponentClick(comp.id)}
+                      className="mt-4 w-full flex items-center justify-center gap-1 text-[11px] font-semibold text-blue-600 dark:text-blue-400 border border-blue-600/20 dark:border-blue-400/20 hover:bg-blue-600 hover:text-white py-2 rounded-lg transition-all cursor-pointer"
+                    >
+                      Inspect Component <ChevronRight className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           ) : (
-            /* ====================================================
-                VIEW CONDITION 2: INDIVIDUAL DETAILED SHOWCASE
-                ==================================================== */
+            /* INDIVIDUAL REFACTOR PREVIEW VIEW CANVAS */
             selectedComponentDetails && (
-              <div className="max-w-7xl mx-auto w-full space-y-6 animate-fadeIn text-left">
-                {/* Back button link */}
-                <button
-                  onClick={() => handleComponentClick("overview")}
-                  className="flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 font-semibold mb-2 hover:underline cursor-pointer border-0 bg-transparent p-0"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  Back to Overview Grid
+              <div className="max-w-7xl mx-auto w-full space-y-6 text-left animate-fadeIn">
+                <button onClick={() => handleComponentClick("overview")} className="flex items-center gap-1.5 text-xs text-blue-600 font-semibold mb-2 hover:underline border-0 bg-transparent cursor-pointer p-0">
+                  <ChevronLeft className="h-4 w-4" /> Back to Dashboard Overview Canvas Grid
                 </button>
 
                 {(() => {
                   const comp = selectedComponentDetails;
                   const tab = activeTabs[comp.id] || "preview";
-                  const setTab = (t: "preview" | "code") => {
-                    setActiveTabs(prev => ({ ...prev, [comp.id]: t }));
-                  };
-
+                  const setTab = (t: "preview" | "code") => setActiveTabs(prev => ({ ...prev, [comp.id]: t }));
                   const code = getGeneratedCodeForComponent(comp.id, options);
-                  const isCopied = copiedStates[comp.id] || false;
-                  const isInstallCopied = copiedInstall[comp.id] || false;
 
                   return (
-                    <section
-                      id={comp.id}
-                      tabIndex={-1}
-                      className="rounded-xl border border-border bg-card p-6 md:p-8 space-y-6 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-600/30"
-                    >
-                      {/* Header metadata */}
+                    <section id={comp.id} className="rounded-xl border border-border bg-card p-6 md:p-8 space-y-6 shadow-sm focus:outline-none">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/80 pb-4">
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-bold text-blue-600 uppercase bg-blue-600/10 px-2 py-0.5 rounded select-none">
-                              {comp.category}
-                            </span>
-                            <span className="text-muted-foreground/40 text-xs">/</span>
-                            <span className="text-xs text-muted-foreground font-medium">{comp.id}</span>
+                            <span className="text-[10px] font-bold text-blue-600 uppercase bg-blue-600/10 px-2 py-0.5 rounded">{comp.category}</span>
+                            <span className="text-xs text-muted-foreground">/ {comp.id}</span>
                           </div>
-                          <h3 className="text-xl font-bold tracking-tight mt-1 text-foreground">
-                            {comp.name}
-                          </h3>
-                          <p className="text-xs text-muted-foreground mt-1 max-w-2xl leading-relaxed">
-                            {comp.description}
-                          </p>
+                          <h3 className="text-xl font-bold tracking-tight mt-1 text-foreground">{comp.name}</h3>
+                          <p className="text-xs text-muted-foreground mt-1 max-w-2xl leading-relaxed">{comp.description}</p>
                         </div>
-
-                        {/* Copy Installation Command */}
-                        <div className="flex items-center gap-1.5 self-start sm:self-auto select-none">
-                          <div className="flex items-center border border-border bg-slate-50 dark:bg-zinc-900/40 rounded-lg p-0.5 pr-2 gap-1 text-[11px] font-mono text-muted-foreground">
-                            <span className="bg-muted px-2 py-1 rounded text-foreground font-medium select-none">add</span>
-                            <span className="px-1.5">{comp.id}</span>
-                            <button
-                              onClick={() => handleCopyInstall(comp.id, comp.installationCommand)}
-                              className="hover:text-foreground transition-colors p-1 cursor-pointer border-0 bg-transparent"
-                              title="Copy install command"
-                            >
-                              {isInstallCopied ? (
-                                <Check className="h-3 w-3 text-green-500" />
-                              ) : (
-                                <Copy className="h-3 w-3" />
-                              )}
-                            </button>
-                          </div>
+                        <div className="flex items-center border border-border bg-slate-50 dark:bg-zinc-900/40 rounded-lg p-0.5 pr-2 gap-1 text-[11px] font-mono">
+                          <span className="bg-muted px-2 py-1 rounded font-medium">install</span>
+                          <span className="px-1.5">{comp.id}</span>
+                          <button onClick={() => handleCopyInstall(comp.id, comp.installationCommand)} className="hover:text-foreground border-0 bg-transparent cursor-pointer">
+                            {copiedInstall[comp.id] ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3 text-muted-foreground" />}
+                          </button>
                         </div>
                       </div>
 
-                      {/* Component Preview / Code Canvas tab bar */}
-                      <div className="flex border-b border-border text-xs font-semibold gap-1 select-none">
-                        <button
-                          onClick={() => setTab("preview")}
-                          className={`px-4 py-2 border-b-2 transition-all flex items-center gap-1.5 cursor-pointer border-0 bg-transparent ${
-                            tab === "preview" 
-                              ? "border-blue-600 text-blue-600" 
-                              : "border-transparent text-muted-foreground hover:text-foreground"
-                          }`}
-                        >
-                          <Eye className="h-3.5 w-3.5" />
-                          Live Preview
-                        </button>
-                        <button
-                          onClick={() => setTab("code")}
-                          className={`px-4 py-2 border-b-2 transition-all flex items-center gap-1.5 cursor-pointer border-0 bg-transparent ${
-                            tab === "code" 
-                              ? "border-blue-600 text-blue-600" 
-                              : "border-transparent text-muted-foreground hover:text-foreground"
-                          }`}
-                        >
-                          <Code className="h-3.5 w-3.5" />
-                          Code View
-                        </button>
+                      <div className="flex border-b border-border text-xs font-semibold gap-1">
+                        <button onClick={() => setTab("preview")} className={`px-4 py-2 border-b-2 border-0 bg-transparent cursor-pointer ${tab === "preview" ? "border-blue-600 text-blue-600" : "border-transparent text-muted-foreground"}`}><Eye className="h-3.5 w-3.5 inline mr-1" /> Preview Component</button>
+                        <button onClick={() => setTab("code")} className={`px-4 py-2 border-b-2 border-0 bg-transparent cursor-pointer ${tab === "code" ? "border-blue-600 text-blue-600" : "border-transparent text-muted-foreground"}`}><Code className="h-3.5 w-3.5 inline mr-1" /> Inspect Clean Markup</button>
                       </div>
 
-                      {/* Sandbox rendering canvas */}
                       {tab === "preview" ? (
                         <div className="space-y-6">
-                          
-                          {/* Active Showcase Frame */}
                           <div className="w-full flex items-center justify-center">
-                            <div 
-                              className={`
-                                h-full min-h-[300px] border border-border rounded-xl flex items-center justify-center p-6 md:p-8 transition-all duration-300 relative overflow-hidden bg-card/25 shadow-sm
-                                ${widthClasses[canvasWidth]}
-                                ${canvasBg === "grid" ? "bg-grid" : canvasBg === "dot" ? "bg-dot" : "bg-card/20"}
-                              `}
-                            >
+                            <div className={`min-h-[300px] border border-border rounded-xl flex items-center justify-center p-6 md:p-8 transition-all relative overflow-hidden bg-card/25 shadow-sm ${widthClasses[canvasWidth]} ${canvasBg === "grid" ? "bg-grid" : canvasBg === "dot" ? "bg-dot" : "bg-card/20"}`}>
                               
-                              {/* ================= BUTTON PREVIEW ================= */}
-                              {comp.id === "button" && (
-                                <div className="flex flex-wrap items-center justify-center gap-4">
-                                  <button
-                                    onClick={() => alert("Button Clicked!")}
-                                    disabled={options.btnDisabled}
-                                    className={`
-                                      inline-flex items-center justify-center font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95 duration-200 disabled:opacity-50 disabled:pointer-events-none
-                                      ${{
-                                        primary: "bg-blue-600 hover:bg-blue-700 text-white shadow focus:ring-blue-600",
-                                        secondary: "bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-foreground focus:ring-slate-500 shadow-sm",
-                                        outline: "border border-slate-200 dark:border-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-900 text-foreground focus:ring-slate-500",
-                                        ghost: "hover:bg-slate-100 dark:hover:bg-zinc-800 text-foreground focus:ring-slate-500",
-                                        gradient: "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow focus:ring-blue-600",
-                                        neon: "border border-blue-500 text-blue-500 bg-transparent hover:bg-blue-500/10 focus:ring-blue-600 shadow-[0_0_10px_rgba(37,99,235,0.2)] hover:shadow-[0_0_15px_rgba(37,99,235,0.4)]",
-                                        glass: "bg-white/20 dark:bg-black/20 backdrop-blur-md border border-white/30 dark:border-white/10 text-foreground shadow hover:bg-white/30"
-                                      }[options.btnVariant] || "bg-blue-600 text-white"}
-                                      ${{
-                                        default: "px-5 py-2.5 text-sm rounded-xl",
-                                        sm: "px-3.5 py-1.5 text-xs rounded-lg",
-                                        lg: "px-6 py-3.5 text-base rounded-xl",
-                                        icon: "p-2.5 rounded-xl"
-                                      }[options.btnSize] || "px-5 py-2.5 text-sm"}
-                                    `}
-                                  >
-                                    {options.btnLoading && <span className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full" />}
-                                    {options.btnSize === "icon" ? <Sparkles className="h-4.5 w-4.5" /> : "Click Me"}
-                                  </button>
-                                  
-                                  <MagneticButton
-                                    magneticStrength={0.35}
-                                    glowColor="rgba(37, 99, 235, 0.2)"
-                                    onClick={() => alert("Magnetic Glow Button Clicked!")}
-                                  >
-                                    ⚡ Magnetic Glow
-                                  </MagneticButton>
-                                </div>
-                              )}
-
-                              {/* ================= INPUT PREVIEW ================= */}
-                              {comp.id === "input" && (
-                                <div className="w-full max-w-sm space-y-2.5">
-                                  <div className="space-y-1.5 text-left">
-                                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-350">Email Address</label>
-                                    <input
-                                      type={options.inputType}
-                                      placeholder={options.inputPlaceholder}
-                                      disabled={options.inputDisabled}
-                                      className={`flex h-10 w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-50 ${options.inputHasError ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
-                                    />
-                                    {options.inputHasError ? (
-                                      <p className="text-[11px] text-red-500 font-medium">Please enter a valid email address.</p>
-                                    ) : (
-                                      <p className="text-[11px] text-muted-foreground">We'll never share your data.</p>
-                                    )}
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* ================= CHECKBOX PREVIEW ================= */}
-                              {comp.id === "checkbox" && (
-                                <div className="flex items-center gap-2.5 text-left select-none">
-                                  <input
-                                    type="checkbox"
-                                    id={`chk-${comp.id}`}
-                                    checked={options.chkChecked}
-                                    disabled={options.chkDisabled}
-                                    onChange={(e) => updateOption("chkChecked", e.target.checked)}
-                                    className="h-5 w-5 rounded border-slate-300 dark:border-zinc-700 text-blue-600 focus:ring-blue-600 accent-blue-650 cursor-pointer disabled:cursor-not-allowed"
-                                  />
-                                  <label
-                                    htmlFor={`chk-${comp.id}`}
-                                    className="text-sm font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none disabled:opacity-50"
-                                  >
-                                    Accept Terms of Service
-                                  </label>
-                                </div>
-                              )}
-
-                              {/* ================= RADIO PREVIEW ================= */}
-                              {comp.id === "radio" && (
-                                <div className={`w-full max-w-sm ${options.radioLayout === "horizontal" ? "flex items-center justify-center gap-6" : "flex flex-col gap-3"} text-left`}>
+                              {/* ANTD STEPPER PIPELINE */}
+                              {comp.id === "steps" && (
+                                <div className="w-full max-w-md flex flex-col md:flex-row items-start gap-4 text-left select-none">
                                   {[
-                                    { id: "starter", name: "Starter Tier", price: "Free" },
-                                    { id: "pro", name: "Professional", price: "$19/mo" }
-                                  ].map(item => (
-                                    <label
-                                      key={item.id}
-                                      className={`
-                                        flex items-center justify-between rounded-xl border p-3.5 cursor-pointer transition-all active:scale-[0.99] select-none
-                                        ${options.radioDisabled ? "opacity-60 cursor-not-allowed" : ""}
-                                        ${options.radioLayout === "vertical" ? "w-full" : "w-1/2"}
-                                        ${item.id === "pro" ? "border-blue-600 bg-blue-600/5 shadow-sm" : "border-slate-200 dark:border-zinc-800"}
-                                      `}
-                                    >
-                                      <div className="flex items-center gap-3">
-                                        <input
-                                          type="radio"
-                                          name="billing-tier"
-                                          disabled={options.radioDisabled}
-                                          defaultChecked={item.id === "pro"}
-                                          className="h-4 w-4 border-slate-305 text-blue-600 focus:ring-blue-600 accent-blue-600 cursor-pointer"
-                                        />
-                                        <span className="text-xs font-semibold text-foreground">{item.name}</span>
-                                      </div>
-                                      <span className="text-xs font-bold text-blue-600">{item.price}</span>
-                                    </label>
-                                  ))}
-                                </div>
-                              )}
-
-                              {/* ================= SWITCH PREVIEW ================= */}
-                              {comp.id === "switch" && (
-                                <div className="flex items-center gap-3 text-left">
-                                  <button
-                                    role="switch"
-                                    disabled={options.switchDisabled}
-                                    aria-checked={options.switchChecked}
-                                    onClick={() => updateOption("switchChecked", !options.switchChecked)}
-                                    className={`
-                                      relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600
-                                      ${options.switchChecked ? "bg-blue-600" : "bg-slate-200 dark:bg-zinc-800"}
-                                      ${options.switchDisabled ? "opacity-50 cursor-not-allowed" : ""}
-                                    `}
-                                  >
-                                    <span
-                                      className={`
-                                        pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 ease-in-out
-                                        ${options.switchChecked ? "translate-x-5" : "translate-x-0"}
-                                      `}
-                                    />
-                                  </button>
-                                  <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 select-none">
-                                    Dark Mode Settings
-                                  </span>
-                                </div>
-                              )}
-
-                              {/* ================= RATING PREVIEW ================= */}
-                              {comp.id === "rating" && (
-                                <div className="flex flex-col items-center gap-2">
-                                  <div className="flex items-center gap-1 select-none">
-                                    {[1, 2, 3, 4, 5].map((val) => (
-                                      <button
-                                        key={val}
-                                        onClick={() => updateOption("ratingValue", val)}
-                                        className="p-1 hover:scale-115 transition-transform cursor-pointer border-0 bg-transparent text-foreground"
-                                      >
-                                        <Star 
-                                          className={`h-6 w-6 transition-all ${
-                                            val <= options.ratingValue 
-                                              ? "fill-amber-400 stroke-amber-400 text-amber-400" 
-                                              : "stroke-slate-400 text-transparent"
-                                          }`}
-                                        />
-                                      </button>
-                                    ))}
-                                  </div>
-                                  <span className="text-xs font-semibold text-muted-foreground select-none">
-                                    Score: {options.ratingValue} / 5.0
-                                  </span>
-                                </div>
-                              )}
-
-                              {/* ================= NAVBAR PREVIEW ================= */}
-                              {comp.id === "navbar" && (
-                                <div className="w-full max-w-xl border border-border rounded-xl bg-card overflow-hidden text-left shadow-sm">
-                                  <header className="w-full border-b border-border bg-card px-5 py-3.5 flex items-center justify-between">
-                                    <div className="flex items-center gap-2.5 font-bold text-sm tracking-tight text-foreground select-none">
-                                      <div className="flex h-6 w-6 items-center justify-center rounded bg-blue-600 text-white text-[10px]">G</div>
-                                      GoatUI
-                                    </div>
-                                    <nav className="flex items-center gap-4 text-xs font-medium text-muted-foreground select-none">
-                                      <span className="hover:text-blue-600 transition-colors cursor-pointer">Explore</span>
-                                      <span className="hover:text-blue-600 transition-colors cursor-pointer">Pricing</span>
-                                      <span className="hover:text-blue-600 transition-colors cursor-pointer">Docs</span>
-                                    </nav>
-                                    <button className="bg-blue-600 hover:bg-blue-750 text-white font-bold text-[10px] px-3.5 py-1.5 rounded-lg transition-colors border-0 cursor-pointer">
-                                      Get Started
-                                    </button>
-                                  </header>
-                                  <div className="p-4 text-center text-[10px] text-muted-foreground select-none">
-                                    Mini navbar container preview header.
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* ================= BREADCRUMB PREVIEW ================= */}
-                              {comp.id === "breadcrumb" && (
-                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground select-none font-medium">
-                                  <span className="hover:text-blue-600 cursor-pointer">Home</span>
-                                  <span className="text-muted-foreground/60">{options.breadSeparator === "chevron" ? ">" : options.breadSeparator === "slash" ? "/" : "•"}</span>
-                                  <span className="hover:text-blue-600 cursor-pointer">Docs</span>
-                                  <span className="text-muted-foreground/60">{options.breadSeparator === "chevron" ? ">" : options.breadSeparator === "slash" ? "/" : "•"}</span>
-                                  <span className="text-blue-600 font-semibold">Breadcrumbs</span>
-                                </div>
-                              )}
-
-                              {/* ================= PAGINATION PREVIEW ================= */}
-                              {comp.id === "pagination" && (
-                                <div className="flex items-center gap-1 text-xs select-none">
-                                  <button className="h-8 px-3 rounded-lg border border-border hover:bg-muted text-muted-foreground cursor-pointer font-medium">
-                                    Previous
-                                  </button>
-                                  {[1, 2, 3, 4].map(idx => (
-                                    <button
-                                      key={idx}
-                                      className={`h-8 w-8 rounded-lg flex items-center justify-center font-bold transition-all cursor-pointer ${
-                                        idx === 2 
-                                          ? "bg-blue-600 text-white" 
-                                          : "border border-border hover:bg-muted text-foreground"
-                                      }`}
-                                    >
-                                      {idx}
-                                    </button>
-                                  ))}
-                                  <button className="h-8 px-3 rounded-lg border border-border hover:bg-muted text-muted-foreground cursor-pointer font-medium">
-                                    Next
-                                  </button>
-                                </div>
-                              )}
-
-                              {/* ================= TABS PREVIEW ================= */}
-                              {comp.id === "tabs" && (
-                                <div className="w-full max-w-sm space-y-4 text-left">
-                                  {options.tabsVariant === "underline" ? (
-                                    <div className="flex border-b border-border text-xs font-semibold gap-4 select-none">
-                                      {["tab-1", "tab-2", "tab-3"].map((id, idx) => (
+                                    { title: "Authenticate", desc: "Verify gateway configuration keys" },
+                                    { title: "Compile Build", desc: "Bundle structural runtime modules" },
+                                    { title: "CDN Release", desc: "Propagate active edge instances" }
+                                  ].map((step, idx) => (
+                                    <div key={idx} className="flex-1 flex flex-col gap-2 relative">
+                                      <div className="flex items-center gap-2">
                                         <button
-                                          key={id}
-                                          onClick={() => setActiveTabSelect(id)}
-                                          className={`pb-2 border-b-2 transition-all cursor-pointer border-0 bg-transparent ${
-                                            activeTabSelect === id 
-                                              ? "border-blue-600 text-blue-600" 
-                                              : "border-transparent text-muted-foreground hover:text-foreground"
+                                          onClick={() => setAntdStepActive(idx)}
+                                          className={`h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs border transition-all cursor-pointer ${
+                                            idx < antdStepActive ? "bg-green-500 border-green-500 text-white" :
+                                            idx === antdStepActive ? "bg-blue-600 border-blue-600 text-white shadow shadow-blue-600/20" :
+                                            "border-slate-200 dark:border-zinc-800 bg-card text-muted-foreground"
                                           }`}
                                         >
-                                          Dashboard {idx + 1}
+                                          {idx < antdStepActive ? "✓" : idx + 1}
                                         </button>
-                                      ))}
+                                        <span className={`text-xs font-bold ${idx === antdStepActive ? "text-blue-600" : "text-foreground"}`}>{step.title}</span>
+                                      </div>
+                                      <p className="text-[10px] text-muted-foreground pl-10 leading-tight">{step.desc}</p>
                                     </div>
-                                  ) : (
-                                    <div className="flex bg-muted p-1 rounded-lg text-xs font-semibold gap-1 max-w-xs select-none">
-                                      {["tab-1", "tab-2", "tab-3"].map((id, idx) => (
+                                  ))}
+                                </div>
+                              )}
+
+                              {/* ANTD SEARCHABLE SELECT INTERACTIVE PANEL */}
+                              {comp.id === "select" && (
+                                <div className="w-full max-w-xs relative text-left select-none">
+                                  <label className="block text-xs font-semibold text-slate-600 dark:text-zinc-400 mb-1.5">Runtime Architecture Infrastructure</label>
+                                  <div
+                                    onClick={() => setAntdSelectOpen(!antdSelectOpen)}
+                                    className="w-full h-10 border border-slate-200 dark:border-zinc-800 rounded-xl bg-card/60 px-3.5 py-2 flex items-center justify-between text-xs font-medium text-foreground cursor-pointer hover:border-blue-500 transition-colors"
+                                  >
+                                    <span>{antdSelectedOption}</span>
+                                    <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${antdSelectOpen ? "rotate-180" : ""}`} />
+                                  </div>
+                                  {antdSelectOpen && (
+                                    <div className="absolute top-[105%] left-0 w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-1 shadow-2xl z-50 animate-fadeIn">
+                                      {["React Core Engine", "Vue Modular Cluster", "Angular Structural Base", "NextJS Build Framework"].map((opt) => (
                                         <button
-                                          key={id}
-                                          onClick={() => setActiveTabSelect(id)}
-                                          className={`flex-1 py-1.5 rounded-md text-center transition-all cursor-pointer border-0 ${
-                                            activeTabSelect === id 
-                                              ? "bg-card text-foreground shadow-sm" 
-                                              : "text-muted-foreground hover:text-foreground"
+                                          key={opt}
+                                          onClick={() => { setAntdSelectedOption(opt); setAntdSelectOpen(false); }}
+                                          className={`w-full text-left text-xs font-medium px-3 py-2 rounded-lg flex items-center justify-between border-0 bg-transparent cursor-pointer ${
+                                            antdSelectedOption === opt ? "bg-blue-600 text-white" : "text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-900"
                                           }`}
                                         >
-                                          Option {idx + 1}
+                                          <span>{opt}</span>
+                                          {antdSelectedOption === opt && <Check className="h-3.5 w-3.5" />}
                                         </button>
                                       ))}
                                     </div>
                                   )}
-                                  <div className="p-4 border border-border/80 rounded-xl bg-card/60 text-xs text-muted-foreground leading-relaxed">
-                                    {activeTabSelect === "tab-1" && <p>Viewing <strong>Dashboard 1</strong> settings. Deploy and configure active node components.</p>}
-                                    {activeTabSelect === "tab-2" && <p>Viewing <strong>Option 2</strong> settings. Modify layout configurations, grid details, and metrics.</p>}
-                                    {activeTabSelect === "tab-3" && <p>Viewing <strong>Details 3</strong> logs. Fetch database queries, connection settings, and actions.</p>}
-                                  </div>
                                 </div>
                               )}
 
-                              {/* ================= CARD PREVIEW ================= */}
-                              {comp.id === "card" && (
-                                <div className="w-full max-w-xs rounded-xl border border-border bg-card p-5 text-left shadow-sm hover:border-blue-600/30 transition-all duration-300">
-                                  <div className="h-32 bg-slate-100 dark:bg-zinc-800 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
-                                    <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground/60 bg-background/50 px-3 py-1 rounded">IMAGE COVER</span>
+                              {/* ANTD DRAG AND DROP FILE UPLOAD AREA */}
+                              {comp.id === "upload" && (
+                                <div className="w-full max-w-sm text-left">
+                                  <div
+                                    onClick={() => setAntdUploadStaged("compiled-deployment-package.zip")}
+                                    className="w-full border-2 border-dashed border-slate-200 dark:border-zinc-800 rounded-xl p-6 text-center transition-all flex flex-col items-center justify-center cursor-pointer bg-card/20 hover:border-blue-500/50"
+                                  >
+                                    <UploadCloud className="h-8 w-8 text-blue-600 mb-2" />
+                                    <span className="text-xs font-bold text-foreground">Click here to select or map active system files</span>
+                                    <p className="text-[10px] text-muted-foreground mt-1">Supports distribution ZIP bundles up to 64MB logs.</p>
                                   </div>
-                                  <div className="space-y-1.5">
-                                    <span className="text-[9px] font-bold text-blue-600 uppercase bg-blue-600/10 px-2 py-0.5 rounded">AI Dev</span>
-                                    <h4 className="font-bold text-sm text-foreground">Goat Agent Pro</h4>
-                                    <p className="text-xs text-muted-foreground leading-relaxed">
-                                      Deploy autonomous developer agents running locally on your environment.
-                                    </p>
-                                  </div>
-                                  <button className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg text-xs transition-colors border-0 cursor-pointer active:scale-[0.98]">
-                                    Deploy Agent
-                                  </button>
+                                  {antdUploadStaged && (
+                                    <div className="mt-3 border border-green-500/20 bg-green-500/5 rounded-xl p-2.5 flex items-center justify-between text-xs text-green-700 dark:text-green-400 font-semibold animate-fadeIn">
+                                      <span className="truncate">{antdUploadStaged}</span>
+                                      <button onClick={() => setAntdUploadStaged(null)} className="text-red-500 border-0 bg-transparent cursor-pointer"><Trash2 className="h-3.5 w-3.5" /></button>
+                                    </div>
+                                  )}
                                 </div>
                               )}
 
-                              {/* ================= STATISTICS PREVIEW ================= */}
-                              {comp.id === "statistics" && (
-                                <div className="w-full max-w-xs rounded-xl border border-border bg-card p-5 text-left shadow-sm">
-                                  <p className="text-xs text-muted-foreground font-medium select-none">Monthly Active Users</p>
-                                  <div className="flex items-baseline gap-2 mt-2">
-                                    <h4 className="text-2xl font-extrabold text-foreground">48,259</h4>
-                                    <span className="text-xs text-green-500 font-bold">
-                                      ▲ +14.2%
-                                    </span>
-                                  </div>
-                                  <p className="text-[10px] text-muted-foreground mt-1 select-none">
-                                    from last calendar month
-                                  </p>
-                                </div>
-                              )}
-
-                              {/* ================= LIST GROUP PREVIEW ================= */}
-                              {comp.id === "list-group" && (
-                                <div className="w-full max-w-sm rounded-xl border border-border bg-card overflow-hidden text-left shadow-sm">
+                              {/* ANTD CHRONOLOGICAL ACTIVITY TIMELINE DOTS */}
+                              {comp.id === "timeline" && (
+                                <div className="w-full max-w-xs space-y-4 text-left select-none">
                                   {[
-                                    { id: "inbox", label: "Inbox Messages", count: "12" },
-                                    { id: "sent", label: "Sent Items", count: "4" },
-                                    { id: "draft", label: "Draft Proposals", count: "2" }
-                                  ].map(item => (
-                                    <button
-                                      key={item.id}
-                                      onClick={() => setListGroupActive(item.id)}
-                                      className={`
-                                        w-full flex items-center justify-between px-4 py-3 text-xs font-semibold border-b border-border/80 last:border-b-0 cursor-pointer transition-colors border-0 bg-transparent
-                                        ${listGroupActive === item.id 
-                                          ? "bg-blue-600/10 text-blue-600 font-semibold" 
-                                          : "hover:bg-muted text-muted-foreground hover:text-foreground"
-                                        }
-                                      `}
-                                    >
-                                      <span>{item.label}</span>
-                                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${listGroupActive === item.id ? 'bg-blue-600 text-white' : 'bg-muted text-muted-foreground'}`}>{item.count}</span>
-                                    </button>
+                                    { label: "Deployment Successful Node Shard 1", time: "10:42 AM", dot: "bg-green-500" },
+                                    { label: "Database Core Architecture Seeded", time: "10:39 AM", dot: "bg-blue-600" },
+                                    { label: "Staging Pipeline Verification Sequence Init", time: "09:12 AM", dot: "bg-amber-500" }
+                                  ].map((item, idx, arr) => (
+                                    <div key={idx} className="flex gap-4 relative pl-1">
+                                      {idx !== arr.length - 1 && <div className="absolute left-2.5 top-3 bottom-0 w-px bg-slate-200 dark:bg-zinc-800 -ml-[0.5px]" />}
+                                      <div className={`h-2.5 w-2.5 rounded-full mt-1 shrink-0 border-2 border-card relative z-10 ${item.dot}`} />
+                                      <div>
+                                        <h5 className="text-xs font-bold text-foreground leading-none">{item.label}</h5>
+                                        <span className="text-[10px] text-muted-foreground font-mono mt-0.5 block">{item.time}</span>
+                                      </div>
+                                    </div>
                                   ))}
                                 </div>
                               )}
 
-                              {/* ================= TABLE PREVIEW ================= */}
-                              {comp.id === "table" && (
-                                <div className="w-full overflow-x-auto border border-border rounded-xl bg-card shadow-sm">
-                                  <table className="w-full border-collapse text-left text-xs">
-                                    <thead>
-                                      <tr className="border-b border-border bg-muted/40 font-semibold">
-                                        <th className="p-3">User</th>
-                                        <th className="p-3">Role</th>
-                                        <th className="p-3">Status</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {[
-                                        { id: 1, name: "Sarah Connor", email: "sarah@skynet.ai", role: "AI Prompt Engineer", status: "Active" },
-                                        { id: 2, name: "John Connor", email: "john@skynet.ai", role: "System Architect", status: "Active" },
-                                        { id: 3, name: "T-800", email: "terminator@cyberdyne.org", role: "Security Auditor", status: "Offline" }
-                                      ].map((user, idx) => (
-                                        <tr 
-                                          key={user.id} 
-                                          onMouseEnter={() => setTableHoveredRow(idx)}
-                                          onMouseLeave={() => setTableHoveredRow(null)}
-                                          className={`
-                                            border-b border-border/60 last:border-b-0 transition-colors
-                                            ${tableHoveredRow === idx ? "bg-blue-600/5" : ""}
-                                          `}
-                                        >
-                                          <td className="p-3">
-                                            <div>
-                                              <div className="font-semibold text-foreground">{user.name}</div>
-                                              <div className="text-[10px] text-muted-foreground">{user.email}</div>
-                                            </div>
-                                          </td>
-                                          <td className="p-3 text-muted-foreground">{user.role}</td>
-                                          <td className="p-3">
-                                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                                              user.status === "Active" 
-                                                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" 
-                                                : "bg-zinc-100 text-zinc-650 dark:bg-zinc-800 dark:text-zinc-400"
-                                            }`}>
-                                              {user.status}
-                                            </span>
-                                          </td>
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </table>
-                                </div>
-                              )}
-
-                              {/* ================= ALERT PREVIEW ================= */}
-                              {comp.id === "alert" && (
-                                <div className="w-full max-w-md space-y-3 text-left">
-                                  {options.alertVariant === "success" && (
-                                    <div className="flex items-start gap-3 rounded-lg border border-green-500/20 bg-green-500/10 p-3.5 text-xs text-green-700 dark:text-green-400">
-                                      <CheckCircle2 className="h-4.5 w-4.5 shrink-0" />
-                                      <div>
-                                        <strong className="font-bold block mb-0.5">Updated Successfully</strong>
-                                        <span>Deployment triggers are live. Active servers synced.</span>
-                                      </div>
-                                    </div>
-                                  )}
-                                  {options.alertVariant === "info" && (
-                                    <div className="flex items-start gap-3 rounded-lg border border-blue-500/20 bg-blue-500/10 p-3.5 text-xs text-blue-700 dark:text-blue-400">
-                                      <Info className="h-4.5 w-4.5 shrink-0" />
-                                      <div>
-                                        <strong className="font-bold block mb-0.5">Deployment Configs</strong>
-                                        <span>Server parameters adjusted automatically. Check developer logs.</span>
-                                      </div>
-                                    </div>
-                                  )}
-                                  {options.alertVariant === "warning" && (
-                                    <div className="flex items-start gap-3 rounded-lg border border-amber-500/20 bg-amber-500/10 p-3.5 text-xs text-amber-700 dark:text-amber-400">
-                                      <AlertTriangle className="h-4.5 w-4.5 shrink-0" />
-                                      <div>
-                                        <strong className="font-bold block mb-0.5">Action Warning</strong>
-                                        <span>Token quota exceeding threshold limits. Refresh credentials.</span>
-                                      </div>
-                                    </div>
-                                  )}
-                                  {options.alertVariant === "danger" && (
-                                    <div className="flex items-start gap-3 rounded-lg border border-red-500/20 bg-red-500/10 p-3.5 text-xs text-red-700 dark:text-red-400">
-                                      <XCircle className="h-4.5 w-4.5 shrink-0" />
-                                      <div>
-                                        <strong className="font-bold block mb-0.5">Connection Error</strong>
-                                        <span>Failed to authenticate webhook trigger key. Invalid signature.</span>
-                                      </div>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-
-                              {/* ================= PROGRESS BAR PREVIEW ================= */}
-                              {comp.id === "progress-bar" && (
-                                <div className="w-full max-w-sm space-y-2 text-left">
-                                  <div className="flex justify-between text-xs font-semibold">
-                                    <span className="text-foreground">Downloading assets...</span>
-                                    <span className="text-blue-600">{options.progressValue}%</span>
+                              {/* ANTD EMPTY INBOX PLACEHOLDER STATS */}
+                              {comp.id === "empty" && (
+                                <div className="w-full max-w-sm rounded-xl border border-dashed border-slate-200 dark:border-zinc-800 bg-card/10 p-8 text-center select-none">
+                                  <div className="h-12 w-12 rounded-full bg-slate-50 dark:bg-zinc-900 flex items-center justify-center mx-auto mb-3 border border-slate-100 dark:border-zinc-800">
+                                    <Inbox className="h-5 w-5 text-muted-foreground/60" />
                                   </div>
-                                  <div className="w-full bg-slate-100 dark:bg-zinc-800 rounded-full h-3 overflow-hidden border border-border/40">
-                                    <div 
-                                      className="bg-blue-600 h-full rounded-full transition-all duration-300 shadow-[0_0_10px_rgba(37,99,235,0.3)]"
-                                      style={{ width: `${options.progressValue}%` }}
-                                    />
-                                  </div>
-                                  <input 
-                                    type="range" 
-                                    min="0" 
-                                    max="100" 
-                                    value={options.progressValue}
-                                    onChange={(e) => updateOption("progressValue", Number(e.target.value))}
-                                    className="w-full h-1 bg-muted rounded-lg appearance-none cursor-pointer accent-blue-600 mt-4"
-                                  />
+                                  <h4 className="text-xs font-bold text-foreground">No Historical Architecture Data Tracked</h4>
+                                  <p className="text-[11px] text-muted-foreground max-w-xs mx-auto mt-1 leading-relaxed">Adjust configuration rules or change filtering scopes.</p>
                                 </div>
                               )}
 
-                              {/* ================= TOAST PREVIEW ================= */}
-                              {comp.id === "toast" && (
-                                <div className="flex flex-col items-center gap-4">
-                                  <div className="flex flex-wrap justify-center gap-2 select-none">
-                                    <button
-                                      onClick={() => addToast("Successfully Updated", "Deployment configuration saved.", "success")}
-                                      className="bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-xs hover:bg-green-700 transition-colors cursor-pointer border-0 font-bold"
-                                    >
-                                      Trigger Success
-                                    </button>
-                                    <button
-                                      onClick={() => addToast("Alert Quota Limit", "Database API calls warning.", "warning")}
-                                      className="bg-amber-600 text-white font-medium py-2 px-4 rounded-lg text-xs hover:bg-amber-700 transition-colors cursor-pointer border-0 font-bold"
-                                    >
-                                      Trigger Warning
-                                    </button>
-                                    <button
-                                      onClick={() => addToast("Auth Connection Error", "Could not verify credentials.", "danger")}
-                                      className="bg-red-600 text-white font-medium py-2 px-4 rounded-lg text-xs hover:bg-red-700 transition-colors cursor-pointer border-0 font-bold"
-                                    >
-                                      Trigger Error
-                                    </button>
-                                  </div>
-                                  <p className="text-[10px] text-muted-foreground select-none">Toasts slide up at the screen corner when clicked.</p>
+                              {/* ANTD SPIN SYSTEM INDICATOR MODAL */}
+                              {comp.id === "spin" && (
+                                <div className="w-full max-w-sm border border-slate-200 dark:border-zinc-800 rounded-xl p-6 bg-card/40 flex flex-col items-center justify-center text-center h-44 select-none">
+                                  <Loader2 className="h-7 w-7 text-blue-600 animate-spin mb-2" />
+                                  <span className="text-xs font-bold text-blue-600">Resolving Data Parameters...</span>
                                 </div>
                               )}
 
-                              {/* ================= MODAL PREVIEW ================= */}
-                              {comp.id === "modal" && (
+                              {/* ANTD TRANSACTION RESULT COMPACT DISPLAY HEADER */}
+                              {comp.id === "result" && (
+                                <div className="w-full max-w-md rounded-xl border border-slate-200 dark:border-zinc-800 bg-card p-6 text-center space-y-4 shadow-sm animate-fadeIn">
+                                  <CheckCircle2 className="h-10 w-10 text-green-500 mx-auto" />
+                                  <div>
+                                    <h4 className="text-sm font-extrabold text-foreground">Cluster Synchronization Success</h4>
+                                    <p className="text-xs text-muted-foreground mt-1 max-w-xs mx-auto">CDN distribution models executed securely without trace mutations.</p>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* ANTD OVERLAY CANVAS SHEET SIDE DRAWER */}
+                              {comp.id === "drawer" && (
                                 <div>
-                                  <button
-                                    onClick={() => setIsModalOpen(true)}
-                                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-lg text-xs transition-colors shadow-md active:scale-[0.98] cursor-pointer border-0"
-                                  >
-                                    Trigger Action Modal
+                                  <button onClick={() => setAntdDrawerOpen(true)} className="bg-blue-600 text-white text-xs font-bold py-2.5 px-4 rounded-xl border-0 cursor-pointer shadow">
+                                    Trigger Side Drawer Sheet Panel
                                   </button>
-                                </div>
-                              )}
-
-                              {/* ================= TOOLTIP PREVIEW ================= */}
-                              {comp.id === "tooltip" && (
-                                <div className="flex justify-center gap-4 relative select-none">
-                                  <div className="group relative inline-block">
-                                    <button className="bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-foreground text-xs font-semibold py-2 px-4 rounded-lg border border-border select-none cursor-pointer">
-                                      Hover tooltip
-                                    </button>
-                                    <div className={`
-                                      absolute hidden group-hover:block bg-zinc-900 text-zinc-100 text-[10px] font-semibold py-1.5 px-2.5 rounded-lg shadow-md whitespace-nowrap z-30 transition-all pointer-events-none
-                                      ${options.tooltipSide === "top" ? "bottom-full left-1/2 -translate-x-1/2 mb-2" : ""}
-                                      ${options.tooltipSide === "bottom" ? "top-full left-1/2 -translate-x-1/2 mt-2" : ""}
-                                      ${options.tooltipSide === "left" ? "right-full top-1/2 -translate-y-1/2 mr-2" : ""}
-                                      ${options.tooltipSide === "right" ? "left-full top-1/2 -translate-y-1/2 ml-2" : ""}
-                                    `}>
-                                      Context tooltips preview content details
-                                      <div className={`
-                                        absolute h-1.5 w-1.5 bg-zinc-900 rotate-45
-                                        ${options.tooltipSide === "top" ? "top-full left-1/2 -translate-x-1/2 -mt-1" : ""}
-                                        ${options.tooltipSide === "bottom" ? "bottom-full left-1/2 -translate-x-1/2 -mb-1" : ""}
-                                        ${options.tooltipSide === "left" ? "left-full top-1/2 -translate-y-1/2 -ml-1" : ""}
-                                        ${options.tooltipSide === "right" ? "right-full top-1/2 -translate-y-1/2 -mr-1" : ""}
-                                      `} />
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* ================= DROPDOWN PREVIEW ================= */}
-                              {comp.id === "dropdown" && (
-                                <div className="relative select-none">
-                                  <button
-                                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                                    className="border border-border bg-card hover:bg-muted text-foreground text-xs font-semibold py-2.5 px-4 rounded-lg flex items-center gap-1.5 shadow-sm select-none cursor-pointer"
-                                  >
-                                    User Profiles
-                                    <ChevronDown className="h-3.5 w-3.5" />
-                                  </button>
-                                  
-                                  {dropdownOpen && (
-                                    <div className="absolute top-full right-0 mt-2 w-48 rounded-xl border border-border bg-card p-1 shadow-lg z-30 text-left animate-fadeIn">
-                                      <button className="w-full text-xs text-foreground px-3 py-2 hover:bg-blue-600 hover:text-white rounded-lg transition-colors text-left flex items-center gap-2 cursor-pointer border-0">
-                                        <Settings className="h-3.5 w-3.5" /> Settings Config
-                                      </button>
-                                      <button className="w-full text-xs text-foreground px-3 py-2 hover:bg-blue-600 hover:text-white rounded-lg transition-colors text-left flex items-center gap-2 cursor-pointer border-0">
-                                        <HelpCircle className="h-3.5 w-3.5" /> Documentation
-                                      </button>
-                                      <div className="h-px bg-border my-1" />
-                                      <button className="w-full text-xs text-red-500 px-3 py-2 hover:bg-red-650 hover:text-white rounded-lg transition-colors text-left flex items-center gap-2 cursor-pointer border-0">
-                                        <LogOut className="h-3.5 w-3.5" /> Disconnect User
-                                      </button>
+                                  {antdDrawerOpen && (
+                                    <div className="fixed inset-0 z-50 flex justify-end">
+                                      <div onClick={() => setAntdDrawerOpen(false)} className="absolute inset-0 bg-black/40 backdrop-blur-xs" />
+                                      <div className="relative w-80 h-full bg-white dark:bg-zinc-950 border-l border-slate-200 dark:border-zinc-900 p-5 shadow-2xl flex flex-col justify-between animate-fadeIn">
+                                        <div className="flex items-center justify-between border-b pb-3">
+                                          <h4 className="text-xs font-extrabold uppercase tracking-wider text-foreground">Drawer Dashboard Parameters</h4>
+                                          <button onClick={() => setAntdDrawerOpen(false)} className="border-0 bg-transparent cursor-pointer text-muted-foreground"><X className="h-4 w-4" /></button>
+                                        </div>
+                                        <button onClick={() => setAntdDrawerOpen(false)} className="w-full bg-blue-600 text-white py-2 rounded-xl text-xs font-bold border-0 cursor-pointer">Close Drawer</button>
+                                      </div>
                                     </div>
                                   )}
                                 </div>
                               )}
 
-                              {/* ================= BADGE PREVIEW ================= */}
-                              {comp.id === "badge" && (
-                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold select-none transition-colors border ${{
-                                  default: "bg-blue-600 text-white hover:bg-blue-700 border-transparent",
-                                  secondary: "bg-slate-100 dark:bg-zinc-800 text-foreground hover:bg-slate-200 border-transparent",
-                                  destructive: "bg-red-500 text-white hover:bg-red-650 border-transparent",
-                                  outline: "border-slate-200 dark:border-zinc-800 text-foreground"
-                                }[options.badgeVariant] || "bg-blue-600 text-white"}`}>
-                                  {options.badgeLabel}
-                                </span>
-                              )}
-
-                              {/* ================= AVATAR PREVIEW ================= */}
-                              {comp.id === "avatar" && (
-                                <div className="flex flex-col items-center gap-4 select-none">
-                                  <div className="flex items-center gap-6">
-                                    <div className="relative">
-                                      <div className={`
-                                        rounded-full bg-slate-350 dark:bg-zinc-800 flex items-center justify-center font-bold text-foreground overflow-hidden border border-border
-                                        ${options.avatarSize === "sm" ? "h-8 w-8 text-xs" : ""}
-                                        ${options.avatarSize === "md" ? "h-11 w-11 text-sm" : ""}
-                                        ${options.avatarSize === "lg" ? "h-16 w-16 text-lg" : ""}
-                                      `}>
-                                        <img 
-                                          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" 
-                                          alt="Avatar User" 
-                                          className="h-full w-full object-cover"
-                                        />
+                              {/* ANTD POPCONFIRM INSIDE ANCHOR TOOLTIP */}
+                              {comp.id === "popconfirm" && (
+                                <div className="relative inline-block">
+                                  <button onClick={() => setAntdPopconfirmOpen(!antdPopconfirmOpen)} className="bg-red-500 hover:bg-red-650 text-white font-bold text-xs py-2.5 px-4 rounded-xl border-0 cursor-pointer shadow">
+                                    Purge Workspace Node
+                                  </button>
+                                  {antdPopconfirmOpen && (
+                                    <div className="absolute bottom-[110%] left-1/2 -translate-x-1/2 w-48 rounded-xl border border-border bg-card p-3 shadow-2xl z-50 text-left">
+                                      <p className="text-[11px] font-bold text-foreground">Delete cloud cluster instances?</p>
+                                      <div className="flex justify-end gap-1 mt-2">
+                                        <button onClick={() => setAntdPopconfirmOpen(false)} className="text-[9px] font-bold px-2 py-0.5 bg-muted rounded border-0 cursor-pointer text-foreground">Cancel</button>
+                                        <button onClick={() => { setAntdPopconfirmOpen(false); addToast("Database Cleared", "Staging indices removed.", "success"); }} className="text-[9px] font-bold px-2 py-0.5 bg-red-500 text-white border-0 cursor-pointer">Purge</button>
                                       </div>
-                                      {options.avatarStatus !== "none" && (
-                                        <span className={`
-                                          absolute bottom-0 right-0 rounded-full border-2 border-card
-                                          ${options.avatarSize === "sm" ? "h-2.5 w-2.5" : "h-3.5 w-3.5"}
-                                          ${options.avatarStatus === "online" ? "bg-green-500" : options.avatarStatus === "busy" ? "bg-red-500" : "bg-gray-400"}
-                                        `} />
-                                      )}
                                     </div>
-                                  </div>
-                                  <p className="text-[10px] text-muted-foreground select-none">Pulsing status display indicators</p>
+                                  )}
                                 </div>
                               )}
 
-                              {/* ================= ACCORDION PREVIEW ================= */}
-                              {comp.id === "accordion" && (
-                                <div className="w-full max-w-sm rounded-xl border border-border bg-card p-2 text-left space-y-1">
-                                  {[
-                                    { id: 0, title: "Is it accessible?", desc: "Yes, our designs respect standard WAI-ARIA specs." },
-                                    { id: 1, title: "Can I customize the colors?", desc: "Yes, fully styled with standard Tailwind config classes." }
-                                  ].map(item => {
-                                    const isOpen = accordionOpen === item.id;
-                                    return (
-                                      <div key={item.id} className="rounded-lg border border-slate-100 dark:border-zinc-800 overflow-hidden">
-                                        <button
-                                          onClick={() => setAccordionOpen(isOpen ? null : item.id)}
-                                          className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold hover:bg-muted/50 cursor-pointer border-0 bg-transparent text-foreground"
-                                        >
-                                          <span>{item.title}</span>
-                                          <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
-                                        </button>
-                                        {isOpen && (
-                                          <div className="p-3 bg-muted/20 text-xs text-slate-500 border-t border-border/40 animate-fadeIn leading-relaxed">
-                                            {item.desc}
-                                          </div>
-                                        )}
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              )}
-
-                              {/* ================= HERO PREVIEW ================= */}
-                              {comp.id === "hero" && (
-                                <div className="w-full max-w-xl rounded-xl border border-border bg-card p-6 md:p-8 text-center space-y-4 shadow-sm relative overflow-hidden">
-                                  <span className="text-[9px] font-bold text-blue-600 uppercase bg-blue-600/10 px-2.5 py-1 rounded-full select-none">
-                                    Goat UI v1.0
-                                  </span>
-                                  <h3 className="text-2xl font-extrabold tracking-tight text-foreground leading-tight">
-                                    Build High-Performance Interfaces
-                                  </h3>
-                                  <p className="text-xs text-muted-foreground max-w-md mx-auto leading-relaxed">
-                                    Seamless copy-paste React design elements optimized for local speed, responsiveness, and dark mode features.
-                                  </p>
-                                  <div className="flex justify-center gap-3 pt-2">
-                                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg text-xs transition-colors cursor-pointer border-0">
-                                      Get Started
-                                    </button>
-                                    <button className="border border-border hover:bg-muted text-foreground font-semibold py-2 px-4 rounded-lg text-xs transition-colors cursor-pointer">
-                                      Learn More
-                                    </button>
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* ================= METRIC CARD PREVIEW ================= */}
-                              {comp.id === "metric-card" && (
-                                <div className="w-full max-w-xs rounded-xl border border-border bg-card p-5 text-left shadow-sm space-y-4">
-                                  <div className="flex justify-between items-center">
-                                    <span className="text-xs text-muted-foreground font-medium select-none">Server Load Rate</span>
-                                    <MoreHorizontal className="h-4.5 w-4.5 text-muted-foreground" />
-                                  </div>
-                                  <div className="flex items-baseline gap-2">
-                                    <h4 className="text-3xl font-extrabold text-foreground tracking-tight">42.8%</h4>
-                                    <span className="text-[10px] text-green-500 font-bold bg-green-500/10 px-2 py-0.5 rounded select-none">
-                                      Healthy
-                                    </span>
-                                  </div>
-                                  {/* Mini graphical indicator bar */}
-                                  <div className="flex items-end justify-between gap-1.5 h-10 pt-2 select-none">
-                                    {[20, 32, 28, 45, 38, 56, 42, 60, 48].map((h, i) => (
-                                      <div 
-                                        key={i} 
-                                        className="bg-blue-600/20 hover:bg-blue-600 rounded-sm flex-1 transition-colors cursor-pointer"
-                                        style={{ height: `${h}%` }}
-                                        title={`Hour ${i+1}: ${h}%`}
-                                      />
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* ================= SKELETON PREVIEW ================= */}
-                              {comp.id === "skeleton" && (
-                                <div className="w-full max-w-xs space-y-3 animate-pulse text-left select-none p-3 border border-border/80 rounded-xl bg-card">
-                                  <div className="flex items-center gap-3">
-                                    <div className="h-10 w-10 rounded-full bg-slate-200 dark:bg-zinc-800" />
-                                    <div className="space-y-1.5 flex-1">
-                                      <div className="h-3 bg-slate-200 dark:bg-zinc-800 rounded w-2/3" />
-                                      <div className="h-2.5 bg-slate-200 dark:bg-zinc-800 rounded w-1/2" />
-                                    </div>
-                                  </div>
-                                  <div className="h-2.5 bg-slate-200 dark:bg-zinc-800 rounded w-full mt-2" />
-                                  <div className="h-2.5 bg-slate-200 dark:bg-zinc-800 rounded w-5/6" />
-                                </div>
-                              )}
-
-                            </div>
-                          </div>
-
-                          {/* Playground variables config panels */}
-                          <div className="border border-border/60 bg-card/10 rounded-xl p-4 md:p-5 space-y-4">
-                            <h4 className="text-xs font-bold text-foreground uppercase tracking-wider select-none text-left">Playground Customizer</h4>
-                            
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-left">
-                              {/* Button controllers */}
-                              {comp.id === "button" && (
-                                <>
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Accent Variant</label>
-                                    <select
-                                      value={options.btnVariant}
-                                      onChange={(e) => updateOption("btnVariant", e.target.value)}
-                                      className="w-full text-xs rounded-lg border border-border bg-card px-2.5 py-2 font-medium focus-visible:outline-none"
-                                    >
-                                      <option value="primary">Primary</option>
-                                      <option value="secondary">Secondary</option>
-                                      <option value="outline">Outline</option>
-                                      <option value="ghost">Ghost</option>
-                                      <option value="gradient">Gradient</option>
-                                      <option value="neon">Neon</option>
-                                      <option value="glass">Glass</option>
-                                    </select>
-                                  </div>
-
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Button Size</label>
-                                    <select
-                                      value={options.btnSize}
-                                      onChange={(e) => updateOption("btnSize", e.target.value)}
-                                      className="w-full text-xs rounded-lg border border-border bg-card px-2.5 py-2 font-medium focus-visible:outline-none"
-                                    >
-                                      <option value="default">Default</option>
-                                      <option value="sm">Small</option>
-                                      <option value="lg">Large</option>
-                                      <option value="icon">Icon only</option>
-                                    </select>
-                                  </div>
-
-                                  <div className="flex flex-col gap-2 pt-4">
-                                    <label className="flex items-center gap-2 text-xs font-semibold text-muted-foreground select-none cursor-pointer">
-                                      <Checkbox checked={options.btnLoading} onCheckedChange={(checked) => updateOption("btnLoading", !!checked)} className="border-blue-600 data-[state=checked]:bg-blue-600 animate-fadeIn" />
-                                      Loading state
-                                    </label>
-                                    <label className="flex items-center gap-2 text-xs font-semibold text-muted-foreground select-none cursor-pointer">
-                                      <Checkbox checked={options.btnDisabled} onCheckedChange={(checked) => updateOption("btnDisabled", !!checked)} className="border-blue-600 data-[state=checked]:bg-blue-600 animate-fadeIn" />
-                                      Disabled
-                                    </label>
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Badge controllers */}
-                              {comp.id === "badge" && (
-                                <>
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Badge Accent Variant</label>
-                                    <select
-                                      value={options.badgeVariant}
-                                      onChange={(e) => updateOption("badgeVariant", e.target.value)}
-                                      className="w-full text-xs rounded-lg border border-border bg-card px-2.5 py-2 font-medium focus-visible:outline-none"
-                                    >
-                                      <option value="default">Default (Blue)</option>
-                                      <option value="secondary">Secondary</option>
-                                      <option value="destructive">Destructive</option>
-                                      <option value="outline">Outline</option>
-                                    </select>
-                                  </div>
-
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Label</label>
-                                    <Input
-                                      value={options.badgeLabel}
-                                      onChange={(e) => updateOption("badgeLabel", e.target.value)}
-                                      className="h-8.5 text-xs rounded-lg focus-visible:ring-blue-600"
-                                    />
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Avatar controllers */}
-                              {comp.id === "avatar" && (
-                                <>
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Avatar Size</label>
-                                    <select
-                                      value={options.avatarSize}
-                                      onChange={(e) => updateOption("avatarSize", e.target.value)}
-                                      className="w-full text-xs rounded-lg border border-border bg-card px-2.5 py-2 font-medium focus-visible:outline-none"
-                                    >
-                                      <option value="sm">Small</option>
-                                      <option value="md">Medium</option>
-                                      <option value="lg">Large</option>
-                                    </select>
-                                  </div>
-
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Online Status</label>
-                                    <select
-                                      value={options.avatarStatus}
-                                      onChange={(e) => updateOption("avatarStatus", e.target.value)}
-                                      className="w-full text-xs rounded-lg border border-border bg-card px-2.5 py-2 font-medium focus-visible:outline-none"
-                                    >
-                                      <option value="online">Online</option>
-                                      <option value="busy">Busy</option>
-                                      <option value="offline">Offline</option>
-                                      <option value="none">None</option>
-                                    </select>
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Inputs controllers */}
-                              {comp.id === "input" && (
-                                <>
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Field Type</label>
-                                    <select
-                                      value={options.inputType}
-                                      onChange={(e) => updateOption("inputType", e.target.value)}
-                                      className="w-full text-xs rounded-lg border border-border bg-card px-2.5 py-2 font-medium focus-visible:outline-none"
-                                    >
-                                      <option value="text">Text</option>
-                                      <option value="password">Password</option>
-                                      <option value="email">Email</option>
-                                      <option value="number">Number</option>
-                                    </select>
-                                  </div>
-
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Placeholder text</label>
-                                    <Input
-                                      value={options.inputPlaceholder}
-                                      onChange={(e) => updateOption("inputPlaceholder", e.target.value)}
-                                      className="h-8.5 text-xs rounded-lg focus-visible:ring-blue-600"
-                                    />
-                                  </div>
-
-                                  <div className="flex flex-col gap-2 pt-4">
-                                    <label className="flex items-center gap-2 text-xs font-semibold text-muted-foreground select-none cursor-pointer">
-                                      <Checkbox checked={options.inputDisabled} onCheckedChange={(checked) => updateOption("inputDisabled", !!checked)} className="border-blue-600 data-[state=checked]:bg-blue-600" />
-                                      Disabled state
-                                    </label>
-                                    <label className="flex items-center gap-2 text-xs font-semibold text-muted-foreground select-none cursor-pointer">
-                                      <Checkbox checked={options.inputHasError} onCheckedChange={(checked) => updateOption("inputHasError", !!checked)} className="border-blue-600 data-[state=checked]:bg-blue-600" />
-                                      Error validation state
-                                    </label>
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Checkbox controllers */}
-                              {comp.id === "checkbox" && (
-                                <>
-                                  <div className="flex flex-col gap-2 pt-4">
-                                    <label className="flex items-center gap-2 text-xs font-semibold text-muted-foreground select-none cursor-pointer">
-                                      <Checkbox checked={options.chkChecked} onCheckedChange={(checked) => updateOption("chkChecked", !!checked)} className="border-blue-600 data-[state=checked]:bg-blue-600 animate-fadeIn" />
-                                      Checked state
-                                    </label>
-                                    <label className="flex items-center gap-2 text-xs font-semibold text-muted-foreground select-none cursor-pointer">
-                                      <Checkbox checked={options.chkDisabled} onCheckedChange={(checked) => updateOption("chkDisabled", !!checked)} className="border-blue-600 data-[state=checked]:bg-blue-600 animate-fadeIn" />
-                                      Disabled interaction
-                                    </label>
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Radio Button controllers */}
-                              {comp.id === "radio" && (
-                                <>
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Radio Group Layout</label>
-                                    <select
-                                      value={options.radioLayout}
-                                      onChange={(e) => updateOption("radioLayout", e.target.value)}
-                                      className="w-full text-xs rounded-lg border border-border bg-card px-2.5 py-2 font-medium focus-visible:outline-none"
-                                    >
-                                      <option value="vertical">Vertical Group</option>
-                                      <option value="horizontal">Horizontal Row</option>
-                                    </select>
-                                  </div>
-
-                                  <div className="flex flex-col gap-2 pt-4">
-                                    <label className="flex items-center gap-2 text-xs font-semibold text-muted-foreground select-none cursor-pointer">
-                                      <Checkbox checked={options.radioDisabled} onCheckedChange={(checked) => updateOption("radioDisabled", !!checked)} className="border-blue-600 data-[state=checked]:bg-blue-600" />
-                                      Disabled group
-                                    </label>
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Switch controllers */}
-                              {comp.id === "switch" && (
-                                <>
-                                  <div className="flex flex-col gap-2 pt-4">
-                                    <label className="flex items-center gap-2 text-xs font-semibold text-muted-foreground select-none cursor-pointer">
-                                      <Checkbox checked={options.switchChecked} onCheckedChange={(checked) => updateOption("switchChecked", !!checked)} className="border-blue-600 data-[state=checked]:bg-blue-600" />
-                                      Toggled switch on
-                                    </label>
-                                    <label className="flex items-center gap-2 text-xs font-semibold text-muted-foreground select-none cursor-pointer">
-                                      <Checkbox checked={options.switchDisabled} onCheckedChange={(checked) => updateOption("switchDisabled", !!checked)} className="border-blue-600 data-[state=checked]:bg-blue-600" />
-                                      Disabled Switch
-                                    </label>
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Rating controllers */}
-                              {comp.id === "rating" && (
-                                <>
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Rating Score</label>
-                                    <select
-                                      value={options.ratingValue}
-                                      onChange={(e) => updateOption("ratingValue", Number(e.target.value))}
-                                      className="w-full text-xs rounded-lg border border-border bg-card px-2.5 py-2 font-medium focus-visible:outline-none"
-                                    >
-                                      <option value="1">1 Star</option>
-                                      <option value="2">2 Stars</option>
-                                      <option value="3">3 Stars</option>
-                                      <option value="4">4 Stars</option>
-                                      <option value="5">5 Stars</option>
-                                    </select>
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Breadcrumbs controllers */}
-                              {comp.id === "breadcrumb" && (
-                                <>
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Separator icon</label>
-                                    <select
-                                      value={options.breadSeparator}
-                                      onChange={(e) => updateOption("breadSeparator", e.target.value)}
-                                      className="w-full text-xs rounded-lg border border-border bg-card px-2.5 py-2 font-medium focus-visible:outline-none"
-                                    >
-                                      <option value="chevron">Chevron (&gt;)</option>
-                                      <option value="slash">Slash (/)</option>
-                                      <option value="dot">Bullet (•)</option>
-                                    </select>
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Tabs controllers */}
-                              {comp.id === "tabs" && (
-                                <>
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Tab Styles</label>
-                                    <select
-                                      value={options.tabsVariant}
-                                      onChange={(e) => updateOption("tabsVariant", e.target.value)}
-                                      className="w-full text-xs rounded-lg border border-border bg-card px-2.5 py-2 font-medium focus-visible:outline-none"
-                                    >
-                                      <option value="underline">Classic Underline</option>
-                                      <option value="pills">Pill Segments</option>
-                                    </select>
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Alerts controllers */}
-                              {comp.id === "alert" && (
-                                <>
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Alert Type</label>
-                                    <select
-                                      value={options.alertVariant}
-                                      onChange={(e) => updateOption("alertVariant", e.target.value)}
-                                      className="w-full text-xs rounded-lg border border-border bg-card px-2.5 py-2 font-medium focus-visible:outline-none"
-                                    >
-                                      <option value="success">Success (Green)</option>
-                                      <option value="info">Information (Blue)</option>
-                                      <option value="warning">Warning (Amber)</option>
-                                      <option value="danger">Destructive (Red)</option>
-                                    </select>
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Progress Bar controllers */}
-                              {comp.id === "progress-bar" && (
-                                <>
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Progress Fill Value</label>
-                                    <Input
-                                      type="number"
-                                      min="0"
-                                      max="100"
-                                      value={options.progressValue}
-                                      onChange={(e) => updateOption("progressValue", Math.min(100, Math.max(0, Number(e.target.value))))}
-                                      className="h-8.5 text-xs rounded-lg focus-visible:ring-blue-600"
-                                    />
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Toast controllers */}
-                              {comp.id === "toast" && (
-                                <>
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Toast Alert Type</label>
-                                    <select
-                                      value={options.toastVariant}
-                                      onChange={(e) => updateOption("toastVariant", e.target.value)}
-                                      className="w-full text-xs rounded-lg border border-border bg-card px-2.5 py-2 font-medium focus-visible:outline-none"
-                                    >
-                                      <option value="success">Success</option>
-                                      <option value="warning">Warning</option>
-                                      <option value="danger">Destructive</option>
-                                    </select>
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Tooltip controllers */}
-                              {comp.id === "tooltip" && (
-                                <>
-                                  <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-foreground">Tooltip Alignment</label>
-                                    <select
-                                      value={options.tooltipSide}
-                                      onChange={(e) => updateOption("tooltipSide", e.target.value)}
-                                      className="w-full text-xs rounded-lg border border-border bg-card px-2.5 py-2 font-medium focus-visible:outline-none"
-                                    >
-                                      <option value="top">Top aligned</option>
-                                      <option value="bottom">Bottom aligned</option>
-                                      <option value="left">Left aligned</option>
-                                      <option value="right">Right aligned</option>
-                                    </select>
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Standard description fallback for utility components */}
-                              {!["button", "badge", "avatar", "input", "checkbox", "radio", "switch", "rating", "breadcrumb", "tabs", "alert", "progress-bar", "toast", "tooltip"].includes(comp.id) && (
-                                <div className="col-span-full py-1 text-xs text-muted-foreground italic select-none">
-                                  Interact with this component dynamically in the live canvas view above.
-                                </div>
-                              )}
+                              {/* DEFAULT PLACEHOLDER INJECTION WRAPPERS */}
+                              {comp.id === "button" && <button className="bg-blue-600 text-white font-semibold py-2 px-5 rounded-xl text-xs border-0 cursor-pointer">Click Me</button>}
+                              {comp.id === "input" && <Input placeholder="Input preview template frame..." className="max-w-xs focus-visible:ring-blue-600" />}
+                              {comp.id === "checkbox" && <div className="flex items-center gap-2 text-xs font-bold"><input type="checkbox" className="accent-blue-600" /> Verify Component Parameter Actions</div>}
+                              {comp.id === "radio" && <div className="flex gap-4 text-xs font-bold"><label className="flex items-center gap-1"><input type="radio" name="r" defaultChecked className="accent-blue-600" /> Option Primary</label></div>}
+                              {comp.id === "switch" && <div className="h-5 w-9 bg-blue-600 rounded-full p-0.5 flex justify-end"><div className="h-4 w-4 bg-white rounded-full" /></div>}
+                              {comp.id === "rating" && <div className="flex gap-1"><Star className="h-5 w-5 fill-amber-400 stroke-amber-400" /><Star className="h-5 w-5 stroke-muted-foreground" /></div>}
+                              {comp.id === "slider" && <input type="range" className="accent-blue-600 w-full max-w-xs" />}
+                              {comp.id === "navbar" && <div className="w-full max-w-md border rounded-xl bg-card p-3 flex justify-between text-xs font-bold"><span>Logo</span><span>Docs</span></div>}
+                              {comp.id === "breadcrumb" && <div className="text-xs text-muted-foreground">Home &gt; Components &gt; <span className="text-blue-600 font-bold">Timeline</span></div>}
+                              {comp.id === "pagination" && <div className="flex gap-1 text-xs"><button className="h-7 px-2.5 border rounded-lg bg-blue-600 text-white font-bold">1</button></div>}
+                              {comp.id === "tabs" && <div className="border-b text-xs font-bold text-blue-600 pb-1 border-blue-600">Active Pipeline Node</div>}
+                              {comp.id === "card" && <div className="border rounded-xl p-4 w-48 text-left bg-card"><div className="h-2 w-12 bg-blue-600 rounded mb-1" /><div className="h-1.5 w-full bg-muted rounded" /></div>}
+                              {comp.id === "statistics" && <div className="text-left"><span className="text-xs text-muted-foreground">Gateway Load</span><h4 className="text-xl font-black">94.2%</h4></div>}
+                              {comp.id === "list-group" && <div className="w-48 border rounded-xl bg-card p-2 text-xs text-blue-600 font-bold bg-blue-600/5">Indexed Choice Stack</div>}
+                              {comp.id === "table" && <div className="w-48 border rounded-xl bg-card p-2 text-[10px] text-muted-foreground">Tabular visualization canvas</div>}
+                              {comp.id === "alert" && <div className="border border-green-500/20 bg-green-500/10 rounded-xl p-3 text-xs text-green-700 dark:text-green-400 font-bold">✓ Parameters Updated</div>}
+                              {comp.id === "progress-bar" && <div className="w-40 bg-slate-200 h-2 rounded-full overflow-hidden"><div className="bg-blue-600 h-full w-2/3" /></div>}
+                              {comp.id === "toast" && <button onClick={() => addToast("Sync Complete", "CDN channels updated.", "success")} className="bg-blue-600 text-white font-bold text-xs py-2 px-4 rounded-xl border-0 cursor-pointer">Trigger Floating Toast Notification</button>}
+                              {comp.id === "modal" && <button onClick={() => setIsModalOpen(true)} className="bg-blue-600 text-white font-bold text-xs py-2 px-4 rounded-xl border-0 cursor-pointer">Launch Modal Window Dialog</button>}
+                              {comp.id === "tooltip" && <div className="px-3 py-1.5 bg-slate-100 rounded-lg text-xs font-semibold border text-foreground">Hover triggers tooltips info boxes</div>}
+                              {comp.id === "dropdown" && <button className="border text-xs px-4 py-2 rounded-xl bg-card">Action Configuration Drops</button>}
+                              {comp.id === "hero" && <div className="text-center"><h3 className="text-lg font-black text-foreground">Premium Layout Blocks</h3></div>}
+                              {comp.id === "metric-card" && <div className="border rounded-xl p-4 bg-card w-40 text-left"><p className="text-[11px] text-muted-foreground">Cluster Core</p><h4 className="text-lg font-bold text-blue-600">Active Node</h4></div>}
+                              {comp.id === "skeleton" && <div className="w-40 space-y-2 animate-pulse"><div className="h-3.5 bg-slate-200 dark:bg-zinc-800 rounded w-full" /><div className="h-3 bg-slate-200 dark:bg-zinc-800 rounded w-5/6" /></div>}
+                              {comp.id === "badge" && <span className="bg-blue-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">Active</span>}
+                              {comp.id === "avatar" && <div className="h-10 w-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs">GOAT</div>}
 
                             </div>
                           </div>
                         </div>
                       ) : (
-                        /* Code block panel */
+                        /* CODE PREVIEW GENERATION VIEW */
                         <div className="w-full border border-border rounded-xl bg-card overflow-hidden flex flex-col text-left">
                           <div className="bg-secondary/40 border-b border-border/80 px-4 py-2 flex items-center justify-between text-xs font-semibold select-none">
                             <div className="flex items-center gap-1.5">
-                              <Terminal className="h-3.5 w-3.5 text-blue-600 animate-pulse" />
-                              <span>Generated Code Snippet</span>
+                              <Terminal className="h-3.5 w-3.5 text-blue-600" />
+                              <span>Production-Ready Modular React Markup File</span>
                             </div>
                             <button
                               onClick={() => handleCopyCode(comp.id, code)}
-                              className="flex items-center gap-1 text-[11px] hover:text-foreground text-muted-foreground font-medium py-1 px-2.5 rounded border border-border/80 bg-background/50 hover:bg-background cursor-pointer"
+                              className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground font-medium py-1 px-2.5 rounded border border-border/80 bg-background/50 cursor-pointer"
                             >
-                              {isCopied ? (
-                                <>
-                                  <Check className="h-3.5 w-3.5 text-green-500" />
-                                  <span className="text-green-500">Copied!</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Copy className="h-3.5 w-3.5" />
-                                  <span>Copy</span>
-                                </>
-                              )}
+                              {copiedStates[comp.id] ? <span className="text-green-500 font-bold">Copied!</span> : <span>Copy Snippet Code</span>}
                             </button>
                           </div>
-                          <pre className="p-5 overflow-x-auto text-[11px] font-mono leading-relaxed bg-zinc-950 text-zinc-300 min-h-[200px]">
+                          <pre className="p-5 overflow-x-auto text-[11px] font-mono leading-relaxed bg-zinc-950 text-zinc-300 min-h-[220px]">
                             <code>{code}</code>
                           </pre>
                         </div>
                       )}
 
-                      {/* Showcase footer action buttons */}
                       <div className="flex flex-wrap items-center justify-end gap-3 pt-4 border-t border-border/60 select-none">
-                        <button
-                          onClick={() => setTab(tab === "preview" ? "code" : "preview")}
-                          className="text-xs text-muted-foreground hover:text-foreground border border-border px-3.5 py-1.5 rounded-lg hover:bg-muted font-medium transition-colors cursor-pointer"
-                        >
-                          {tab === "preview" ? "View Code" : "View Preview"}
+                        <button onClick={() => setTab(tab === "preview" ? "code" : "preview")} className="text-xs text-muted-foreground hover:text-foreground border border-border px-3.5 py-1.5 rounded-lg hover:bg-muted font-semibold cursor-pointer">
+                          {tab === "preview" ? "View Raw Source Code" : "Return to Live Sandbox Canvas"}
                         </button>
-                        <button
-                          onClick={() => handleCopyCode(comp.id, code)}
-                          className="text-xs text-blue-600 dark:text-blue-400 hover:bg-blue-600/10 border border-blue-600/20 dark:border-blue-400/20 px-3.5 py-1.5 rounded-lg font-semibold transition-colors cursor-pointer"
-                        >
-                          Copy Component Code
+                        <button onClick={() => handleCopyCode(comp.id, code)} className="text-xs bg-blue-600 text-white px-4 py-1.5 rounded-lg font-bold border-0 cursor-pointer hover:bg-blue-700">
+                          Copy Structural Code Component
                         </button>
                       </div>
                     </section>
@@ -2857,81 +1737,38 @@ export default function ComponentsGalleryPage() {
             )
           )}
 
-          {/* ====================================================
-              FLOATING INTERACTIVE MODAL OVERLAY
-              ==================================================== */}
+          {/* FLOATING DIALOG CONFIRMATION WINDOW MODAL */}
           <AnimatePresence>
             {isModalOpen && (
               <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                {/* Backdrop overlay */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onClick={() => setIsModalOpen(false)}
-                  className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                />
-
-                {/* Dialog content */}
-                <motion.div
-                  initial={{ scale: 0.95, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.95, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="relative w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-2xl z-10 text-left border-blue-600/20"
-                >
-                  <h4 className="text-base font-bold text-foreground">Confirm Actions Trigger</h4>
-                  <p className="text-xs text-muted-foreground mt-2 leading-relaxed font-sans">
-                    Are you sure you want to verify these webhook client connections? Doing so updates deployment servers.
-                  </p>
-                  
-                  <div className="flex justify-end gap-2.5 mt-6">
-                    <button
-                      onClick={() => setIsModalOpen(false)}
-                      className="text-xs font-semibold text-slate-500 border border-border px-4 py-2 rounded-lg hover:bg-muted transition-colors cursor-pointer"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsModalOpen(false);
-                        addToast("Connection Approved", "Server hooks updated successfully.", "success");
-                      }}
-                      className="text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors cursor-pointer border-0 font-bold"
-                    >
-                      Approve Connection
-                    </button>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-black/60 backdrop-blur-xs" />
+                <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="relative w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-2xl z-10 text-left border-blue-600/20">
+                  <h4 className="text-base font-extrabold text-foreground">Confirm Operation Parameter Inject</h4>
+                  <p className="text-xs text-muted-foreground mt-2 leading-relaxed">Are you certain you want to commit these deployment parameter targets to production CDN lines?</p>
+                  <div className="flex justify-end gap-2 mt-5">
+                    <button onClick={() => setIsModalOpen(false)} className="text-xs font-semibold text-slate-500 border border-border px-4 py-2 rounded-lg hover:bg-muted cursor-pointer">Cancel Action</button>
+                    <button onClick={() => { setIsModalOpen(false); addToast("Parameters Saved", "Cluster metrics synced successfully.", "success"); }} className="text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg border-0 cursor-pointer">Approve Change</button>
                   </div>
                 </motion.div>
               </div>
             )}
           </AnimatePresence>
 
-          {/* ====================================================
-              FLOATING TOAST CONTAINER (BOTTOM-RIGHT)
-              ==================================================== */}
+          {/* FLOATING ACTION NOTIFICATION TOAST OVERLAYS */}
           <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none">
             <AnimatePresence>
               {toasts.map((toast) => (
                 <motion.div
                   key={toast.id}
-                  initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
-                  className={`
-                    p-4 rounded-xl border bg-card shadow-lg border-l-4 pointer-events-auto flex items-start gap-3 text-left border-border/80
-                    ${toast.variant === "success" ? "border-l-green-500" : ""}
-                    ${toast.variant === "warning" ? "border-l-amber-500" : ""}
-                    ${toast.variant === "danger" ? "border-l-red-500" : ""}
-                  `}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="p-4 rounded-xl border bg-card shadow-xl border-l-4 border-l-green-500 pointer-events-auto flex items-start gap-3 text-left border-border/80"
                 >
-                  {toast.variant === "success" && <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />}
-                  {toast.variant === "warning" && <AlertTriangle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />}
-                  {toast.variant === "danger" && <XCircle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />}
-
+                  <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
                   <div>
                     <h5 className="text-xs font-bold text-foreground">{toast.title}</h5>
-                    <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">{toast.description}</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">{toast.description}</p>
                   </div>
                 </motion.div>
               ))}

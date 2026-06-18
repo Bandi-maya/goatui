@@ -1,177 +1,174 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useTheme } from "next-themes";
-import * as React from "react";
-import { Sun, Moon, Search, Laptop } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import * as React from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useTheme } from "next-themes"
+import { Search, Sun, Moon, Laptop, Menu, X, Sparkles,  } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function Navbar() {
-  const pathname = usePathname();
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
+  const pathname = usePathname()
+  const { theme, setTheme } = useTheme()
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
 
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const navLinks = [
+    { name: "Docs", href: "/docs" },
+    { name: "Components", href: "/components" },
+    { name: "Blocks", href: "/blocks" },
+    { name: "Templates", href: "/templates" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "Changelog", href: "/changelog" },
+  ]
 
-  const isActive = (path: string) => {
-    return pathname === path;
-  };
-
-  const toggleTheme = () => {
-    if (theme === "light") {
-      setTheme("dark");
-    } else {
-      setTheme("light");
-    }
-  };
+  const triggerSearch = () => {
+    window.dispatchEvent(new CustomEvent("open-search"))
+  }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 items-center justify-between px-6 sm:px-8 max-w-7xl">
-        <div className="flex items-center gap-8">
-          {/* Logo and Brand */}
-          <Link href="/" className="flex items-center gap-2.5 transition-all hover:opacity-90">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm shadow-primary/20">
-              {/* Premium geometric goat-like horn SVG logo */}
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-5 w-5"
-              >
-                <path d="M16 3c1 0 2 1 3 3 1.5 3 .5 6-1 8.5L12 21l-6-6.5c-1.5-2.5-2.5-5.5-1-8.5 1-2 2-3 3-3" />
-                <path d="M12 12c.5-1.5 1.5-2.5 3-2.5" />
-                <path d="M12 12C11.5 10.5 10.5 9.5 9 9.5" />
-              </svg>
+    <header className="sticky top-0 z-45 w-full border-b border-border/80 bg-background/70 backdrop-blur-md transition-colors duration-300">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 sm:px-8">
+        
+        {/* Logo */}
+        <div className="flex items-center gap-6">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+              <span className="font-extrabold text-sm">G</span>
             </div>
-            <span className="font-bold text-lg tracking-tight text-foreground">
-              Goat <span className="text-primary font-medium">UI</span>
+            <span className="font-extrabold text-sm tracking-tight text-foreground bg-gradient-to-r from-foreground via-foreground to-foreground/80 bg-clip-text">
+              GOATUI
             </span>
           </Link>
 
-          {/* Navigation Links */}
+          {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-1">
-            <Link href="/docs">
-              <Button
-                variant={isActive("/docs") || pathname?.startsWith("/docs") ? "secondary" : "ghost"}
-                size="sm"
-                className="text-sm font-semibold"
-              >
-                Docs
-              </Button>
-            </Link>
-            <Link href="/components">
-              <Button
-                variant={isActive("/components") || pathname?.startsWith("/components") ? "secondary" : "ghost"}
-                size="sm"
-                className="text-sm font-semibold"
-              >
-                Components
-              </Button>
-            </Link>
-            <Link href="/blocks">
-              <Button
-                variant={isActive("/blocks") ? "secondary" : "ghost"}
-                size="sm"
-                className="text-sm font-semibold"
-              >
-                Blocks
-              </Button>
-            </Link>
-            <Link href="/templates">
-              <Button
-                variant={isActive("/templates") ? "secondary" : "ghost"}
-                size="sm"
-                className="text-sm font-semibold"
-              >
-                Templates
-              </Button>
-            </Link>
-            <Link href="/pricing">
-              <Button
-                variant={isActive("/pricing") ? "secondary" : "ghost"}
-                size="sm"
-                className="text-sm font-semibold"
-              >
-                Pricing
-              </Button>
-            </Link>
-            <Link href="/changelog">
-              <Button
-                variant={isActive("/changelog") ? "secondary" : "ghost"}
-                size="sm"
-                className="text-sm font-semibold"
-              >
-                Changelog
-              </Button>
-            </Link>
+            {navLinks.map((link) => {
+              const active = pathname?.startsWith(link.href)
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all ${
+                    active
+                      ? "text-blue-600 bg-blue-600/5 dark:bg-blue-600/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              )
+            })}
           </nav>
         </div>
 
-        {/* Action Button & Theme Switcher */}
-        <div className="flex items-center gap-2">
-          {/* Search Trigger Button */}
+        {/* Right side controls */}
+        <div className="flex items-center gap-3">
+          
+          {/* Search Trigger */}
           <button
-            onClick={() => {
-              const event = new KeyboardEvent("keydown", {
-                key: "k",
-                metaKey: true,
-                bubbles: true,
-              });
-              document.dispatchEvent(event);
-            }}
-            className="flex h-9 w-40 items-center justify-between rounded-lg border border-input bg-background/50 px-3 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground md:w-48 lg:w-56"
+            onClick={triggerSearch}
+            className="hidden sm:flex items-center gap-2 rounded-lg border border-border bg-card/40 hover:bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground font-semibold w-40 transition-all cursor-pointer"
           >
-            <span className="flex items-center gap-1.5">
-              <Search className="h-3.5 w-3.5" />
-              Search docs...
-            </span>
-            <kbd className="pointer-events-none hidden h-5 select-none items-center gap-0.5 rounded border bg-muted px-1.5 font-mono text-[9px] font-medium opacity-100 sm:flex">
-              Ctrl K
+            <Search className="h-3.5 w-3.5 text-muted-foreground/75" />
+            <span className="flex-1 text-left text-muted-foreground/60">Search docs...</span>
+            <kbd className="pointer-events-none rounded bg-muted px-1.5 font-mono text-[9px] font-bold border border-border/80">
+              ⌘K
             </kbd>
           </button>
 
+          {/* Theme Switcher */}
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="p-2 rounded-lg border border-border bg-card/40 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all cursor-pointer"
+            aria-label="Toggle Theme"
+          >
+            <Sun className="h-4 w-4 dark:hidden" />
+            <Moon className="h-4 w-4 hidden dark:block" />
+          </button>
+
+          {/* GitHub Icon */}
           <a
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:inline-block"
+            className="p-2 rounded-lg border border-border bg-card/40 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all hidden sm:inline-block"
           >
-            <Button variant="ghost" size="icon" className="h-9 w-9">
-              <span className="sr-only">GitHub</span>
-            </Button>
+            
           </a>
 
-          {/* Theme switcher */}
-          {mounted && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="h-9 w-9"
-              aria-label="Toggle theme"
-            >
-              {theme === "light" ? (
-                <Moon className="h-4 w-4 text-foreground" />
-              ) : (
-                <Sun className="h-4 w-4 text-foreground" />
-              )}
-            </Button>
-          )}
-
-          <Link href="/docs">
-            <Button variant="primary" size="sm" className="h-9 font-medium shadow-lg shadow-primary/10">
+          {/* Get Started button */}
+          <Link href="/components" className="hidden md:inline-block">
+            <Button variant="primary" className="h-9 px-4 text-xs font-semibold shadow-md shadow-blue-500/10">
               Get Started
             </Button>
           </Link>
+
+          {/* Mobile menu trigger */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg border border-border bg-card/40 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all cursor-pointer"
+          >
+            {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
         </div>
+
       </div>
+
+      {/* Mobile Menu Drawer */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-border/80 bg-background/95 backdrop-blur-md px-6 py-6 space-y-4 animate-slideDown absolute top-16 left-0 w-full shadow-lg">
+          
+          {/* Mobile search bar */}
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false)
+              triggerSearch()
+            }}
+            className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-xs text-muted-foreground w-full font-semibold"
+          >
+            <Search className="h-4 w-4" />
+            <span>Search components &amp; docs...</span>
+          </button>
+
+          {/* Mobile links */}
+          <nav className="flex flex-col gap-1">
+            {navLinks.map((link) => {
+              const active = pathname?.startsWith(link.href)
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`px-3 py-2.5 rounded-lg text-xs font-bold transition-all ${
+                    active
+                      ? "text-blue-600 bg-blue-600/5"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              )
+            })}
+          </nav>
+
+          <div className="pt-4 border-t border-border flex items-center justify-between gap-4">
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-xs font-bold text-muted-foreground hover:text-foreground"
+            >
+              
+              <span>GitHub Repository</span>
+            </a>
+            <Link href="/components" onClick={() => setMobileMenuOpen(false)}>
+              <Button variant="primary" size="sm">
+                Get Started
+              </Button>
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
-  );
+  )
 }
