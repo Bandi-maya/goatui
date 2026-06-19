@@ -24,7 +24,7 @@ export default function AboutPage() {
           <wc-card className="block rounded-2xl border border-zinc-800 bg-zinc-900/30 p-8 shadow-xl">
             <h2 className="text-2xl font-bold text-zinc-100">The Mission</h2>
             <p className="mt-4 text-zinc-300 leading-relaxed">
-              Peacock UI (formerly GoatUI) was founded on the idea that modern web interfaces shouldn't be locked into specific JavaScript frameworks. By leveraging the Web Components standard, we build interfaces that outlive framework trends, load instantly, and remain highly customizable.
+              Peacock UI (formerly GoatUI) was founded on the idea that modern web interfaces shouldn&apos;t be locked into specific JavaScript frameworks. By leveraging the Web Components standard, we build interfaces that outlive framework trends, load instantly, and remain highly customizable.
             </p>
           </wc-card>
 
