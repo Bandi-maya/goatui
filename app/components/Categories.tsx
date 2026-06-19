@@ -16,7 +16,7 @@ export function Categories({ searchQuery, handleComponentClick, activeComponent,
 
     const categoryGroups = useMemo(() => {
         const groups: Record<string, ComponentItem[]> = {};
-        filteredComponents.forEach(comp => {
+        filteredComponents.forEach((comp: any) => {
             if (!groups[comp.category]) groups[comp.category] = [];
             groups[comp.category].push(comp);
         });
@@ -24,7 +24,7 @@ export function Categories({ searchQuery, handleComponentClick, activeComponent,
     }, [filteredComponents]);
 
     return <div className="space-y-4">
-        {CATEGORIES.map((cat) => {
+        {CATEGORIES.map((cat: any) => {
             const items = categoryGroups[cat] || [];
             if (items.length === 0) return null;
             const isExpanded = expandedCategories[cat];
