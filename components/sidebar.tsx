@@ -12,12 +12,21 @@ export function Sidebar() {
       title: "Getting Started",
       links: [
         { name: "Introduction", href: "/docs" },
-        { name: "Installation", href: "/docs/installation" },
-        { name: "Theming", href: "/docs/theming" },
       ],
     },
     {
-      title: "Components",
+      title: "Core Ecosystem",
+      links: [
+        { name: "Sandbox Playground", href: "/playground" },
+        { name: "Blocks Explorer", href: "/blocks" },
+        { name: "Templates Showcase", href: "/templates" },
+        { name: "Theme Engine", href: "/themes" },
+        { name: "Animation Engine", href: "/animations" },
+        { name: "Design Icons", href: "/icons" },
+      ],
+    },
+    {
+      title: "Components Library",
       links: [
         { name: "3D Product Viewer", href: "/components/3d-product-viewer" },
         { name: "Agent Card", href: "/components/agent-card" },

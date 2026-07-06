@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Layout from "@/components/Layout";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen, Terminal, Sparkles, AlertCircle } from "lucide-react";
+import { BookOpen, Terminal, Sparkles, AlertCircle } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Documentation | Goat UI",
@@ -87,7 +86,7 @@ export default function DocsPage() {
               
               <div className="overflow-hidden rounded-xl bg-card border border-border p-4 text-xs font-mono text-zinc-300 dark:text-zinc-200 shadow-sm">
                 <div className="text-foreground">
-                  <span className="text-blue-500">const</span> nextConfig: NextConfig = &#127;
+                  <span className="text-blue-500">const</span> nextConfig: NextConfig = &#123;
                   <div className="pl-4">output: <span className="text-green-600 dark:text-green-400">&apos;export&apos;</span>,</div>
                   <div className="pl-4">images: &#123; unoptimized: <span className="text-blue-500">true</span> &#125;</div>
                   &#125;;
@@ -104,7 +103,7 @@ export default function DocsPage() {
               
               <div className="overflow-hidden rounded-xl bg-card border border-border p-4 text-xs font-mono text-zinc-300 dark:text-zinc-200 shadow-sm">
                 <div className="text-foreground">
-                  <span className="text-muted-foreground/80">// goatui.d.ts</span>
+                  <span className="text-muted-foreground/80">{"// goatui.d.ts"}</span>
                   <div><span className="text-blue-500">declare module</span> <span className="text-green-600 dark:text-green-400">&quot;react&quot;</span> &#123;</div>
                   <div className="pl-4">interface <span className="text-blue-500">IntrinsicElements</span> &#123;</div>
                   <div className="pl-8">&apos;wc-button&apos;: any;</div>

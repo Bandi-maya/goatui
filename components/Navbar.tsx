@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
 import { Search, Sun, Moon, Laptop, Menu, X, Sparkles,  } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import Button from "../app/components/ui/button"
 
 export default function Navbar() {
   const pathname = usePathname()
