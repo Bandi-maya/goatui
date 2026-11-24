@@ -1,0 +1,3 @@
+import TabAPIExamples from "@/components/catalog/TabAPIExamples";
+import PremiumTabCollection from '@/components/catalog/PremiumTabs';
+export default function Page(){return <main style={{maxWidth:1160,margin:'auto',padding:'40px 24px',background:'#f5f8fd'}}><div style={{color:'#26372e',fontFamily:'var(--font-sans)'}}><p style={{fontSize:11,letterSpacing:'.12em'}}>GOAT UI / TABS</p><h1 style={{fontSize:40,fontWeight:500,letterSpacing:'-.05em'}}>Different ways to find your place.</h1><p style={{fontSize:14,color:'#536555'}}>30 tab designs. Keyboard navigation, clear panels and considered details.</p></div><PremiumTabCollection/><TabAPIExamples/></main>}
