@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect,useState } from "react";
 import { componentsRegistry } from "@/lib/component-registry";
 import { 
   ChevronRight, ArrowLeft, Terminal, Shield, Sparkles, Check, Copy,
@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 
 export default function ComponentDetailWrapper({ slug }: { slug: string }) {
   const router = useRouter();
+  const[mounted,setMounted]=useState(false);useEffect(()=>setMounted(true),[]);
   const [copiedInstall, setCopiedInstall] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
   const [viewport, setViewport] = useState<"desktop" | "tablet" | "mobile">("desktop");
@@ -89,7 +90,7 @@ export default function ComponentDetailWrapper({ slug }: { slug: string }) {
           <div className="bg-secondary/15 rounded-2xl border border-border p-8 flex items-center justify-center min-h-[300px] overflow-hidden">
             <div className={`transition-all duration-300 w-full flex items-center justify-center ${viewportClasses[viewport]}`}>
               <div className="p-8 bg-card border border-border rounded-xl shadow-soft w-full flex justify-center">
-                <matched.component />
+                {mounted&&<matched.component />}
               </div>
             </div>
           </div>
