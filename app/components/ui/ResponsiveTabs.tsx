@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useRef, useEffect } from 'react';
 
 const clsx = (...classes: any[]) => classes.filter(Boolean).join(" ");
@@ -23,7 +25,7 @@ export interface ResponsiveTabsProps {
 }
 
 export default function ResponsiveTabs({
-  tabs,
+  tabs = [],
   activeTab,
   setActiveTab,
   className,
@@ -161,4 +163,3 @@ export default function ResponsiveTabs({
     </div>
   );
 }
-
