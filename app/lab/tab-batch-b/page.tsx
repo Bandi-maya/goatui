@@ -1,0 +1,2 @@
+import TabBatchB,{ShopStepperTabs,MenuCapsuleTabs,ChatSegmentedTabs,FitnessRailTabs,HelpSoftTabs,CrmFolderTabs} from "@/components/catalog/TabBatchB";
+export default function Page(){return <main style={{background:"#f3f4f6",padding:"40px 18px"}}><TabBatchB/><div className="tbb-batch" style={{marginTop:48}}><ShopStepperTabs/><MenuCapsuleTabs/><ChatSegmentedTabs/><FitnessRailTabs/><HelpSoftTabs/><CrmFolderTabs/></div></main>}
