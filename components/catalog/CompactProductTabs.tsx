@@ -1,0 +1,15 @@
+"use client";
+import {WeatherTabs,PlaceDetailsTabs,RecipeTabs,TokenInspectorTabs,HomeControllerTabs} from './TabBatchD';
+import {KanbanTabs,AnalyticsTabs,LearningTabs,IssueTabs,DeliveryTabs,OnboardingTabs} from './TabBatchC';
+import {MilestoneTabNav,TicketTabNav} from './UniqueCompactTabs';
+import {ContactTabNav,PreferenceTabNav,PhotoEditorTabNav,CheckoutTabNav,HiringTabNav,TravelTabNav} from './TabBatchA';
+import {ShopStepperTabs,MenuCapsuleTabs,ChatSegmentedTabs,FitnessRailTabs,HelpSoftTabs,CrmFolderTabs} from './TabBatchB';
+import {ProductTabs} from './ProductTabs';
+import './TabProductStudies.css';
+import './TabProductSettings.css';
+import './TabProductCalendar.css';
+import './CompactProductTabs.css';
+export const productTabNames=['Mail categories','Playlist navigation','Account sections','Transaction filters','Calendar views','File collections','Editor files'];
+const definitions=[{screen:'mail',variant:0,label:'Mail categories',names:['All inbox','Important','Updates'],details:['4 messages','2 important messages','1 update']},{screen:'music',variant:0,label:'Playlist navigation',names:['Songs','About','Made for you'],details:['4 songs · 23 min','Playlist information','Recommended mixes']},{screen:'settings',variant:2,label:'Account sections',names:['My profile','Notifications','Security & access'],details:['Profile settings','Notification preferences','Account security']},{screen:'bank',variant:1,label:'Transaction direction',names:['All transactions','Money in','Money out'],details:['4 transactions','1 incoming transfer','3 outgoing payments']},{screen:'calendar',variant:1,label:'Calendar view',names:['Week','Month','Agenda'],details:['18–22 November','November 2024','Upcoming events']},{screen:'drive',variant:0,label:'File collection',names:['All files','Shared','Starred'],details:['5 files','2 shared files','1 starred file']},{screen:'editor',variant:4,label:'Open files',names:['page.tsx','globals.css','README.md'],details:['TypeScript React','CSS','Markdown']}];
+const batchNavs=[ContactTabNav,MilestoneTabNav,PhotoEditorTabNav,CheckoutTabNav,HiringTabNav,TicketTabNav,ShopStepperTabs,MenuCapsuleTabs,ChatSegmentedTabs,FitnessRailTabs,HelpSoftTabs,CrmFolderTabs,WeatherTabs,PlaceDetailsTabs,RecipeTabs,TokenInspectorTabs,HomeControllerTabs,KanbanTabs,AnalyticsTabs,LearningTabs,IssueTabs,DeliveryTabs,OnboardingTabs];
+export default function CompactProductTabs({index}:{index?:number}){if(index!==undefined&&index>=7){const Component=batchNavs[index-7];return Component?<div className="compact-tab-single"><Component/></div>:null;}const rows=index===undefined?definitions.map((d,i)=>({d,i})):[{d:definitions[index],i:index}];return <div className={`compact-tab-collection${index===undefined?'':' compact-tab-single'}`}>{rows.map(({d,i})=>d&&<div key={i} className={`product-study ${d.screen}-study compact-tab-preview`}><ProductTabs label={d.label} variant={d.variant} orientation={i===2?'vertical':'horizontal'} items={d.names.map((name,j)=>({id:String(j),label:name,badge:i===0&&j===0?'4':undefined,content:<div className="compact-tab-panel">{d.details[j]}</div>}))}/></div>)}</div>}
