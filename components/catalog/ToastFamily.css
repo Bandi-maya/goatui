@@ -1,0 +1,1644 @@
+/* ============================================================
+   GOAT UI — Toast / Alert / Notification family (30 variants)
+   Plain CSS. 4px spacing grid. Radius scale 8 / 12 / 16 / 20 / full.
+   Spring easings + damped keyframes. prefers-reduced-motion honored.
+   ============================================================ */
+
+.tf-root {
+  --tf-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --tf-ease-soft: cubic-bezier(0.22, 1.2, 0.36, 1);
+  --tf-ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --tf-ink: #10131a;
+  --tf-ink-2: #4b5261;
+  --tf-ink-3: #8a91a1;
+  --tf-bg: #ffffff;
+  --tf-line: #e6e8ee;
+  --tf-accent: #5b5bd6;
+  --tf-green: #17a05e;
+  --tf-red: #e5484d;
+  --tf-amber: #f5a524;
+  --tf-blue: #1f7ae0;
+  --tf-r8: 8px;
+  --tf-r12: 12px;
+  --tf-r16: 16px;
+  --tf-r20: 20px;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--tf-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.tf-root *, .tf-root *::before, .tf-root *::after { box-sizing: border-box; }
+
+/* ---------- demo scaffolding (stage + grid + replay) ---------- */
+.tf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 24px;
+  padding: 24px;
+  max-width: 1560px;
+  margin: 0 auto;
+}
+.tf-cell { min-width: 0; }
+.tf-label {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 8px 2px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.tf-label b { font-weight: 700; }
+.tf-label span { color: var(--tf-ink-3); font-weight: 500; font-variant-numeric: tabular-nums; }
+.tf-demo {
+  position: relative;
+  min-height: 300px;
+  border: 1px solid var(--tf-line);
+  border-radius: var(--tf-r20);
+  background:
+    radial-gradient(circle at 1px 1px, #dfe2ea 1px, transparent 1.2px) 0 0 / 20px 20px,
+    linear-gradient(#fbfcfe, #f6f7fa);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  overflow: hidden;
+}
+.tf-replay {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 9999px;
+  border: 1px solid var(--tf-line);
+  background: #fff;
+  color: var(--tf-ink-2);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.35s var(--tf-ease-spring), box-shadow 0.2s ease, color 0.2s ease;
+}
+.tf-replay:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(16, 19, 26, 0.1); color: var(--tf-ink); }
+.tf-replay:active { transform: translateY(0) scale(0.94); }
+
+/* shared button primitives inside toasts */
+.tf-btn {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  border-radius: var(--tf-r8);
+  transition: transform 0.35s var(--tf-ease-spring), box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease, opacity 0.18s ease;
+}
+.tf-btn:hover { transform: translateY(-1px); }
+.tf-btn:active { transform: scale(0.95); }
+.tf-btn:focus-visible, .tf-iconbtn:focus-visible, .tf-replay:focus-visible {
+  outline: 2px solid var(--tf-accent);
+  outline-offset: 2px;
+}
+.tf-iconbtn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--tf-r8);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  transition: transform 0.35s var(--tf-ease-spring), background 0.15s ease, opacity 0.15s ease;
+}
+.tf-iconbtn:hover { transform: scale(1.1); }
+.tf-iconbtn:active { transform: scale(0.9); }
+
+/* entrance keyframes (damped spring approximations) */
+@keyframes tf-rise {
+  0% { opacity: 0; transform: translateY(24px) scale(0.96); }
+  55% { opacity: 1; transform: translateY(-4px) scale(1.008); }
+  78% { transform: translateY(1.5px) scale(0.999); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes tf-drop {
+  0% { opacity: 0; transform: translateY(-28px); }
+  55% { opacity: 1; transform: translateY(5px); }
+  80% { transform: translateY(-2px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes tf-slide-r {
+  0% { opacity: 0; transform: translateX(56px); }
+  60% { opacity: 1; transform: translateX(-5px); }
+  82% { transform: translateX(2px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+@keyframes tf-pop {
+  0% { opacity: 0; transform: scale(0.6); }
+  60% { opacity: 1; transform: scale(1.06); }
+  82% { transform: scale(0.98); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ============================================================
+   01 — Aurora Glass (frosted glass, orb glow)
+   ============================================================ */
+.tf-aurora { position: relative; width: 340px; }
+.tf-aurora::before {
+  content: "";
+  position: absolute;
+  inset: -32px -20px auto -20px;
+  height: 140px;
+  background:
+    radial-gradient(60px 60px at 22% 60%, rgba(91, 91, 214, 0.5), transparent 70%),
+    radial-gradient(70px 70px at 78% 30%, rgba(23, 160, 94, 0.4), transparent 70%);
+  filter: blur(28px);
+  z-index: 0;
+  animation: tf-pop 0.9s var(--tf-ease-expo) both;
+}
+.tf-aurora-card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 16px;
+  border-radius: var(--tf-r20);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 40px rgba(31, 38, 71, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(18px) saturate(1.5);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  animation: tf-rise 0.7s var(--tf-ease-expo) both;
+}
+.tf-aurora-icon {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: conic-gradient(from 210deg, #5b5bd6, #7c6cf0, #17a05e, #5b5bd6);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5), 0 4px 12px rgba(91, 91, 214, 0.4);
+}
+.tf-aurora-body { min-width: 0; flex: 1; }
+.tf-aurora-title { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+.tf-aurora-text { font-size: 13px; line-height: 1.45; color: var(--tf-ink-2); margin-top: 2px; }
+.tf-aurora-close { flex: none; width: 26px; height: 26px; font-size: 14px; opacity: 0.55; }
+.tf-aurora-close:hover { opacity: 1; }
+
+/* ============================================================
+   02 — Slide Stack (3-deep card stack, dismiss promotes)
+   ============================================================ */
+.tf-stack { position: relative; width: 340px; height: 148px; }
+.tf-stack-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 16px;
+  border-radius: var(--tf-r16);
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  box-shadow: 0 10px 30px rgba(16, 19, 26, 0.1);
+  transition: transform 0.55s var(--tf-ease-spring), opacity 0.35s ease, box-shadow 0.35s ease;
+  will-change: transform;
+}
+.tf-stack-card[data-depth="0"] { transform: translateY(0) scale(1); z-index: 3; }
+.tf-stack-card[data-depth="1"] { transform: translateY(12px) scale(0.95); z-index: 2; opacity: 0.85; }
+.tf-stack-card[data-depth="2"] { transform: translateY(24px) scale(0.9); z-index: 1; opacity: 0.6; }
+.tf-stack-card[data-exit="1"] {
+  transform: translateX(120%) rotate(4deg);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.5, -0.2, 0.7, 0.2), opacity 0.4s ease;
+}
+.tf-stack-dot { flex: none; width: 10px; height: 10px; border-radius: 50%; }
+.tf-stack-body { flex: 1; min-width: 0; }
+.tf-stack-title { font-size: 14px; font-weight: 700; }
+.tf-stack-text { font-size: 12.5px; color: var(--tf-ink-2); margin-top: 2px; }
+.tf-stack-x { flex: none; width: 28px; height: 28px; font-size: 15px; color: var(--tf-ink-3); }
+.tf-stack-x:hover { color: var(--tf-ink); background: #f2f3f7; }
+.tf-stack-count {
+  position: absolute;
+  top: -10px;
+  right: -6px;
+  z-index: 4;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 9999px;
+  background: var(--tf-ink);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  display: grid;
+  place-items: center;
+  animation: tf-pop 0.5s var(--tf-ease-spring) both;
+}
+
+/* ============================================================
+   03 — Progress Line (slim bar, bottom countdown, pause on hover)
+   ============================================================ */
+.tf-line {
+  position: relative;
+  width: 340px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px 17px;
+  border-radius: var(--tf-r12);
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  box-shadow: 0 8px 24px rgba(16, 19, 26, 0.08);
+  overflow: hidden;
+  animation: tf-slide-r 0.6s var(--tf-ease-expo) both;
+}
+.tf-line-icon {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--tf-r8);
+  display: grid;
+  place-items: center;
+  background: #e8f7ef;
+  color: var(--tf-green);
+}
+.tf-line-body { flex: 1; min-width: 0; font-size: 13.5px; }
+.tf-line-body b { font-weight: 650; }
+.tf-line-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--tf-green), #4ade80);
+  transform-origin: left;
+  animation: tf-linecount 6s linear forwards;
+}
+.tf-line:hover .tf-line-bar { animation-play-state: paused; }
+@keyframes tf-linecount { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+/* ============================================================
+   04 — Flip Card (3D flip front/back)
+   ============================================================ */
+.tf-flip { width: 320px; height: 132px; perspective: 1000px; }
+.tf-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.7s var(--tf-ease-spring);
+}
+.tf-flip[data-flipped="1"] .tf-flip-inner { transform: rotateY(180deg); }
+.tf-flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--tf-r16);
+  border: 1px solid var(--tf-line);
+  background: var(--tf-bg);
+  box-shadow: 0 10px 28px rgba(16, 19, 26, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  animation: tf-rise 0.6s var(--tf-ease-expo) both;
+}
+.tf-flip-back { transform: rotateY(180deg); animation: none; background: #171a22; color: #f4f5f8; border-color: #2a2e3a; }
+.tf-flip-badge {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--tf-r12);
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #5b5bd6, #9a5bd6);
+  color: #fff;
+}
+.tf-flip-title { font-size: 14px; font-weight: 700; }
+.tf-flip-text { font-size: 12.5px; color: var(--tf-ink-2); margin-top: 2px; }
+.tf-flip-back .tf-flip-text { color: #a7adbd; }
+.tf-flip-hint { margin-left: auto; flex: none; font-size: 11px; color: var(--tf-ink-3); border: 1px solid var(--tf-line); padding: 4px 8px; border-radius: 9999px; }
+.tf-flip-back .tf-flip-hint { border-color: #3a3f4d; color: #a7adbd; }
+.tf-flip-act {
+  padding: 8px 14px;
+  background: #fff;
+  color: #171a22;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+/* ============================================================
+   05 — Terminal (CLI typed output)
+   ============================================================ */
+.tf-term {
+  width: 360px;
+  border-radius: var(--tf-r12);
+  background: #0d1117;
+  border: 1px solid #21262e;
+  box-shadow: 0 16px 40px rgba(5, 8, 15, 0.5);
+  padding: 14px 16px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  animation: tf-rise 0.6s var(--tf-ease-expo) both;
+}
+.tf-term-row { display: flex; gap: 8px; align-items: baseline; white-space: pre-wrap; word-break: break-word; }
+.tf-term-prompt { color: #3fb950; font-weight: 700; flex: none; }
+.tf-term-cmd { color: #e6edf3; }
+.tf-term-ok { color: #3fb950; }
+.tf-term-warn { color: #d29922; }
+.tf-term-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background: #3fb950;
+  vertical-align: -2px;
+  animation: tf-blink 1s steps(1) infinite;
+}
+@keyframes tf-blink { 50% { opacity: 0; } }
+.tf-term-head { display: flex; gap: 6px; margin-bottom: 10px; }
+.tf-term-head i { width: 10px; height: 10px; border-radius: 50%; background: #30363d; }
+.tf-term-head i:nth-child(1) { background: #ff5f57; }
+.tf-term-head i:nth-child(2) { background: #febc2e; }
+.tf-term-head i:nth-child(3) { background: #28c840; }
+
+/* ============================================================
+   06 — Neubrutalist (hard shadow slam)
+   ============================================================ */
+.tf-brut {
+  width: 340px;
+  background: #ffd02f;
+  border: 3px solid #111;
+  border-radius: 0;
+  box-shadow: 6px 6px 0 #111;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  animation: tf-slam 0.55s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+@keyframes tf-slam {
+  0% { opacity: 0; transform: scale(1.18) rotate(-2.5deg); box-shadow: 14px 14px 0 #111; }
+  55% { opacity: 1; transform: scale(0.97) rotate(0.6deg); box-shadow: 4px 4px 0 #111; }
+  100% { opacity: 1; transform: scale(1) rotate(0); box-shadow: 6px 6px 0 #111; }
+}
+.tf-brut:active { transform: translate(2px, 2px); box-shadow: 4px 4px 0 #111; }
+.tf-brut-icon {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border: 3px solid #111;
+  background: #fff;
+  display: grid;
+  place-items: center;
+}
+.tf-brut-title { font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; color: #111; }
+.tf-brut-text { font-size: 12.5px; font-weight: 600; color: #111; margin-top: 3px; }
+.tf-brut-x {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border: 2px solid #111;
+  background: #fff;
+  font-weight: 900;
+  font-size: 13px;
+  box-shadow: 2px 2px 0 #111;
+}
+.tf-brut-x:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 #111; }
+.tf-brut-x:active { transform: translate(2px, 2px); box-shadow: 0 0 0 #111; }
+
+/* ============================================================
+   07 — Orbit Badge (avatar with orbiting indicator)
+   ============================================================ */
+.tf-orbit {
+  width: 340px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  border-radius: var(--tf-r16);
+  box-shadow: 0 10px 28px rgba(16, 19, 26, 0.09);
+  animation: tf-rise 0.6s var(--tf-ease-expo) both;
+}
+.tf-orbit-avatarwrap { position: relative; flex: none; width: 52px; height: 52px; }
+.tf-orbit-avatar {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f2a65a, #d96a4f);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+}
+.tf-orbit-ring { position: absolute; inset: 0; animation: tf-spin 9s linear infinite; }
+@keyframes tf-spin { to { transform: rotate(360deg); } }
+.tf-orbit-body { flex: 1; min-width: 0; }
+.tf-orbit-title { font-size: 13.5px; font-weight: 650; }
+.tf-orbit-title b { font-weight: 800; }
+.tf-orbit-text { font-size: 12.5px; color: var(--tf-ink-2); margin-top: 2px; }
+.tf-orbit-time { flex: none; font-size: 11px; color: var(--tf-ink-3); font-variant-numeric: tabular-nums; align-self: flex-start; margin-top: 2px; }
+
+/* ============================================================
+   08 — Ticket Stub (perforated tear)
+   ============================================================ */
+.tf-ticket {
+  width: 360px;
+  display: flex;
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  border-radius: var(--tf-r16);
+  box-shadow: 0 12px 32px rgba(16, 19, 26, 0.1);
+  overflow: hidden;
+  animation: tf-drop 0.7s var(--tf-ease-expo) both;
+}
+.tf-ticket-stub {
+  flex: none;
+  width: 92px;
+  background: #171a22;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 8px;
+}
+.tf-ticket-stub .tf-ticket-amt { font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.tf-ticket-stub .tf-ticket-cur { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #9aa1b5; }
+.tf-ticket-code {
+  width: 56px;
+  height: 26px;
+  background: repeating-linear-gradient(90deg, #fff 0 2px, transparent 2px 5px, #fff 5px 6px, transparent 6px 10px);
+  opacity: 0.85;
+}
+.tf-ticket-tear {
+  flex: none;
+  width: 0;
+  border-left: 2px dashed #c9cdd8;
+  position: relative;
+}
+.tf-ticket-tear::before, .tf-ticket-tear::after {
+  content: "";
+  position: absolute;
+  left: -8px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f6f7fa;
+  border: 1px solid var(--tf-line);
+}
+.tf-ticket-tear::before { top: -8px; }
+.tf-ticket-tear::after { bottom: -8px; }
+.tf-ticket-main { flex: 1; padding: 16px; min-width: 0; }
+.tf-ticket-title { font-size: 14px; font-weight: 700; }
+.tf-ticket-text { font-size: 12.5px; color: var(--tf-ink-2); margin-top: 3px; }
+.tf-ticket-meta { margin-top: 10px; display: flex; gap: 8px; }
+.tf-ticket-chip { font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 8px; border-radius: 9999px; background: #f2f3f7; color: var(--tf-ink-2); }
+
+/* ============================================================
+   09 — Liquid Blob (gooey merge entrance)
+   ============================================================ */
+.tf-goo-stage { position: relative; width: 220px; height: 130px; }
+.tf-goo-blobs { position: absolute; inset: 0; filter: url(#tf-goo); }
+.tf-goo-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  margin: -11px;
+  border-radius: 50%;
+  background: var(--tf-accent);
+  animation: tf-goo-merge 1s var(--tf-ease-expo) both;
+}
+.tf-goo-dot:nth-child(1) { --gx: -52px; --gd: 0s; }
+.tf-goo-dot:nth-child(2) { --gx: -18px; --gd: 0.08s; }
+.tf-goo-dot:nth-child(3) { --gx: 18px; --gd: 0.16s; }
+.tf-goo-dot:nth-child(4) { --gx: 52px; --gd: 0.24s; }
+@keyframes tf-goo-merge {
+  0% { transform: translateX(var(--gx)) scale(0.4); opacity: 0; }
+  70% { transform: translateX(0) scale(1); opacity: 1; }
+  100% { transform: translateX(0) scale(1.6); opacity: 1; }
+}
+.tf-goo-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: 150px;
+  padding: 14px 16px;
+  border-radius: 9999px;
+  background: var(--tf-accent);
+  color: #fff;
+  text-align: center;
+  animation: tf-pop 0.7s var(--tf-ease-spring) 0.5s both;
+}
+.tf-goo-card b { display: block; font-size: 13.5px; }
+.tf-goo-card span { font-size: 11.5px; opacity: 0.85; }
+
+/* ============================================================
+   10 — Rail Snackbar (accent rail + undo ring countdown)
+   ============================================================ */
+.tf-rail {
+  width: 360px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px 12px 18px;
+  border-radius: var(--tf-r12);
+  background: #171a22;
+  color: #f4f5f8;
+  box-shadow: 0 14px 36px rgba(5, 8, 15, 0.45);
+  position: relative;
+  overflow: hidden;
+  animation: tf-rise 0.6s var(--tf-ease-expo) both;
+}
+.tf-rail::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #7c6cf0, #5b5bd6);
+}
+.tf-rail-text { flex: 1; min-width: 0; font-size: 13.5px; }
+.tf-rail-text b { font-weight: 700; }
+.tf-rail-undo {
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #b9a8ff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.tf-rail-undo svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+.tf-rail-undo circle { fill: none; stroke-width: 2.5; }
+.tf-rail-undo .track { stroke: #2a2e3a; }
+.tf-rail-undo .prog { stroke: #b9a8ff; stroke-linecap: round; stroke-dasharray: 100; animation: tf-ring 6s linear forwards; }
+.tf-rail:hover .tf-rail-undo .prog { animation-play-state: paused; }
+@keyframes tf-ring { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 100; } }
+
+/* ============================================================
+   11 — Expand Pill (pill morphs into full toast)
+   ============================================================ */
+.tf-pill {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 9999px;
+  background: var(--tf-ink);
+  color: #fff;
+  overflow: hidden;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  display: block;
+  transition:
+    width 0.55s var(--tf-ease-spring),
+    height 0.55s var(--tf-ease-spring),
+    border-radius 0.55s var(--tf-ease-spring),
+    box-shadow 0.25s ease,
+    transform 0.35s var(--tf-ease-spring);
+  box-shadow: 0 10px 26px rgba(16, 19, 26, 0.25);
+}
+.tf-pill:hover { transform: translateY(-2px); box-shadow: 0 16px 34px rgba(16, 19, 26, 0.3); }
+.tf-pill[data-open="1"] { width: 320px; height: 108px; border-radius: var(--tf-r20); cursor: default; }
+.tf-pill-bell {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  transition: opacity 0.25s ease, transform 0.45s var(--tf-ease-spring);
+}
+.tf-pill[data-open="1"] .tf-pill-bell { opacity: 0; transform: scale(0.5) rotate(-30deg); pointer-events: none; }
+.tf-pill-dot {
+  position: absolute;
+  top: 12px;
+  right: 13px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ff5f57;
+  box-shadow: 0 0 0 3px var(--tf-ink);
+}
+.tf-pill-body {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px 14px 64px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease 0.18s, transform 0.5s var(--tf-ease-spring) 0.18s;
+  text-align: left;
+}
+.tf-pill[data-open="1"] .tf-pill-body { opacity: 1; transform: translateY(0); }
+.tf-pill-body .tf-pill-mini {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--tf-r12);
+  background: rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+  color: #ffd166;
+}
+.tf-pill-title { font-size: 13.5px; font-weight: 700; color: #fff; }
+.tf-pill-text { font-size: 12px; color: #b9bdca; margin-top: 2px; }
+
+/* ============================================================
+   12 — Notification Center (bell + panel, unread, mark all read)
+   ============================================================ */
+.tf-nc { position: relative; width: 380px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.tf-nc-bell {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  box-shadow: 0 8px 20px rgba(16, 19, 26, 0.1);
+  color: var(--tf-ink);
+  display: grid;
+  place-items: center;
+}
+.tf-nc-bell:hover { transform: translateY(-2px) rotate(-6deg); }
+.tf-nc-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 9999px;
+  background: var(--tf-red);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  display: grid;
+  place-items: center;
+  border: 2px solid #fff;
+  animation: tf-pop 0.45s var(--tf-ease-spring) both;
+}
+.tf-nc-panel {
+  width: 100%;
+  border-radius: var(--tf-r20);
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  box-shadow: 0 24px 60px rgba(16, 19, 26, 0.16);
+  overflow: hidden;
+  transform-origin: top center;
+  animation: tf-pop 0.5s var(--tf-ease-spring) both;
+}
+.tf-nc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--tf-line);
+}
+.tf-nc-head b { font-size: 14px; }
+.tf-nc-clear { font-size: 12px; font-weight: 650; color: var(--tf-accent); padding: 6px 10px; }
+.tf-nc-clear:hover { background: #eef; }
+.tf-nc-list { max-height: 260px; overflow: auto; }
+.tf-nc-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f1f2f6;
+  align-items: flex-start;
+  animation: tf-rise 0.5s var(--tf-ease-expo) both;
+  animation-delay: calc(var(--i) * 70ms);
+}
+.tf-nc-item:last-child { border-bottom: 0; }
+.tf-nc-ic {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--tf-r8);
+  display: grid;
+  place-items: center;
+}
+.tf-nc-itembody { flex: 1; min-width: 0; }
+.tf-nc-itemtitle { font-size: 13px; font-weight: 650; }
+.tf-nc-itemtext { font-size: 12px; color: var(--tf-ink-2); margin-top: 1px; }
+.tf-nc-itemtime { flex: none; font-size: 10.5px; color: var(--tf-ink-3); font-variant-numeric: tabular-nums; }
+.tf-nc-unread { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--tf-accent); margin-top: 6px; }
+.tf-nc-item[data-read="1"] .tf-nc-unread { opacity: 0; }
+.tf-nc-item[data-read="1"] { opacity: 0.65; }
+
+/* ============================================================
+   13 — Banner Announcement (full-width gradient mesh)
+   ============================================================ */
+.tf-banner {
+  width: 100%;
+  max-width: 520px;
+  position: relative;
+  border-radius: var(--tf-r16);
+  padding: 14px 48px 14px 16px;
+  color: #fff;
+  background:
+    radial-gradient(220px 90px at 12% 120%, rgba(124, 108, 240, 0.65), transparent 70%),
+    radial-gradient(260px 110px at 95% -20%, rgba(23, 160, 94, 0.5), transparent 70%),
+    linear-gradient(100deg, #1b1e30, #2a2250);
+  box-shadow: 0 14px 36px rgba(27, 30, 48, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+  animation: tf-drop 0.6s var(--tf-ease-expo) both;
+}
+.tf-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.14) 46%, transparent 60%);
+  transform: translateX(-120%);
+  animation: tf-shine 3.2s ease 0.9s infinite;
+  pointer-events: none;
+}
+@keyframes tf-shine { 45%, 100% { transform: translateX(120%); } }
+.tf-banner-chip {
+  flex: none;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 4px 9px;
+  border-radius: 9999px;
+}
+.tf-banner-text { flex: 1; min-width: 0; font-size: 13px; }
+.tf-banner-text b { font-weight: 750; }
+.tf-banner-cta {
+  flex: none;
+  padding: 8px 14px;
+  background: #fff;
+  color: #1b1e30;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 9999px;
+}
+.tf-banner-x {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+}
+.tf-banner-x:hover { color: #fff; background: rgba(255, 255, 255, 0.14); }
+
+/* ============================================================
+   14 — Inline Field Alert (form error, shake)
+   ============================================================ */
+.tf-field { width: 320px; animation: tf-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) 0.25s both; }
+@keyframes tf-shake {
+  0%, 100% { transform: translateX(0); }
+  18% { transform: translateX(-7px); }
+  38% { transform: translateX(6px); }
+  58% { transform: translateX(-4px); }
+  78% { transform: translateX(3px); }
+}
+.tf-field-label { display: block; font-size: 12.5px; font-weight: 650; margin-bottom: 6px; }
+.tf-field-wrap { position: relative; }
+.tf-field-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 40px 0 14px;
+  font: inherit;
+  font-size: 14px;
+  border-radius: var(--tf-r12);
+  border: 1.5px solid var(--tf-red);
+  background: #fff;
+  color: var(--tf-ink);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(229, 72, 77, 0.12);
+}
+.tf-field-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: var(--tf-red);
+  animation: tf-pop 0.4s var(--tf-ease-spring) 0.55s both;
+}
+.tf-field-msg {
+  position: relative;
+  margin-top: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--tf-red);
+  padding-left: 2px;
+  animation: tf-rise 0.45s var(--tf-ease-expo) 0.5s both;
+}
+.tf-field-msg::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: -7px;
+  border: 4px solid transparent;
+  border-bottom-color: currentColor;
+  opacity: 0.25;
+}
+
+/* ============================================================
+   15 — Confetti Success (particle burst)
+   ============================================================ */
+.tf-confetti { position: relative; }
+.tf-confetti-card {
+  position: relative;
+  z-index: 1;
+  width: 320px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: var(--tf-r16);
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  box-shadow: 0 12px 32px rgba(16, 19, 26, 0.1);
+  animation: tf-pop 0.55s var(--tf-ease-spring) both;
+}
+.tf-confetti-check {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--tf-green);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  animation: tf-pop 0.5s var(--tf-ease-spring) 0.15s both;
+}
+.tf-confetti-title { font-size: 14px; font-weight: 750; }
+.tf-confetti-text { font-size: 12.5px; color: var(--tf-ink-2); margin-top: 1px; }
+.tf-confetti-bits { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.tf-confetti-bits i {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 7px;
+  height: 11px;
+  border-radius: 2px;
+  background: var(--c);
+  animation: tf-burst 1s cubic-bezier(0.15, 0.8, 0.3, 1) both;
+  animation-delay: var(--d);
+}
+@keyframes tf-burst {
+  0% { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.7); opacity: 0; }
+}
+
+/* ============================================================
+   16 — Neon Cyber (clipped corners, scanline)
+   ============================================================ */
+.tf-neon {
+  position: relative;
+  width: 360px;
+  background: #05070d;
+  color: #d6faff;
+  padding: 16px 18px;
+  clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
+  border: 0;
+  box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.55), 0 0 24px rgba(0, 229, 255, 0.25), inset 0 0 32px rgba(0, 229, 255, 0.06);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  overflow: hidden;
+  animation: tf-neon-in 0.55s steps(6) both;
+}
+@keyframes tf-neon-in {
+  0% { opacity: 0; transform: translateX(-8px) skewX(-4deg); }
+  30% { opacity: 1; transform: translateX(5px) skewX(2deg); }
+  55% { transform: translateX(-2px) skewX(-1deg); }
+  100% { opacity: 1; transform: translateX(0) skewX(0); }
+}
+.tf-neon::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 34%;
+  top: -40%;
+  background: linear-gradient(180deg, transparent, rgba(0, 229, 255, 0.13), transparent);
+  animation: tf-scan 2.6s linear 0.8s infinite;
+  pointer-events: none;
+}
+@keyframes tf-scan { to { top: 130%; } }
+.tf-neon-tag {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #00e5ff;
+  border: 1px solid rgba(0, 229, 255, 0.5);
+  padding: 3px 8px;
+  margin-bottom: 8px;
+}
+.tf-neon-title { font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.tf-neon-text { font-size: 12px; color: #7fb9c4; margin-top: 4px; }
+
+/* ============================================================
+   17 — Minimal Dot (hairline, pulse dot)
+   ============================================================ */
+.tf-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px 9px 12px;
+  border-radius: 9999px;
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  box-shadow: 0 6px 18px rgba(16, 19, 26, 0.07);
+  animation: tf-rise 0.5s var(--tf-ease-expo) both;
+}
+.tf-mini-dot { position: relative; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--tf-green); }
+.tf-mini-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--tf-green);
+  opacity: 0;
+  animation: tf-pulse 2s ease-out infinite;
+}
+@keyframes tf-pulse {
+  0% { transform: scale(0.6); opacity: 0.7; }
+  70% { transform: scale(1.25); opacity: 0; }
+  100% { opacity: 0; }
+}
+.tf-mini-text { font-size: 13px; font-weight: 550; }
+.tf-mini-time { font-size: 11.5px; color: var(--tf-ink-3); font-variant-numeric: tabular-nums; }
+.tf-mini-act {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--tf-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ============================================================
+   18 — Gauge Toast (circular progress, count-up)
+   ============================================================ */
+.tf-gauge {
+  width: 340px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: var(--tf-r16);
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  box-shadow: 0 10px 28px rgba(16, 19, 26, 0.09);
+  animation: tf-rise 0.6s var(--tf-ease-expo) both;
+}
+.tf-gauge-dial { position: relative; flex: none; width: 52px; height: 52px; }
+.tf-gauge-dial svg { transform: rotate(-90deg); display: block; }
+.tf-gauge-dial circle { fill: none; stroke-width: 5; }
+.tf-gauge-dial .track { stroke: #eceef4; }
+.tf-gauge-dial .prog {
+  stroke: var(--tf-accent);
+  stroke-linecap: round;
+  stroke-dasharray: 138.2;
+  stroke-dashoffset: 138.2;
+  animation: tf-gaugefill 2.4s var(--tf-ease-expo) 0.3s forwards;
+}
+@keyframes tf-gaugefill { to { stroke-dashoffset: 34.5; } }
+.tf-gauge-pct {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.tf-gauge-title { font-size: 13.5px; font-weight: 700; }
+.tf-gauge-text { font-size: 12px; color: var(--tf-ink-2); margin-top: 2px; }
+.tf-gauge-bar {
+  margin-top: 8px;
+  height: 4px;
+  width: 150px;
+  border-radius: 9999px;
+  background: #eceef4;
+  overflow: hidden;
+}
+.tf-gauge-bar i {
+  display: block;
+  height: 100%;
+  width: 75%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #7c6cf0, var(--tf-accent));
+  animation: tf-barw 2.4s var(--tf-ease-expo) 0.3s both;
+}
+@keyframes tf-barw { from { width: 0; } to { width: 75%; } }
+
+/* ============================================================
+   19 — Chat Bubble (typing then message)
+   ============================================================ */
+.tf-chat { width: 320px; display: flex; gap: 10px; align-items: flex-end; animation: tf-rise 0.5s var(--tf-ease-expo) both; }
+.tf-chat-avatar {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5b8def, #7c6cf0);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 4px 10px rgba(91, 141, 239, 0.4);
+}
+.tf-chat-bubble {
+  position: relative;
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  border-radius: var(--tf-r16) var(--tf-r16) var(--tf-r16) 4px;
+  padding: 10px 14px;
+  box-shadow: 0 8px 22px rgba(16, 19, 26, 0.08);
+  min-width: 120px;
+  animation: tf-pop 0.45s var(--tf-ease-spring) both;
+}
+.tf-chat-bubble::before {
+  content: "";
+  position: absolute;
+  left: -5px;
+  bottom: 0;
+  width: 10px;
+  height: 10px;
+  background: inherit;
+  border-left: 1px solid var(--tf-line);
+  border-bottom: 1px solid var(--tf-line);
+  clip-path: polygon(100% 0, 0 100%, 100% 100%);
+}
+.tf-chat-name { font-size: 11px; font-weight: 700; color: var(--tf-accent); margin-bottom: 2px; }
+.tf-chat-msg { font-size: 13px; line-height: 1.4; }
+.tf-chat-typing { display: inline-flex; gap: 4px; padding: 4px 2px; }
+.tf-chat-typing i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #b7bcc9;
+  animation: tf-typedot 1.1s ease-in-out infinite;
+}
+.tf-chat-typing i:nth-child(2) { animation-delay: 0.15s; }
+.tf-chat-typing i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes tf-typedot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* ============================================================
+   20 — Achievement Unlock (medal pop, shine, XP count-up)
+   ============================================================ */
+.tf-achieve {
+  width: 360px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 16px;
+  border-radius: var(--tf-r20);
+  background: linear-gradient(135deg, #1c1526, #2d1f3d);
+  border: 1px solid rgba(255, 209, 102, 0.35);
+  color: #f7efdd;
+  box-shadow: 0 18px 44px rgba(20, 12, 34, 0.5), 0 0 40px rgba(255, 209, 102, 0.12);
+  animation: tf-rise 0.6s var(--tf-ease-expo) both;
+}
+.tf-achieve-medal {
+  position: relative;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, #ffe9b0, #f5b942 55%, #c67f16);
+  display: grid;
+  place-items: center;
+  color: #5c3c05;
+  box-shadow: inset 0 -3px 6px rgba(92, 60, 5, 0.45), 0 6px 16px rgba(245, 185, 66, 0.45);
+  animation: tf-pop 0.6s var(--tf-ease-spring) 0.2s both;
+  overflow: hidden;
+}
+.tf-achieve-medal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.7) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: tf-shine 2.4s ease 0.9s 2;
+}
+.tf-achieve-kicker { font-size: 10px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #ffd166; }
+.tf-achieve-title { font-size: 14.5px; font-weight: 750; margin-top: 2px; }
+.tf-achieve-xp { font-size: 12.5px; color: #d9c9a8; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.tf-achieve-xp b { color: #ffd166; font-weight: 800; }
+
+/* ============================================================
+   21 — Desktop Window Alert (macOS-style dialog)
+   ============================================================ */
+.tf-win {
+  width: 360px;
+  border-radius: var(--tf-r16);
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  box-shadow: 0 30px 80px rgba(16, 19, 26, 0.28);
+  overflow: hidden;
+  animation: tf-win-in 0.5s var(--tf-ease-spring) both;
+}
+@keyframes tf-win-in {
+  0% { opacity: 0; transform: scale(0.88) translateY(14px); }
+  62% { opacity: 1; transform: scale(1.02) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.tf-win-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: linear-gradient(#fafbfc, #f0f1f4);
+  border-bottom: 1px solid var(--tf-line);
+}
+.tf-win-bar i { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 1px rgba(0,0,0,0.2); }
+.tf-win-bar i:nth-child(1) { background: #ff5f57; }
+.tf-win-bar i:nth-child(2) { background: #febc2e; }
+.tf-win-bar i:nth-child(3) { background: #28c840; }
+.tf-win-bar span { margin-left: 8px; font-size: 12px; font-weight: 650; color: var(--tf-ink-2); }
+.tf-win-body { display: flex; gap: 12px; padding: 18px 16px 6px; align-items: flex-start; }
+.tf-win-icon {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--tf-r12);
+  background: linear-gradient(135deg, #ffd166, #f5a524);
+  display: grid;
+  place-items: center;
+  color: #5c3c05;
+  box-shadow: 0 6px 14px rgba(245, 165, 36, 0.4);
+}
+.tf-win-title { font-size: 14.5px; font-weight: 750; }
+.tf-win-text { font-size: 12.5px; color: var(--tf-ink-2); margin-top: 3px; line-height: 1.5; }
+.tf-win-actions { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 16px 16px; }
+.tf-win-ghost { padding: 8px 16px; background: #f2f3f7; color: var(--tf-ink); font-size: 13px; font-weight: 650; }
+.tf-win-ghost:hover { background: #e8eaF0; }
+.tf-win-primary {
+  padding: 8px 18px;
+  background: linear-gradient(180deg, #3d8bfd, #1f6ae0);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(31, 106, 224, 0.4), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+
+/* ============================================================
+   22 — Skeleton to Ready (shimmer then content pop)
+   ============================================================ */
+.tf-skel {
+  width: 340px;
+  padding: 14px 16px;
+  border-radius: var(--tf-r16);
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  box-shadow: 0 10px 28px rgba(16, 19, 26, 0.09);
+  animation: tf-rise 0.5s var(--tf-ease-expo) both;
+}
+.tf-skel-row { display: flex; gap: 12px; align-items: center; }
+.tf-skel-avatar, .tf-skel-bar {
+  background: linear-gradient(90deg, #eceef4 25%, #f7f8fb 50%, #eceef4 75%);
+  background-size: 200% 100%;
+  animation: tf-shimmer 1.3s linear infinite;
+}
+@keyframes tf-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+.tf-skel-avatar { flex: none; width: 40px; height: 40px; border-radius: 50%; }
+.tf-skel-bars { flex: 1; display: grid; gap: 8px; }
+.tf-skel-bar { height: 12px; border-radius: 6px; }
+.tf-skel-bar.w60 { width: 60%; }
+.tf-skel-bar.w85 { width: 85%; }
+.tf-skel-live { display: flex; gap: 12px; align-items: center; animation: tf-pop 0.5s var(--tf-ease-spring) both; }
+.tf-skel-liveicon {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e8f0fe;
+  color: var(--tf-blue);
+  display: grid;
+  place-items: center;
+}
+.tf-skel-livetitle { font-size: 14px; font-weight: 700; }
+.tf-skel-livetext { font-size: 12.5px; color: var(--tf-ink-2); margin-top: 2px; }
+
+/* ============================================================
+   23 — Split Diagonal (skewed icon zone, corner entry)
+   ============================================================ */
+.tf-split {
+  position: relative;
+  width: 360px;
+  display: flex;
+  border-radius: var(--tf-r12);
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  box-shadow: 0 12px 30px rgba(16, 19, 26, 0.1);
+  overflow: hidden;
+  animation: tf-corner 0.65s var(--tf-ease-expo) both;
+}
+@keyframes tf-corner {
+  0% { opacity: 0; transform: translate(36px, 24px) scale(0.95); }
+  60% { opacity: 1; transform: translate(-3px, -2px) scale(1.004); }
+  100% { opacity: 1; transform: translate(0, 0) scale(1); }
+}
+.tf-split-zone {
+  position: relative;
+  flex: none;
+  width: 72px;
+  background: linear-gradient(160deg, #5b5bd6, #8f5bd6);
+  display: grid;
+  place-items: center;
+  color: #fff;
+}
+.tf-split-zone::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -13px;
+  bottom: 0;
+  width: 26px;
+  background: inherit;
+  transform: skewX(-9deg);
+}
+.tf-split-body { flex: 1; padding: 16px 16px 16px 28px; min-width: 0; }
+.tf-split-title { font-size: 14px; font-weight: 750; }
+.tf-split-text { font-size: 12.5px; color: var(--tf-ink-2); margin-top: 3px; }
+.tf-split-link { margin-top: 8px; display: inline-block; font-size: 12.5px; font-weight: 700; color: var(--tf-accent); }
+
+/* ============================================================
+   24 — Sticky Note (tape, curl, wobble)
+   ============================================================ */
+.tf-sticky {
+  position: relative;
+  width: 260px;
+  background: linear-gradient(175deg, #fffbe0, #fff3b8);
+  padding: 34px 18px 18px;
+  transform: rotate(-2deg);
+  box-shadow: 0 14px 28px rgba(120, 100, 20, 0.22);
+  animation: tf-sticky-in 0.8s var(--tf-ease-spring) both;
+}
+@keyframes tf-sticky-in {
+  0% { opacity: 0; transform: rotate(-9deg) translateY(-30px); }
+  50% { opacity: 1; transform: rotate(2.5deg) translateY(4px); }
+  72% { transform: rotate(-3.5deg) translateY(-1px); }
+  100% { opacity: 1; transform: rotate(-2deg) translateY(0); }
+}
+.tf-sticky::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 96px;
+  height: 26px;
+  transform: translateX(-50%) rotate(-1.5deg);
+  background: rgba(255, 255, 255, 0.55);
+  border-left: 1px dashed rgba(0, 0, 0, 0.08);
+  border-right: 1px dashed rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+.tf-sticky::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 26px;
+  height: 26px;
+  background: linear-gradient(315deg, transparent 49%, rgba(0, 0, 0, 0.08) 50%, #fffdf0 52%);
+  border-radius: 0 0 4px 0;
+}
+.tf-sticky-title { font-size: 14px; font-weight: 800; color: #6b5410; font-family: "Segoe Print", "Bradley Hand", cursive; }
+.tf-sticky-text { font-size: 13px; line-height: 1.5; color: #7a621a; margin-top: 4px; font-family: "Segoe Print", "Bradley Hand", cursive; }
+.tf-sticky-pin {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  background: none;
+  color: #a3852a;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* ============================================================
+   25 — Pixel Retro (notched corners, scanlines, blink)
+   ============================================================ */
+.tf-pixel {
+  width: 360px;
+  background: #1a1c2c;
+  color: #f4f4f4;
+  padding: 16px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  position: relative;
+  clip-path: polygon(0 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px));
+  box-shadow: 0 0 0 4px #5a5e8c;
+  animation: tf-pop 0.4s steps(4) both;
+}
+.tf-pixel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0 2px, transparent 2px 4px);
+  pointer-events: none;
+}
+.tf-pixel-title { font-size: 13px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #8dff8d; }
+.tf-pixel-text { font-size: 12px; color: #c8cbe0; margin-top: 6px; line-height: 1.6; }
+.tf-pixel-ok {
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #ffd866;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  animation: tf-blink 1.1s steps(1) infinite;
+}
+
+/* ============================================================
+   26 — Weather Alert (stripe ticker, pulse icon)
+   ============================================================ */
+.tf-weather {
+  width: 380px;
+  border-radius: var(--tf-r12);
+  background: #fff;
+  border: 1px solid #f3d08a;
+  box-shadow: 0 12px 30px rgba(180, 120, 20, 0.18);
+  overflow: hidden;
+  animation: tf-slide-r 0.55s var(--tf-ease-expo) both;
+}
+.tf-weather-tape {
+  height: 12px;
+  background: repeating-linear-gradient(-45deg, #f5a524 0 14px, #1c1c1c 14px 28px);
+  background-size: 40px 40px;
+  animation: tf-tape 1.4s linear infinite;
+}
+@keyframes tf-tape { to { background-position: 40px 0; } }
+.tf-weather-body { display: flex; gap: 12px; padding: 14px 16px; align-items: flex-start; }
+.tf-weather-icon {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #fff4dd;
+  color: #d98e04;
+  display: grid;
+  place-items: center;
+  animation: tf-pulseicon 1.6s ease-in-out infinite;
+}
+@keyframes tf-pulseicon {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 165, 36, 0.4); }
+  50% { transform: scale(1.07); box-shadow: 0 0 0 8px rgba(245, 165, 36, 0); }
+}
+.tf-weather-title { font-size: 13.5px; font-weight: 800; color: #8a5a00; text-transform: uppercase; letter-spacing: 0.03em; }
+.tf-weather-text { font-size: 12.5px; color: #6b5a33; margin-top: 3px; line-height: 1.5; }
+.tf-weather-text b { font-variant-numeric: tabular-nums; }
+
+/* ============================================================
+   27 — Media Rich (thumbnail art, hover lift)
+   ============================================================ */
+.tf-media {
+  width: 360px;
+  display: flex;
+  gap: 14px;
+  padding: 12px;
+  border-radius: var(--tf-r16);
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  box-shadow: 0 10px 26px rgba(16, 19, 26, 0.09);
+  align-items: center;
+  animation: tf-rise 0.6s var(--tf-ease-expo) both;
+  transition: transform 0.4s var(--tf-ease-spring), box-shadow 0.25s ease;
+}
+.tf-media:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(16, 19, 26, 0.14); }
+.tf-media-thumb {
+  position: relative;
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--tf-r12);
+  background:
+    radial-gradient(40px 40px at 30% 25%, #ffd166, transparent 60%),
+    radial-gradient(50px 50px at 75% 70%, #ef5da8, transparent 65%),
+    linear-gradient(135deg, #5b5bd6, #2b2d6e);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  animation: tf-pop 0.5s var(--tf-ease-spring) 0.2s both;
+}
+.tf-media-body { flex: 1; min-width: 0; }
+.tf-media-title { font-size: 13.5px; font-weight: 700; }
+.tf-media-text { font-size: 12px; color: var(--tf-ink-2); margin-top: 2px; }
+.tf-media-meta { font-size: 10.5px; color: var(--tf-ink-3); margin-top: 5px; letter-spacing: 0.04em; text-transform: uppercase; }
+.tf-media-play {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--tf-ink);
+  color: #fff;
+  display: grid;
+  place-items: center;
+}
+
+/* ============================================================
+   28 — Destructive Undo (icon morph, inline countdown)
+   ============================================================ */
+.tf-morph {
+  width: 360px;
+  padding: 14px 16px;
+  border-radius: var(--tf-r16);
+  background: #1f1113;
+  border: 1px solid #4a2028;
+  color: #f6e8e9;
+  box-shadow: 0 14px 36px rgba(30, 8, 12, 0.5);
+  animation: tf-rise 0.55s var(--tf-ease-expo) both;
+}
+.tf-morph-top { display: flex; gap: 12px; align-items: center; }
+.tf-morph-icon {
+  position: relative;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--tf-r12);
+  background: rgba(229, 72, 77, 0.16);
+  display: grid;
+  place-items: center;
+  color: #ff8589;
+}
+.tf-morph-icon svg { position: absolute; transition: opacity 0.3s ease, transform 0.5s var(--tf-ease-spring); }
+.tf-morph-icon .ic-trash { opacity: 0; transform: rotate(-90deg) scale(0.4); }
+.tf-morph-icon .ic-warn { opacity: 1; transform: rotate(0) scale(1); }
+.tf-morph-title { flex: 1; font-size: 13.5px; font-weight: 650; }
+.tf-morph-actions { flex: none; display: flex; gap: 8px; }
+.tf-morph-undo {
+  padding: 7px 14px;
+  background: #e5484d;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 750;
+}
+.tf-morph-undo:hover { background: #f2555a; }
+.tf-morph-x { width: 30px; height: 30px; color: #a98a8e; font-size: 14px; }
+.tf-morph-x:hover { color: #fff; }
+.tf-morph-bar { margin-top: 10px; height: 3px; border-radius: 9999px; background: #3d2126; overflow: hidden; }
+.tf-morph-bar i {
+  display: block;
+  height: 100%;
+  background: #e5484d;
+  transform-origin: left;
+  animation: tf-linecount 7s linear forwards;
+}
+
+/* ============================================================
+   29 — Step Tracker (multi-step progress toast)
+   ============================================================ */
+.tf-steps {
+  width: 360px;
+  padding: 16px;
+  border-radius: var(--tf-r16);
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  box-shadow: 0 12px 30px rgba(16, 19, 26, 0.1);
+  animation: tf-rise 0.55s var(--tf-ease-expo) both;
+}
+.tf-steps-head { display: flex; justify-content: space-between; align-items: baseline; }
+.tf-steps-title { font-size: 13.5px; font-weight: 700; }
+.tf-steps-of { font-size: 11.5px; color: var(--tf-ink-3); font-variant-numeric: tabular-nums; }
+.tf-steps-track { position: relative; display: flex; justify-content: space-between; margin-top: 16px; padding: 0 6px; }
+.tf-steps-line {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 50%;
+  height: 3px;
+  transform: translateY(-50%);
+  background: #eceef4;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.tf-steps-line i {
+  display: block;
+  height: 100%;
+  background: var(--tf-accent);
+  border-radius: inherit;
+  transition: width 0.6s var(--tf-ease-spring);
+}
+.tf-steps-dot {
+  position: relative;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2.5px solid #d5d9e2;
+  display: grid;
+  place-items: center;
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.45s var(--tf-ease-spring);
+}
+.tf-steps-dot[data-state="done"] { background: var(--tf-accent); border-color: var(--tf-accent); color: #fff; }
+.tf-steps-dot[data-state="active"] { border-color: var(--tf-accent); transform: scale(1.25); box-shadow: 0 0 0 5px rgba(91, 91, 214, 0.16); }
+.tf-steps-dot[data-state="active"]::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tf-accent);
+  animation: tf-pulse 1.4s ease-out infinite;
+}
+.tf-steps-label { margin-top: 12px; font-size: 12.5px; color: var(--tf-ink-2); }
+.tf-steps-label b { color: var(--tf-ink); font-weight: 700; }
+
+/* ============================================================
+   30 — Swipe Dismiss (drag physics, snap back / fling out)
+   ============================================================ */
+.tf-swipe {
+  width: 340px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 9999px;
+  background: var(--tf-bg);
+  border: 1px solid var(--tf-line);
+  box-shadow: 0 12px 30px rgba(16, 19, 26, 0.12);
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
+  animation: tf-rise 0.55s var(--tf-ease-expo) both;
+  will-change: transform;
+}
+.tf-swipe.dragging { cursor: grabbing; animation: none; }
+.tf-swipe.released { transition: transform 0.55s var(--tf-ease-spring), opacity 0.3s ease; }
+.tf-swipe.gone { transition: transform 0.45s cubic-bezier(0.5, -0.1, 0.7, 0.2), opacity 0.35s ease; opacity: 0; }
+.tf-swipe-grip { flex: none; display: grid; gap: 3px; padding: 2px; }
+.tf-swipe-grip i { width: 14px; height: 2.5px; border-radius: 2px; background: #c9cdd8; }
+.tf-swipe-text { flex: 1; min-width: 0; font-size: 13.5px; }
+.tf-swipe-text b { font-weight: 700; }
+.tf-swipe-hint { flex: none; font-size: 10.5px; color: var(--tf-ink-3); letter-spacing: 0.08em; text-transform: uppercase; }
+.tf-swipe-reset {
+  margin-top: 14px;
+  padding: 8px 16px;
+  background: var(--tf-ink);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  border-radius: 9999px;
+}
+.tf-swipe-cell { display: flex; flex-direction: column; align-items: center; }
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .tf-root *, .tf-root *::before, .tf-root *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .tf-orbit-ring, .tf-banner::after, .tf-neon::before, .tf-weather-tape,
+  .tf-mini-dot::after, .tf-pixel-ok, .tf-term-cursor, .tf-achieve-medal::after { animation: none !important; }
+}
+
+/* taller demo stage for tall variants */
+.tf-demo.tf-demo-tall { min-height: 460px; }
