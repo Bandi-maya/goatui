@@ -1,8 +1,8 @@
 export default function Page() {
   return (
     <iframe
-      src="/kage/kage.html"
-      title="Kage"
+      src="/goat-red/"
+      title="GOAT UI — Crafted for the Extraordinary"
       style={{
         position: "fixed",
         inset: 0,
