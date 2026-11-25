@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kage — Where stillness reveals the unseen</title>
+<style>
+/* Original re-implementation of the Kage visual system (metrics measured from reference). */
+@font-face { font-family:"Onest"; src:url("/fonts/onest-300.woff2") format("woff2"); font-weight:300; font-display:swap; }
+@font-face { font-family:"Onest"; src:url("/fonts/onest-400.woff2") format("woff2"); font-weight:400; font-display:swap; }
+@font-face { font-family:"Onest"; src:url("/fonts/onest-500.woff2") format("woff2"); font-weight:500; font-display:swap; }
+@font-face { font-family:"Onest"; src:url("/fonts/onest-600.woff2") format("woff2"); font-weight:600; font-display:swap; }
+:root{
+  --ink:#05070a; --ink-2:#0a0e12;
+  --bone:#dfe7e0; --bone-dim:#aab4ad; --muted:#78837c;
+  --line:rgba(223,231,224,.13); --line-soft:rgba(223,231,224,.07);
+  --vermilion:#e0231c; --ember:#ff5a3c; --gold:#c9a24a;
+  --pad:clamp(20px,3.4vw,56px); --nav-h:84px;
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-out:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{
+  background:var(--ink); color:var(--bone);
+  font-family:"Onest",system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  font-weight:300; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--vermilion);color:var(--bone)}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+#vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 42%,transparent 55%,rgba(3,4,7,.55) 100%)}
+#grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.06'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ---------- preloader ---------- */
+#pre{position:fixed;inset:0;z-index:90;background:var(--ink);display:flex;align-items:center;justify-content:center;
+  transition:opacity .9s var(--ease-out),visibility .9s}
+#pre.done{opacity:0;visibility:hidden}
+.pre-in{display:flex;flex-direction:column;align-items:center;gap:22px;width:min(320px,72vw)}
+.pre-mark svg{width:44px;height:44px}
+.pre-bar{width:100%;height:1px;background:var(--line);position:relative;overflow:hidden}
+.pre-bar i{position:absolute;inset:0;background:var(--bone);transform:scaleX(0);transform-origin:left;transition:transform .25s linear}
+.pre-meta{width:100%;display:flex;justify-content:space-between;align-items:baseline;
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.pre-meta b{font-weight:400;color:var(--bone-dim)}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:70;height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);
+  transition:background .5s var(--ease),backdrop-filter .5s}
+.nav.solid{background:rgba(5,7,10,.72);backdrop-filter:blur(10px);border-bottom:1px solid var(--line-soft)}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--bone)}
+.brand svg{width:34px;height:34px}
+.brand-tx{display:flex;flex-direction:column;line-height:1.25}
+.brand-tx b{font-weight:500;font-size:13px;letter-spacing:.18em}
+.brand-tx i{font-style:normal;font-size:8px;letter-spacing:.3em;color:var(--muted)}
+.nav-links{display:flex;gap:clamp(20px,2.6vw,44px)}
+.nav-link{position:relative;text-decoration:none;color:var(--bone-dim);
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase;padding:6px 0;
+  transition:color .4s var(--ease)}
+.nav-link::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--vermilion);transition:width .5s var(--ease-out)}
+.nav-link:hover{color:var(--bone)}
+.nav-link:hover::after{width:100%}
+.nav-burger{display:none;width:44px;height:44px;background:none;border:1px solid var(--line);border-radius:999px;cursor:pointer;
+  flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.nav-burger i{display:block;width:16px;height:1px;background:var(--bone)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;z-index:3;height:100vh;min-height:620px;display:flex;flex-direction:column;
+  padding:calc(var(--nav-h) + 24px) var(--pad) 40px}
+.eyebrow{font-size:10px;letter-spacing:2.2px;text-transform:uppercase;color:var(--bone-dim);
+  display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--vermilion)}
+.display{font-weight:400;text-transform:uppercase;color:var(--bone)}
+.h-hero{font-size:clamp(30px,3.05vw,43.92px);line-height:1.055;letter-spacing:-0.012em;max-width:590px}
+.h-hero .mask-line{display:block;overflow:hidden}
+.h-hero .mask-line>span{display:block;transform:translateY(110%);animation:rise 1.2s var(--ease-out) forwards}
+.h-hero .mask-line:nth-child(2)>span{animation-delay:.12s}
+.h-hero .mask-line:nth-child(3)>span{animation-delay:.24s}
+@keyframes rise{to{transform:none}}
+.hero-sub{margin-top:22px;max-width:44ch;font-size:15px;line-height:1.7;color:var(--bone-dim)}
+.hero-spacer{flex:1}
+.hero-foot{display:flex;flex-direction:column;gap:28px}
+.hero-cue{display:flex;align-items:center;gap:12px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.hero-cue .track{position:relative;width:56px;height:1px;background:var(--line);overflow:hidden}
+.hero-cue .track i{position:absolute;top:0;left:-30%;width:30%;height:100%;background:var(--bone);animation:cue 2.2s var(--ease) infinite}
+@keyframes cue{0%{left:-30%}60%,100%{left:100%}}
+.chapters{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)}
+.chip{padding:20px 20px 4px 0;display:flex;gap:14px;cursor:pointer;position:relative;text-decoration:none;color:var(--bone)}
+.chip+.chip{margin-left:24px}
+.chip .num{font-size:11px;color:var(--muted);letter-spacing:.08em;padding-top:2px}
+.chip .tx b{display:block;font-weight:400;font-size:15px;letter-spacing:.01em;margin-bottom:6px;transition:color .35s}
+.chip .tx p{font-size:12px;line-height:1.55;color:var(--muted)}
+.chip::after{content:"";position:absolute;top:-1px;left:0;height:1px;width:0;background:var(--vermilion);transition:width .6s var(--ease-out)}
+.chip:hover::after{width:100%}
+.chip:hover .tx b{color:var(--ember)}
+
+/* ---------- sections ---------- */
+.page{position:relative;z-index:3}
+.sec{position:relative;padding:20vh var(--pad);max-width:1460px;margin:0 auto}
+.sec-eyebrow{font-size:10px;letter-spacing:2.2px;text-transform:uppercase;color:var(--bone-dim);margin-bottom:16px;display:flex;gap:10px;align-items:center}
+.sec-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--vermilion)}
+.sec h2{font-weight:400;font-size:clamp(26px,3vw,40px);letter-spacing:-.01em;line-height:1.1;max-width:20ch;margin-bottom:22px;text-transform:uppercase}
+.sec p.lead{max-width:52ch;font-size:16px;line-height:1.75;color:var(--bone-dim)}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:64px;border-top:1px solid var(--line);padding-top:32px}
+.stat-row b{display:block;font-weight:400;font-size:clamp(30px,3.4vw,48px);letter-spacing:-.015em}
+.stat-row b em{font-style:normal;color:var(--vermilion)}
+.stat-row span{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.notes{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:72px}
+.note{border-top:1px solid var(--line);padding-top:24px}
+.note i{font-style:normal;font-size:10px;letter-spacing:.22em;color:var(--vermilion);text-transform:uppercase}
+.note b{display:block;font-weight:400;font-size:19px;margin:14px 0 10px;letter-spacing:-.01em}
+.note p{font-size:13.5px;line-height:1.75;color:var(--muted)}
+.craft{margin-top:72px;border-top:1px solid var(--line)}
+.craft-row{display:grid;grid-template-columns:220px 1fr;gap:32px;padding:26px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.craft-row b{font-weight:400;font-size:15px;letter-spacing:.02em}
+.craft-row b i{font-style:normal;display:block;font-size:10px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-top:6px}
+.craft-row p{font-size:13.5px;line-height:1.75;color:var(--muted)}
+.closing{margin-top:88px;text-align:center}
+.closing p{font-size:clamp(20px,2.4vw,30px);line-height:1.5;letter-spacing:-.01em;max-width:720px;margin:0 auto}
+.closing a{display:inline-block;margin-top:36px;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--paper);text-decoration:none;border:1px solid var(--line);padding:14px 28px;border-radius:999px;transition:border-color .4s}
+.closing a:hover{border-color:var(--vermilion)}
+
+/* ---------- footer ---------- */
+.footer{position:relative;z-index:3;border-top:1px solid var(--line);background:rgba(6,8,11,.66);backdrop-filter:blur(8px);
+  padding:88px var(--pad) 40px}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;max-width:1460px;margin:0 auto 64px}
+.foot-grid h3{font-weight:400;font-size:19px;line-height:1.5;max-width:34ch;margin-bottom:14px}
+.foot-grid p{font-size:13px;color:var(--muted);line-height:1.7;max-width:40ch}
+.foot-grid h4{font-weight:400;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.foot-grid ul{list-style:none;display:grid;gap:12px}
+.foot-grid a{color:var(--bone-dim);text-decoration:none;font-size:13px;transition:color .35s}
+.foot-grid a:hover{color:var(--ember)}
+.foot-base{display:flex;justify-content:space-between;max-width:1460px;margin:0 auto;padding-top:28px;border-top:1px solid var(--line-soft);
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+
+[data-rv]{opacity:0;transform:translateY(26px);transition:opacity 1s var(--ease-out),transform 1s var(--ease-out)}
+[data-rv].in{opacity:1;transform:none}
+
+@media(max-width:900px){
+  .nav-links{display:none}
+  .nav-burger{display:flex}
+  .hero{padding-top:calc(var(--nav-h) + 8px)}
+  .chapters{grid-template-columns:1fr 1fr;gap:0 24px}
+  .chip+.chip{margin-left:0}
+  .chip .tx p{display:none}
+  .stat-row{grid-template-columns:1fr 1fr;gap:24px}
+  .notes{grid-template-columns:1fr;gap:28px;margin-top:52px}
+  .craft-row{grid-template-columns:1fr;gap:10px;padding:22px 0}
+  .craft{margin-top:52px}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .foot-base{flex-direction:column;gap:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  .h-hero .mask-line>span{animation:none;transform:none}
+  .hero-cue .track i{animation:none}
+  [data-rv]{opacity:1;transform:none;transition:none}
+}
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div id="vignette"></div>
+<div id="grain"></div>
+
+<div id="pre">
+  <div class="pre-in">
+    <div class="pre-mark">
+      <svg viewBox="0 0 44 44" fill="none" aria-hidden="true">
+        <circle cx="22" cy="24" r="9.5" stroke="#e0231c" stroke-width="1.2"/>
+        <path d="M6 12h32M9.5 17h25M22 8v28" stroke="#dfe7e0" stroke-width="1.2"/>
+      </svg>
+    </div>
+    <div class="pre-bar"><i id="pre-fill"></i></div>
+    <div class="pre-meta"><span>Raising the mountain temple</span><b><span id="pre-pct">0</span>%</b></div>
+  </div>
+</div>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#top">
+    <svg viewBox="0 0 44 44" fill="none" aria-hidden="true">
+      <circle cx="22" cy="25" r="8.6" fill="#e0231c" fill-opacity=".9"/>
+      <path d="M5 13h34M9 18.4h26M22 8.5v27" stroke="#dfe7e0" stroke-width="1.5"/>
+      <path d="M14 35.5h16" stroke="#dfe7e0" stroke-width="1.2" stroke-opacity=".6"/>
+    </svg>
+    <span class="brand-tx"><b>KAGE</b><i>HIDDEN REALMS OF KYOTO</i></span>
+  </a>
+  <nav class="nav-links">
+    <a class="nav-link" href="#gate">Temples</a>
+    <a class="nav-link" href="#pathways">Gardens</a>
+    <a class="nav-link" href="#lessons">Rituals</a>
+    <a class="nav-link" href="#eternity">Afterlight</a>
+  </nav>
+  <button class="nav-burger" aria-label="Menu"><i></i><i></i></button>
+</header>
+
+<div class="page" id="top">
+  <section class="hero" id="hero">
+    <div class="hero-top">
+      <div class="eyebrow"><span class="dot"></span> Chapter 00 — The Hidden Gate</div>
+      <h1 class="display h-hero">
+        <span class="mask-line"><span>Where stillness</span></span>
+        <span class="mask-line"><span>reveals the</span></span>
+        <span class="mask-line"><span>unseen.</span></span>
+      </h1>
+      <p class="hero-sub">Enter Kyoto through its quiet thresholds, where ritual, craft, and memory shape the path.</p>
+    </div>
+    <div class="hero-spacer"></div>
+    <div class="hero-foot">
+      <div class="hero-cue"><span>Scroll to enter</span><span class="track"><i></i></span></div>
+      <div class="chapters">
+        <a class="chip" href="#gate"><span class="num">01</span><span class="tx"><b>Thresholds</b><p>Discover the hidden gates that open on to deeper paths.</p></span></a>
+        <a class="chip" href="#pathways"><span class="num">02</span><span class="tx"><b>Still Gardens</b><p>Witness the courts where silence gently unfolds.</p></span></a>
+        <a class="chip" href="#lessons"><span class="num">03</span><span class="tx"><b>Sacred Craft</b><p>Embrace the hands and heritage that shape devotion.</p></span></a>
+        <a class="chip" href="#eternity"><span class="num">04</span><span class="tx"><b>Night Rituals</b><p>Explore the rites that awaken when the day is done.</p></span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="gate">
+    <div class="sec-eyebrow" data-rv><span class="dot"></span> 01 — Thresholds</div>
+    <h2 data-rv>Charred cypress, worn stone, one gate left open.</h2>
+    <p class="lead" data-rv>Kage begins where the city stops: a mountain gate of cedar burned black, standing in its own weather. Climb the worn steps and the worship hall lifts out of the mist, its paper screens lit from inside like a lantern the size of a house.</p>
+    <div class="stat-row" data-rv>
+      <div><b>05</b><span>Chapters</span></div>
+      <div><b>92</b><span>Minutes</span></div>
+      <div><b>1611</b><span>Hall raised</span></div>
+      <div><b><em>&infin;</em></b><span>Stillness</span></div>
+    </div>
+  </section>
+
+  <section class="sec" id="pathways">
+    <div class="sec-eyebrow" data-rv><span class="dot"></span> 02 — Still Gardens</div>
+    <h2 data-rv>Five chapters. Ninety minutes. One quiet mind.</h2>
+    <p class="lead" data-rv>Each chapter is a walk, not a lecture. You arrive at the gate, climb the steps, sit with the lantern, and leave with one thing worth keeping.</p>
+    <div class="notes">
+      <div class="note" data-rv><i>Note 01 — Gravel</i><b>Raked before first light</b><p>The garden is combed into lines that hold the moon. Footsteps are asked to wait until the pattern has finished its work.</p></div>
+      <div class="note" data-rv><i>Note 02 — Scenery</i><b>The mountain you never own</b><p>A gap in the hedge is measured to the inch, so a far ridge can sit inside the garden like a loan that is never called in.</p></div>
+      <div class="note" data-rv><i>Note 03 — Rain</i><b>Weather as a second architect</b><p>Night rain darkens the stone to ink and lifts the smell of cedar through the court. The walk is slower, and that is the point.</p></div>
+    </div>
+  </section>
+
+  <section class="sec" id="lessons">
+    <div class="sec-eyebrow" data-rv><span class="dot"></span> 03 — Sacred Craft</div>
+    <h2 data-rv>Borrowed scenery, charred cypress, lantern light.</h2>
+    <p class="lead" data-rv>Shakkei: composing with a mountain you will never own. Yakisugi: burning a board black so the weather will let it live. How a single ember decides the scale of everything around it.</p>
+    <div class="craft">
+      <div class="craft-row" data-rv><b>Shakkei<i>Borrowed scenery</i></b><p>Compose with what lies beyond the wall. The ridge, the moon, the far temple roof: none of it is yours, all of it is in the frame.</p></div>
+      <div class="craft-row" data-rv><b>Yakisugi<i>Charred cypress</i></b><p>Burn the surface of the board until it turns to black glass. Fire, given first, is the weather the wood no longer fears.</p></div>
+      <div class="craft-row" data-rv><b>Andon<i>Lantern light</i></b><p>Paper stretched over a cedar rib turns one ember into a room. Scale begins where the light decides to stop.</p></div>
+      <div class="craft-row" data-rv><b>Kairo<i>The covered walk</i></b><p>A roofed corridor that bends before it shows you the hall. Arrival is a sequence, never a single step.</p></div>
+    </div>
+  </section>
+
+  <section class="sec" id="eternity">
+    <div class="sec-eyebrow" data-rv><span class="dot"></span> 04 — Afterlight</div>
+    <h2 data-rv>The gate does not close behind you.</h2>
+    <p class="lead" data-rv>Take the walk whenever the noise gets loud — it is always the same path, and never the same light.</p>
+    <div class="closing" data-rv>
+      <p>The temple keeps its lamps lit long after the city has gone quiet. Whoever climbs at night carries a little of that stillness back down.</p>
+      <a href="#top">Begin the walk again</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="foot-grid">
+      <div>
+        <h3>A five-chapter night walk through a Kyoto mountain temple.</h3>
+        <p>Three illustrated garden field notes sit inside a live Three.js sanctuary.</p>
+      </div>
+      <div>
+        <h4>Chapters</h4>
+        <ul><li><a href="#gate">The Sanmon</a></li><li><a href="#pathways">Still Gardens</a></li><li><a href="#lessons">Sacred Craft</a></li><li><a href="#eternity">Afterlight</a></li></ul>
+      </div>
+      <div>
+        <h4>Practice</h4>
+        <ul><li><a href="#pathways">Borrowed scenery</a></li><li><a href="#lessons">Lantern light</a></li><li><a href="#gate">Charred cypress</a></li><li><a href="#eternity">Raked gravel</a></li></ul>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <ul><li><a href="#top">Journal</a></li><li><a href="#top">Field notes</a></li><li><a href="#top">Colophon</a></li></ul>
+      </div>
+    </div>
+    <div class="foot-base"><span>&copy; 2026 Kage</span><span>WebGL &middot; Onest &middot; Kyoto</span><span>Rebuilt as original code</span></div>
+  </footer>
+</div>
+
+<script src="/kage-clone/three.min.js"></script>
+<script>
+/* Original night-temple scene: layered ridges, pagoda, gate, moon, mist, leaves.
+   All geometry and textures generated in code. No threeui assets. */
+(function(){
+  const canvas = document.getElementById('gl');
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:false});
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x05070a);
+  scene.fog = new THREE.FogExp2(0x05070a, 0.020);
+  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 220);
+
+  // ---------- generated textures ----------
+  function ridgeTexture(seed, base, amp){
+    const c = document.createElement('canvas'); c.width = 1024; c.height = 256;
+    const g = c.getContext('2d');
+    g.clearRect(0,0,1024,256);
+    g.fillStyle = base;
+    g.beginPath(); g.moveTo(0,256);
+    let y = 128 + Math.sin(seed)*30;
+    g.lineTo(0,y);
+    let s = seed;
+    for(let x=0;x<=1024;x+=8){
+      s = (s*9301+49297)%233280;
+      const r = s/233280;
+      y += (r-0.5)*amp;
+      y = Math.max(40, Math.min(200, y));
+      g.lineTo(x,y);
+    }
+    g.lineTo(1024,256); g.closePath(); g.fill();
+    const t = new THREE.CanvasTexture(c); t.needsUpdate = true; return t;
+  }
+  function glowTexture(inner, outer){
+    const c = document.createElement('canvas'); c.width = c.height = 256;
+    const g = c.getContext('2d');
+    const gr = g.createRadialGradient(128,128,10,128,128,128);
+    gr.addColorStop(0, inner); gr.addColorStop(0.35, outer); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = gr; g.fillRect(0,0,256,256);
+    return new THREE.CanvasTexture(c);
+  }
+  function leafTexture(){
+    const c = document.createElement('canvas'); c.width = c.height = 64;
+    const g = c.getContext('2d');
+    g.translate(32,32); g.fillStyle = '#b3231b';
+    g.beginPath();
+    for(let i=0;i<5;i++){
+      const a = (i/5)*Math.PI*2 - Math.PI/2;
+      g.ellipse(Math.cos(a)*9, Math.sin(a)*9, 12, 5, a, 0, Math.PI*2);
+    }
+    g.fill();
+    g.fillStyle = '#8c1a14'; g.fillRect(-1.5,-2,3,26);
+    return new THREE.CanvasTexture(c);
+  }
+  function mistTexture(){
+    const c = document.createElement('canvas'); c.width = 512; c.height = 128;
+    const g = c.getContext('2d');
+    for(let i=0;i<60;i++){
+      const x = Math.random()*512, y = 40+Math.random()*60, r = 30+Math.random()*70;
+      const gr = g.createRadialGradient(x,y,0,x,y,r);
+      gr.addColorStop(0,'rgba(190,205,215,0.05)'); gr.addColorStop(1,'rgba(190,205,215,0)');
+      g.fillStyle = gr; g.beginPath(); g.arc(x,y,r,0,7); g.fill();
+    }
+    return new THREE.CanvasTexture(c);
+  }
+
+  // ---------- sky ----------
+  const starGeo = new THREE.BufferGeometry();
+  const starPos = new Float32Array(900*3);
+  for(let i=0;i<900;i++){
+    starPos[i*3] = (Math.random()-0.5)*260;
+    starPos[i*3+1] = 18+Math.random()*90;
+    starPos[i*3+2] = -40-Math.random()*120;
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(starPos,3));
+  scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({color:0xcdd8e4,size:0.55,sizeAttenuation:true,transparent:true,opacity:0.8,fog:false})));
+
+  function moonTexture(){
+    const c = document.createElement('canvas'); c.width = c.height = 512;
+    const g = c.getContext('2d');
+    g.fillStyle = '#b02018'; g.fillRect(0,0,512,512);
+    let s = 7;
+    for(let i=0;i<90;i++){
+      s = (s*9301+49297)%233280; const r1 = s/233280;
+      s = (s*9301+49297)%233280; const r2 = s/233280;
+      s = (s*9301+49297)%233280; const r3 = s/233280;
+      const x = r1*512, y = r2*512, r = 12+r3*64;
+      const gr = g.createRadialGradient(x,y,0,x,y,r);
+      const dark2 = r3 > 0.5;
+      gr.addColorStop(0, dark2 ? 'rgba(70,10,10,0.35)' : 'rgba(230,80,50,0.22)');
+      gr.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = gr; g.beginPath(); g.arc(x,y,r,0,7); g.fill();
+    }
+    return new THREE.CanvasTexture(c);
+  }
+  // moon + glow
+  const moon = new THREE.Mesh(new THREE.CircleGeometry(9.5,64), new THREE.MeshBasicMaterial({map:moonTexture(), fog:false}));
+  moon.position.set(26,34,-95); scene.add(moon);
+  const moonGlow = new THREE.Sprite(new THREE.SpriteMaterial({map:glowTexture('rgba(224,35,28,0.5)','rgba(224,35,28,0.12)'),transparent:true,depthWrite:false,fog:false}));
+  moonGlow.scale.set(46,46,1); moonGlow.position.copy(moon.position); scene.add(moonGlow);
+
+  // ---------- ridges ----------
+  const ridges = [];
+  [['#0a0f16',7,-120,300,26],['#0c1219',3,-80,220,20],['#0e141d',1.5,-46,160,16]].forEach((r,i)=>{
+    const mat = new THREE.MeshBasicMaterial({map:ridgeTexture(17+i*31, r[0], r[5]), transparent:true, depthWrite:false});
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(r[3], r[3]/4), mat);
+    m.position.set(0, r[2]===-46?2:6+i*4, r[2]);
+    scene.add(m); ridges.push(m);
+  });
+
+  // ---------- ground ----------
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(400,160), new THREE.MeshBasicMaterial({color:0x04060a}));
+  ground.rotation.x = -Math.PI/2; ground.position.set(0,-2.2,-40); scene.add(ground);
+
+  // ---------- pagoda ----------
+  const pagoda = new THREE.Group();
+  const dark = new THREE.MeshBasicMaterial({color:0x11161d});
+  const roof = new THREE.MeshBasicMaterial({color:0x18202c});
+  const winMat = new THREE.MeshBasicMaterial({color:0xffb45a, transparent:true, opacity:0.9});
+  for(let t=0;t<3;t++){
+    const w = 15 - t*3.4, h = 4.6 - t*0.5, y = t*6.4;
+    const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, w*0.7), dark);
+    body.position.y = y + h/2; pagoda.add(body);
+    const rf = new THREE.Mesh(new THREE.ConeGeometry(w*0.95, 2.6, 4), roof);
+    rf.rotation.y = Math.PI/4; rf.position.y = y + h + 1.3; rf.scale.z = 0.7; pagoda.add(rf);
+    for(let k=-1;k<=1;k++){
+      const win = new THREE.Mesh(new THREE.PlaneGeometry(0.85,1.25), winMat);
+      win.position.set(k*(w/3.2), y+h/2, w*0.35+0.06); pagoda.add(win);
+    }
+  }
+  const spire = new THREE.Mesh(new THREE.CylinderGeometry(0.16,0.3,5,6), roof);
+  spire.position.y = 21.5; pagoda.add(spire);
+  pagoda.position.set(3,-2.2,-50); pagoda.rotation.y = 0.18;
+  scene.add(pagoda);
+  const pagGlow = new THREE.Sprite(new THREE.SpriteMaterial({map:glowTexture('rgba(255,192,106,0.35)','rgba(255,150,60,0.1)'),transparent:true,depthWrite:false}));
+  pagGlow.scale.set(22,17,1); pagGlow.position.set(3,5,-51); scene.add(pagGlow);
+
+  // ---------- gate ----------
+  const gate = new THREE.Group();
+  const gmat = new THREE.MeshBasicMaterial({color:0x160708});
+  const pil1 = new THREE.Mesh(new THREE.CylinderGeometry(0.38,0.48,7,10), gmat); pil1.position.set(-3,1.7,0);
+  const pil2 = pil1.clone(); pil2.position.x = 3;
+  const beam1 = new THREE.Mesh(new THREE.BoxGeometry(8.8,0.55,0.8), gmat); beam1.position.y = 5.4;
+  const beam2 = new THREE.Mesh(new THREE.BoxGeometry(7.2,0.45,0.75), gmat); beam2.position.y = 4.2;
+  gate.add(pil1,pil2,beam1,beam2);
+  gate.position.set(24,-2.2,-30); gate.scale.setScalar(0.8); scene.add(gate);
+
+  function grassTexture(){
+    const c = document.createElement('canvas'); c.width = 1024; c.height = 128;
+    const g = c.getContext('2d');
+    let s = 41;
+    for(let x=0;x<1024;x+=2){
+      s = (s*9301+49297)%233280; const r = s/233280;
+      const h = 16 + r*58;
+      g.strokeStyle = r>0.85 ? '#0d1410' : '#070b09';
+      g.lineWidth = 1 + r*1.6;
+      g.beginPath(); g.moveTo(x,128);
+      g.quadraticCurveTo(x+(r-0.5)*14, 128-h*0.6, x+(r-0.5)*22, 128-h);
+      g.stroke();
+    }
+    return new THREE.CanvasTexture(c);
+  }
+  const grass = new THREE.Mesh(new THREE.PlaneGeometry(70,3.1),
+    new THREE.MeshBasicMaterial({map:grassTexture(),transparent:true,depthWrite:false}));
+  grass.position.set(0,-0.6,-10); scene.add(grass);
+  const grass2 = new THREE.Mesh(new THREE.PlaneGeometry(140,5.6),
+    new THREE.MeshBasicMaterial({map:grassTexture(),transparent:true,depthWrite:false}));
+  grass2.position.set(-6,-0.4,-18); scene.add(grass2);
+
+  // ---------- mist ----------
+  const mists = [];
+  for(let i=0;i<3;i++){
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(120,10),
+      new THREE.MeshBasicMaterial({map:mistTexture(),transparent:true,depthWrite:false,opacity:0.32}));
+    m.position.set((i-1)*20, 0.6+i*1.4, -22-i*12);
+    scene.add(m); mists.push(m);
+  }
+
+  // ---------- leaves ----------
+  const LEAVES = 260;
+  const leafGeo = new THREE.BufferGeometry();
+  const lp = new Float32Array(LEAVES*3), lr = new Float32Array(LEAVES);
+  for(let i=0;i<LEAVES;i++){
+    lp[i*3]=(Math.random()-0.5)*70; lp[i*3+1]=Math.random()*34; lp[i*3+2]=-8-Math.random()*50;
+    lr[i]=Math.random()*Math.PI*2;
+  }
+  leafGeo.setAttribute('position', new THREE.BufferAttribute(lp,3));
+  const leaves = new THREE.Points(leafGeo, new THREE.PointsMaterial({map:leafTexture(),size:0.7,transparent:true,depthWrite:false,alphaTest:0.08}));
+  scene.add(leaves);
+
+  // near-camera leaves: larger, slower drift, reads as foreground depth
+  const NEAR = 24;
+  const nearGeo = new THREE.BufferGeometry();
+  const np = new Float32Array(NEAR*3);
+  for(let i=0;i<NEAR;i++){
+    np[i*3]=(Math.random()-0.5)*60; np[i*3+1]=Math.random()*24; np[i*3+2]=-5+Math.random()*11;
+  }
+  nearGeo.setAttribute('position', new THREE.BufferAttribute(np,3));
+  const nearLeaves = new THREE.Points(nearGeo, new THREE.PointsMaterial({map:leafTexture(),size:0.55,transparent:true,depthWrite:false,alphaTest:0.08,opacity:0.75}));
+  scene.add(nearLeaves);
+
+  // ---------- maple branches framing the hero ----------
+  function mapleLeaf(g,x,y,s,rot,col){
+    g.save(); g.translate(x,y); g.rotate(rot); g.fillStyle = col;
+    g.beginPath();
+    for(let i=0;i<5;i++){
+      const a = -Math.PI/2 + i*(Math.PI*2/5);
+      const a2 = a + Math.PI/5;
+      g.lineTo(Math.cos(a)*s, Math.sin(a)*s);
+      g.lineTo(Math.cos(a2)*s*0.42, Math.sin(a2)*s*0.42);
+    }
+    g.closePath(); g.fill();
+    g.strokeStyle = col; g.lineWidth = s*0.08;
+    g.beginPath(); g.moveTo(0,0); g.lineTo(0,s*1.05); g.stroke();
+    g.restore();
+  }
+  function branchTexture(mirror){
+    const c = document.createElement('canvas'); c.width = 512; c.height = 512;
+    const g = c.getContext('2d');
+    if(mirror){ g.translate(512,0); g.scale(-1,1); }
+    g.strokeStyle = 'rgba(24,8,8,0.95)'; g.lineCap = 'round';
+    function limb(x0,y0,x1,y1,x2,y2,w){
+      g.lineWidth = w; g.beginPath(); g.moveTo(x0,y0); g.quadraticCurveTo(x1,y1,x2,y2); g.stroke();
+    }
+    limb(-20,10, 150,190, 300,150, 16);
+    limb(120,180, 230,300, 340,360, 9);
+    limb(200,160, 300,60, 430,120, 7);
+    limb(300,150, 390,260, 480,300, 5);
+    let s = 7;
+    const rnd = ()=>{ s=(s*9301+49297)%233280; return s/233280; };
+    for(let i=0;i<30;i++){
+      const t = rnd();
+      const bx = 50 + t*450, by = 10 + rnd()*300;
+      const sz = 10 + rnd()*16;
+      const col = rnd()>0.55 ? 'rgba(72,15,13,0.92)' : 'rgba(42,11,10,0.95)';
+      mapleLeaf(g,bx,by,sz,rnd()*Math.PI*2,col);
+    }
+    return new THREE.CanvasTexture(c);
+  }
+  const branchL = new THREE.Mesh(new THREE.PlaneGeometry(26,26),
+    new THREE.MeshBasicMaterial({map:branchTexture(false),transparent:true,depthWrite:false}));
+  branchL.position.set(-20,10,4); branchL.rotation.z = 0.14; scene.add(branchL);
+  const branchR = new THREE.Mesh(new THREE.PlaneGeometry(30,30),
+    new THREE.MeshBasicMaterial({map:branchTexture(true),transparent:true,depthWrite:false}));
+  branchR.position.set(18.5,10,4.5); branchR.rotation.z = -0.08; scene.add(branchR);
+
+  // ---------- rain ----------
+  function rainTexture(){
+    const c = document.createElement('canvas'); c.width = 8; c.height = 64;
+    const g = c.getContext('2d');
+    const gr = g.createLinearGradient(0,0,0,64);
+    gr.addColorStop(0,'rgba(190,205,225,0)');
+    gr.addColorStop(0.5,'rgba(190,205,225,0.55)');
+    gr.addColorStop(1,'rgba(190,205,225,0)');
+    g.fillStyle = gr; g.fillRect(3,0,2,64);
+    return new THREE.CanvasTexture(c);
+  }
+  const RAIN = 420;
+  const rainGeo = new THREE.BufferGeometry();
+  const rp = new Float32Array(RAIN*3);
+  for(let i=0;i<RAIN;i++){
+    rp[i*3]=(Math.random()-0.5)*80; rp[i*3+1]=Math.random()*40; rp[i*3+2]=-6-Math.random()*46;
+  }
+  rainGeo.setAttribute('position', new THREE.BufferAttribute(rp,3));
+  const rain = new THREE.Points(rainGeo, new THREE.PointsMaterial({map:rainTexture(),size:1.15,transparent:true,depthWrite:false,opacity:0.14}));
+  scene.add(rain);
+
+  // ---------- stone lantern by the gate ----------
+  const lantern = new THREE.Group();
+  const stone = new THREE.MeshBasicMaterial({color:0x11151a});
+  const lb = new THREE.Mesh(new THREE.BoxGeometry(1.5,0.4,1.5), stone); lb.position.y = 0.2;
+  const ls = new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.3,1.6,8), stone); ls.position.y = 1.2;
+  const lc = new THREE.Mesh(new THREE.BoxGeometry(1.1,0.8,1.1), stone); lc.position.y = 2.3;
+  const lw = new THREE.Mesh(new THREE.PlaneGeometry(0.8,0.55), winMat); lw.position.set(0,2.3,0.57);
+  const lw2 = lw.clone(); lw2.rotation.y = Math.PI; lw2.position.z = -0.57;
+  const lcap = new THREE.Mesh(new THREE.ConeGeometry(1.15,0.7,4), stone); lcap.rotation.y = Math.PI/4; lcap.position.y = 3.05;
+  lantern.add(lb,ls,lc,lw,lw2,lcap);
+  lantern.position.set(16.5,-2.2,-26); scene.add(lantern);
+  const lantGlow = new THREE.Sprite(new THREE.SpriteMaterial({map:glowTexture('rgba(255,192,106,0.5)','rgba(255,150,60,0.12)'),transparent:true,depthWrite:false}));
+  lantGlow.scale.set(4.5,4.5,1); lantGlow.position.set(16.5,0.2,-26.5); scene.add(lantGlow);
+
+  // ---------- camera path + loop ----------
+  let target = 0, prog = 0, mx = 0, my = 0;
+  const stops = [
+    {p:[0,3.4,14],  l:[3,6,-46]},
+    {p:[4,2.6,6],   l:[4,4,-30]},
+    {p:[-8,4.5,2],  l:[-13,7,-42]},
+    {p:[0,7,-2],    l:[10,16,-80]},
+    {p:[0,4,10],    l:[26,30,-95]},
+  ];
+  function onScroll(){
+    const max = document.documentElement.scrollHeight - innerHeight;
+    target = max>0 ? Math.min(1, Math.max(0, scrollY/max)) : 0;
+  }
+  addEventListener('scroll', onScroll, {passive:true});
+  addEventListener('pointermove', e=>{ mx=(e.clientX/innerWidth-0.5); my=(e.clientY/innerHeight-0.5); }, {passive:true});
+  function resize(){
+    const w = innerWidth, h = innerHeight;
+    renderer.setSize(w,h,false);
+    camera.aspect = w/h; camera.updateProjectionMatrix();
+  }
+  addEventListener('resize', resize); resize(); onScroll();
+
+  const A = new THREE.Vector3(), B = new THREE.Vector3();
+  let last = performance.now();
+  function frame(now){
+    const dt = Math.min(0.05, (now-last)/1000); last = now;
+    prog += (target-prog)*Math.min(1, dt*3.2);
+    const f = prog*(stops.length-1);
+    const i = Math.min(stops.length-2, Math.floor(f)), t = f-i;
+    const s = t*t*(3-2*t);
+    A.fromArray(stops[i].p).lerp(B.fromArray(stops[i+1].p), s);
+    camera.position.set(A.x + mx*1.6, A.y - my*1.0, A.z);
+    A.fromArray(stops[i].l).lerp(B.fromArray(stops[i+1].l), s);
+    camera.lookAt(A.x + mx*3, A.y - my*1.6, A.z);
+    const pos = leaves.geometry.attributes.position;
+    for(let k=0;k<LEAVES;k++){
+      let y = pos.getY(k) - dt*(1.1+Math.sin(k)*0.5);
+      pos.setX(k, pos.getX(k) + Math.sin(now/900 + k)*dt*1.4);
+      if(y < -2) y = 30 + Math.random()*6;
+      pos.setY(k, y);
+    }
+    pos.needsUpdate = true;
+    const npos = nearLeaves.geometry.attributes.position;
+    for(let k=0;k<NEAR;k++){
+      let y = npos.getY(k) - dt*0.8;
+      npos.setX(k, npos.getX(k) + Math.sin(now/1400 + k*2.7)*dt*1.1);
+      if(y < -3) y = 20 + Math.random()*4;
+      npos.setY(k, y);
+    }
+    npos.needsUpdate = true;
+    const rpos = rain.geometry.attributes.position;
+    for(let k=0;k<RAIN;k++){
+      let y = rpos.getY(k) - dt*22;
+      if(y < -3) y = 36 + Math.random()*4;
+      rpos.setY(k, y);
+    }
+    rpos.needsUpdate = true;
+    winMat.opacity = 0.82 + Math.sin(now/1700)*0.10 + Math.sin(now/397)*0.05;
+    lantGlow.material.opacity = 0.7 + Math.sin(now/1300+2)*0.2;
+    mists.forEach((m,i2)=>{ m.position.x = (i2-1)*16 + Math.sin(now/7000 + i2*2)*4; });
+    moonGlow.material.opacity = 0.85 + Math.sin(now/2400)*0.15;
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // ---------- preloader ----------
+  const fill = document.getElementById('pre-fill'), pct = document.getElementById('pre-pct');
+  let p = 0;
+  const tick = setInterval(()=>{
+    p = Math.min(100, p + Math.max(2, Math.round((100-p)*0.16)));
+    fill.style.transform = 'scaleX(' + p/100 + ')'; pct.textContent = p;
+    if(p >= 100){ clearInterval(tick); setTimeout(()=>document.getElementById('pre').classList.add('done'), 320); }
+  }, 80);
+
+  // ---------- reveals + nav ----------
+  const nav = document.getElementById('nav');
+  addEventListener('scroll', ()=>nav.classList.toggle('solid', scrollY>40), {passive:true});
+  const io = new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('in')),{threshold:0.15});
+  document.querySelectorAll('[data-rv]').forEach(el=>io.observe(el));
+})();
+</script>
+</body>
+</html>

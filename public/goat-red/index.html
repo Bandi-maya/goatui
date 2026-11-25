@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3 L21 8 L19 14 L22 13 L16 29 L10 13 L13 14 L11 8 Z' fill='%23e8232a'/%3E%3Ccircle cx='16' cy='11' r='1.6' fill='%23ffffff'/%3E%3C/svg%3E">
+<title>GOAT UI — Crafted for the Extraordinary</title>
+<style>
+@font-face{font-family:'Onest';src:url('/fonts/onest-300.woff2') format('woff2');font-weight:300;font-display:swap}
+@font-face{font-family:'Onest';src:url('/fonts/onest-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Onest';src:url('/fonts/onest-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Onest';src:url('/fonts/onest-600.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'Onest';src:url('/fonts/onest-800.woff2') format('woff2');font-weight:800;font-display:swap}
+:root{
+  --bg:#07080d; --bg2:#0b0d15; --ink:#f2f4f8; --muted:#bcc3d1; --red:#e8232a; --red-soft:rgba(232,35,42,.16);
+  --line:rgba(242,244,248,.1); --card:#10121c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{background:var(--bg);color:var(--ink);font-family:'Onest',system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+::selection{background:var(--red);color:#fff}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:22px 48px;transition:background .5s,backdrop-filter .5s}
+.nav.solid{background:rgba(7,8,13,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.14em;font-size:15px}
+.brand svg{width:30px;height:30px}
+.links{display:flex;gap:38px}
+.links a{font-size:13.5px;font-weight:500;color:var(--muted);position:relative;padding:6px 0;transition:color .35s;text-shadow:0 1px 10px rgba(7,8,13,.9)}
+.links a:hover{color:var(--ink)}
+.links a.on{color:var(--ink)}
+.links a.on::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--red);border-radius:2px}
+.cta{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:600;padding:11px 22px;
+  border:1px solid rgba(232,35,42,.55);border-radius:999px;background:rgba(232,35,42,.08);transition:background .35s,border-color .35s}
+.cta:hover{background:var(--red-soft);border-color:var(--red)}
+.cta svg{width:13px;height:13px}
+.burger{display:none;background:none;border:0;width:40px;height:40px;position:relative;cursor:pointer}
+.burger i{position:absolute;left:9px;right:9px;height:1.5px;background:var(--ink);transition:transform .4s,top .4s}
+.burger i:first-child{top:15px}.burger i:last-child{top:24px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+.hero-art{position:absolute;inset:0;pointer-events:none}
+.art-right{position:absolute;top:0;right:0;height:100%;width:min(78%,1180px);object-fit:cover;object-position:right top;
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 26%),linear-gradient(to top,transparent 2%,#000 30%);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to right,transparent 0,#000 26%),linear-gradient(to top,transparent 2%,#000 30%);mask-composite:intersect;
+  will-change:transform}
+.art-left{position:absolute;top:-2%;left:-3%;height:82%;width:auto;opacity:.92;
+  -webkit-mask-image:linear-gradient(to left,transparent 0,#000 34%),linear-gradient(to top,transparent 0,#000 42%);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to left,transparent 0,#000 34%),linear-gradient(to top,transparent 0,#000 42%);mask-composite:intersect;
+  will-change:transform}
+.lyr{position:absolute;pointer-events:none;will-change:transform}
+.lyr img{display:block;width:100%;height:auto}
+.blend{mix-blend-mode:screen}
+.lyr-moon{top:0;right:5%;width:min(38%,540px)}
+.lyr-mounts{top:5%;right:-2%;width:min(64%,920px);opacity:.9}
+.lyr-clouds{top:15%;right:-4%;width:min(56%,840px);opacity:.7}
+.lyr-mist{bottom:-5%;left:-4%;width:min(78%,1040px);opacity:.5;-webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 55%,#000 30%,transparent 72%);mask-image:radial-gradient(ellipse 90% 80% at 50% 55%,#000 30%,transparent 72%)}
+.lyr-temple{bottom:-2%;right:3%;width:min(30%,430px);-webkit-mask-image:linear-gradient(to top,transparent 0,#000 26%);mask-image:linear-gradient(to top,transparent 0,#000 26%)}
+.lyr-torii{bottom:7%;right:32%;width:min(12%,170px)}
+.lyr-lantern{bottom:9%;right:21%;width:min(6.5%,92px)}
+.lyr-maple{top:-3%;left:-2%;width:min(30%,430px)}
+.lyr-sakura{top:3%;left:13%;width:min(15%,210px);opacity:.9}
+.a-drift{animation:drift 26s ease-in-out infinite}
+.a-drift2{animation:drift2 34s ease-in-out infinite}
+.a-breathe{animation:breathe 9s ease-in-out infinite}
+.a-sway{animation:sway 11s ease-in-out infinite;transform-origin:top left}
+.a-sway2{animation:sway 14s ease-in-out infinite reverse;transform-origin:top left}
+.a-lantern{animation:lanternSway 7s ease-in-out infinite;transform-origin:top center}
+@keyframes drift{0%,100%{transform:translateX(-2.5%)}50%{transform:translateX(2.5%)}}
+@keyframes drift2{0%,100%{transform:translateX(2.2%)}50%{transform:translateX(-2.2%)}}
+@keyframes breathe{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.045)}}
+@keyframes sway{0%,100%{transform:rotate(-1.3deg)}50%{transform:rotate(1.3deg)}}
+@keyframes lanternSway{0%,100%{transform:rotate(2.4deg)}50%{transform:rotate(-2.4deg)}}
+.hero-glow{position:absolute;top:4%;right:12%;width:520px;height:520px;border-radius:50%;
+  background:radial-gradient(circle,rgba(232,35,42,.22),rgba(232,35,42,0) 65%);filter:blur(10px)}
+#petals{position:absolute;inset:0;width:100%;height:100%}
+.hero-in{position:relative;z-index:3;padding:0 48px;max-width:1400px;width:100%;margin:0 auto}
+.eyebrow{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--red);font-weight:600;margin-bottom:26px}
+.h1{font-size:clamp(44px,6.2vw,86px);line-height:1.04;letter-spacing:-.02em;font-weight:400;max-width:12ch}
+.h1 .mask-line{display:block;overflow:hidden}
+.h1 .mask-line span{display:block;transform:translateY(110%);animation:rise 1.1s cubic-bezier(.16,1,.3,1) forwards}
+.h1 .mask-line:nth-child(2) span{animation-delay:.12s}
+.h1 em{font-style:normal;color:var(--red);font-weight:600}
+@keyframes rise{to{transform:none}}
+.hero-sub{margin-top:26px;max-width:44ch;color:var(--muted);font-size:15px;line-height:1.8}
+.watch{margin-top:38px;display:inline-flex;align-items:center;gap:16px;font-size:13.5px;font-weight:600;letter-spacing:.04em}
+.play{width:52px;height:52px;border-radius:50%;background:var(--red);display:grid;place-items:center;
+  box-shadow:0 0 0 0 rgba(232,35,42,.5);animation:pulse 2.6s infinite;transition:transform .35s}
+.watch:hover .play{transform:scale(1.08)}
+.play svg{width:16px;height:16px;margin-left:2px}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(232,35,42,.45)}70%{box-shadow:0 0 0 18px rgba(232,35,42,0)}100%{box-shadow:0 0 0 0 rgba(232,35,42,0)}}
+.hero-foot{position:absolute;left:48px;right:48px;bottom:34px;z-index:3;display:flex;align-items:flex-end;justify-content:space-between}
+.slide-num{display:flex;align-items:center;gap:14px;font-size:12px;letter-spacing:.18em;color:var(--muted)}
+.slide-num b{color:var(--ink);font-weight:600}
+.ticks{display:flex;gap:6px}
+.ticks i{width:16px;height:2px;background:var(--line);border-radius:2px}
+.ticks i.on{background:var(--red)}
+.dots{position:absolute;right:30px;top:50%;transform:translateY(-50%);z-index:4;display:flex;flex-direction:column;gap:20px}
+.dots a{display:flex;align-items:center;gap:10px;flex-direction:row-reverse;font-size:11px;letter-spacing:.14em;color:var(--muted)}
+.dots a span{opacity:0;transform:translateX(6px);transition:.35s}
+.dots a:hover span,.dots a.on span{opacity:1;transform:none}
+.dots a i{width:7px;height:7px;border-radius:50%;background:var(--line);transition:.35s}
+.dots a.on i{background:var(--red);box-shadow:0 0 12px rgba(232,35,42,.8)}
+.socials{display:flex;gap:14px}
+.socials a{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;transition:.35s}
+.socials a:hover{border-color:var(--red);background:var(--red-soft)}
+.socials svg{width:14px;height:14px;fill:var(--muted)}
+.socials a:hover svg{fill:var(--ink)}
+
+/* ---------- feature strip ---------- */
+.strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(11,13,21,.6)}
+.strip-in{max-width:1400px;margin:0 auto;padding:26px 48px;display:flex;flex-wrap:wrap;gap:28px 56px;justify-content:space-between}
+.feat{display:flex;align-items:center;gap:14px;font-size:13px;font-weight:500;color:var(--muted)}
+.feat svg{width:22px;height:22px;stroke:var(--red);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.feat b{color:var(--ink);font-weight:600}
+
+/* ---------- sections ---------- */
+.sec{padding:130px 48px;max-width:1400px;margin:0 auto;position:relative}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:64px}
+.sec-eyebrow{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--red);font-weight:600;margin-bottom:18px}
+.h2{font-size:clamp(30px,3.6vw,52px);line-height:1.12;letter-spacing:-.015em;font-weight:500;max-width:18ch}
+.sec-note{max-width:34ch;color:var(--muted);font-size:14px;line-height:1.8}
+.gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.gcard{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);aspect-ratio:3/4;background:var(--card)}
+.gcard img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.16,1,.3,1)}
+.gcard:hover img{transform:scale(1.07)}
+.gcard figcaption{position:absolute;left:0;right:0;bottom:0;padding:44px 18px 16px;font-size:12px;letter-spacing:.12em;
+  text-transform:uppercase;background:linear-gradient(to top,rgba(7,8,13,.9),transparent)}
+.gcard figcaption b{display:block;font-size:14px;letter-spacing:.02em;text-transform:none;margin-top:6px;font-weight:600}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pillar{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:34px 30px;transition:transform .5s cubic-bezier(.16,1,.3,1),border-color .5s}
+.pillar:hover{transform:translateY(-6px);border-color:rgba(232,35,42,.4)}
+.pillar .ic{width:44px;height:44px;border-radius:12px;background:var(--red-soft);display:grid;place-items:center;margin-bottom:22px}
+.pillar .ic svg{width:20px;height:20px;stroke:var(--red);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.pillar b{font-size:17px;font-weight:600;display:block;margin-bottom:12px}
+.pillar p{color:var(--muted);font-size:13.5px;line-height:1.8}
+
+/* ---------- footer ---------- */
+.footer{border-top:1px solid var(--line);padding:44px 48px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.footer .mark{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.14em;font-size:14px}
+.footer .mark svg{width:26px;height:26px}
+.footer .tag{font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.footer .tag em{font-style:normal;color:var(--red)}
+
+/* ---------- split features ---------- */
+.split{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center}
+.split-art{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line)}
+.split-art img{width:100%;height:100%;object-fit:cover}
+.btn-red{display:inline-flex;align-items:center;gap:10px;background:var(--red);color:#fff;font-size:13px;font-weight:600;
+  padding:13px 26px;border-radius:999px;transition:transform .35s,box-shadow .35s;border:0;cursor:pointer}
+.btn-red:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(232,35,42,.35)}
+.btn-ghost{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:600;padding:13px 26px;border-radius:999px;
+  border:1px solid rgba(232,35,42,.55);background:rgba(232,35,42,.08);transition:background .35s}
+.btn-ghost:hover{background:var(--red-soft)}
+.fcards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:44px}
+.fcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 22px;transition:border-color .4s,transform .4s}
+.fcard:hover{border-color:rgba(232,35,42,.4);transform:translateY(-4px)}
+.fcard .ic{width:38px;height:38px;border-radius:10px;background:var(--red-soft);display:grid;place-items:center;margin-bottom:16px}
+.fcard .ic svg{width:18px;height:18px;stroke:var(--red);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.fcard b{font-size:14.5px;font-weight:600;display:block;margin-bottom:8px}
+.fcard p{color:var(--muted);font-size:12px;line-height:1.7}
+
+/* ---------- stats ---------- */
+.stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stats-in{max-width:1400px;margin:0 auto;padding:38px 48px;display:grid;grid-template-columns:repeat(4,1fr)}
+.stat{display:flex;align-items:center;gap:16px;justify-content:center;padding:0 24px}
+.stat+.stat{border-left:1px solid var(--line)}
+.stat svg{width:26px;height:26px;stroke:var(--red);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.stat b{display:block;font-size:24px;font-weight:700;letter-spacing:-.01em}
+.stat span{font-size:11.5px;color:var(--muted);letter-spacing:.06em}
+
+/* ---------- coverflow ---------- */
+.flow{display:grid;grid-template-columns:.38fr .62fr;gap:48px;align-items:center}
+.flow-stage{position:relative;height:360px;perspective:1100px}
+.fc{position:absolute;top:50%;left:50%;width:250px;height:190px;margin:-95px 0 0 -125px;border-radius:12px;overflow:hidden;
+  border:1px solid var(--line);transition:transform .8s cubic-bezier(.16,1,.3,1),opacity .8s,filter .8s;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.fc img{width:100%;height:100%;object-fit:cover}
+.fc.p0{transform:translateX(-196%) translateZ(-160px) rotateY(38deg);opacity:.55;filter:brightness(.6)}
+.fc.p1{transform:translateX(-128%) translateZ(-70px) rotateY(28deg);opacity:.85;filter:brightness(.8)}
+.fc.p2{transform:translateX(0) translateZ(40px) scale(1.16);opacity:1;z-index:3}
+.fc.p3{transform:translateX(128%) translateZ(-70px) rotateY(-28deg);opacity:.85;filter:brightness(.8)}
+.fc.p4{transform:translateX(196%) translateZ(-160px) rotateY(-38deg);opacity:.55;filter:brightness(.6)}
+.flow-ctl{display:flex;align-items:center;gap:16px;margin-top:34px}
+.arrow{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:none;display:grid;place-items:center;cursor:pointer;transition:.35s}
+.arrow:hover{border-color:var(--red);background:var(--red-soft)}
+.arrow svg{width:15px;height:15px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.flow-dots{display:flex;gap:8px;margin-left:8px}
+.flow-dots i{width:7px;height:7px;border-radius:50%;background:var(--line);transition:.35s}
+.flow-dots i.on{background:var(--red);box-shadow:0 0 10px rgba(232,35,42,.8)}
+
+/* ---------- testimonials ---------- */
+.tests{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px}
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px 28px;transition:transform .5s,border-color .5s}
+.tcard:hover{transform:translateY(-5px);border-color:rgba(232,35,42,.35)}
+.thead{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.avat{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff;flex:none}
+.av1{background:linear-gradient(135deg,#e8232a,#7a1216)}.av2{background:linear-gradient(135deg,#39406b,#191d33)}.av3{background:linear-gradient(135deg,#8c4a1d,#4a2408)}
+.thead b{display:block;font-size:14px;font-weight:600}
+.thead span{font-size:11.5px;color:var(--muted)}
+.tcard>p{color:var(--muted);font-size:13.5px;line-height:1.8;font-style:italic}
+.stars{display:flex;gap:3px;margin-top:18px}
+.stars svg{width:13px;height:13px;fill:var(--red)}
+
+/* ---------- cta band ---------- */
+.ctaband{position:relative;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:96px 48px;text-align:center;background:var(--bg2)}
+.ctaband .cl,.ctaband .cr{position:absolute;top:0;bottom:0;width:34%;object-fit:cover;opacity:.9}
+.ctaband .cl{left:0;-webkit-mask-image:linear-gradient(to left,transparent,#000 65%);mask-image:linear-gradient(to left,transparent,#000 65%)}
+.ctaband .cr{right:0;width:20%;-webkit-mask-image:linear-gradient(to right,transparent,#000 65%);mask-image:linear-gradient(to right,transparent,#000 65%)}
+.ctaband h2{position:relative;font-size:clamp(26px,3.2vw,44px);font-weight:500;letter-spacing:-.015em}
+.ctaband p{position:relative;color:var(--muted);font-size:14px;margin:16px 0 32px}
+
+/* ---------- big footer ---------- */
+.bigfoot{padding:72px 48px 0;max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1.3fr .8fr .8fr .8fr 1.1fr;gap:40px}
+.bigfoot h5{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);margin-bottom:20px;font-weight:600}
+.bigfoot ul{list-style:none;display:grid;gap:12px}
+.bigfoot ul a{font-size:13px;color:var(--muted);transition:color .3s}
+.bigfoot ul a:hover{color:var(--ink)}
+.fbrand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.14em;font-size:15px;margin-bottom:14px}
+.fbrand svg{width:28px;height:28px}
+.bigfoot .fdesc{font-size:12.5px;color:var(--muted);line-height:1.7;margin-bottom:22px}
+.newsl p{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+.newsl .row{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
+.newsl input{flex:1;background:none;border:0;outline:0;color:var(--ink);font-family:inherit;font-size:13px;padding:13px 16px}
+.newsl input::placeholder{color:var(--muted)}
+.newsl button{background:var(--red);border:0;width:46px;display:grid;place-items:center;cursor:pointer}
+.newsl button svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.footbase{max-width:1400px;margin:56px auto 0;padding:22px 48px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--muted)}
+.footbase em{font-style:normal;color:var(--red)}
+
+/* ---------- reveal ---------- */
+[data-rv]{opacity:0;transform:translateY(26px);transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1)}
+[data-rv].in{opacity:1;transform:none}
+
+/* ---------- theme toggle + light theme ---------- */
+.theme-toggle{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:none;display:grid;place-items:center;cursor:pointer;transition:border-color .3s;flex:none}
+.theme-toggle:hover{border-color:var(--red)}
+.theme-toggle svg{width:16px;height:16px;stroke:var(--ink);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.theme-toggle .ic-sun{display:none}
+.light-only{display:none}
+.avat-photo{width:44px;height:44px;border-radius:50%;object-fit:cover;flex:none;display:none}
+.lyr-corner{display:none}
+html[data-theme=light]{--bg:#edf3fb;--bg2:#ffffff;--ink:#0e1c30;--muted:#4d5f7a;--red:#1e6fe0;--red-soft:rgba(30,111,224,.12);--line:rgba(13,28,48,.12);--card:#ffffff}
+html[data-theme=light] body{background:linear-gradient(180deg,#dde9f9 0%,#edf3fb 34%,#f5f8fd 100%)}
+html[data-theme=light] .light-only{display:block}
+html[data-theme=light] .dark-only{display:none}
+html[data-theme=light] .theme-toggle .ic-sun{display:block}
+html[data-theme=light] .theme-toggle .ic-moon{display:none}
+html[data-theme=light] .nav.solid{background:rgba(255,255,255,.86)}
+html[data-theme=light] .links a{text-shadow:0 1px 8px rgba(255,255,255,.95)}
+html[data-theme=light] .cta{background:var(--red);color:#fff;border-color:var(--red)}
+html[data-theme=light] .cta svg path{stroke:#fff}
+html[data-theme=light] .strip{background:rgba(255,255,255,.7)}
+.art-left-light{display:none}
+html[data-theme=light] .art-left-light{display:block;position:absolute;top:0;left:0;height:100%;width:46%;object-fit:cover;object-position:left top;pointer-events:none;
+  -webkit-mask-image:linear-gradient(to left,transparent 0,#000 48%),linear-gradient(to top,transparent 2%,#000 34%);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to left,transparent 0,#000 48%),linear-gradient(to top,transparent 2%,#000 34%);mask-composite:intersect}
+html[data-theme=light] .lyr-corner{width:min(34%,380px)}
+html[data-theme=light] .split{position:relative;min-height:520px}
+html[data-theme=light] .split-art{position:absolute;right:-48px;top:0;bottom:0;width:46%;height:100%;border:0;border-radius:0;overflow:visible}
+html[data-theme=light] .split-art img{height:100%;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 34%);mask-image:linear-gradient(to right,transparent 0,#000 34%)}
+@media (max-width:900px){
+  html[data-theme=light] .split{min-height:0}
+  html[data-theme=light] .split-art{position:static;width:100%;height:auto;transform:none;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  html[data-theme=light] .split-art img{height:auto;-webkit-mask-image:none;mask-image:none}
+}
+html[data-theme=light] .hero::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(to right,rgba(237,243,251,.6) 0%,rgba(237,243,251,.28) 42%,transparent 65%)}
+html[data-theme=light] .hero-glow{background:radial-gradient(circle,rgba(255,178,54,.5),rgba(255,178,54,0) 65%)}
+html[data-theme=light] .lyr{display:none}
+html[data-theme=light] .lyr-corner{display:block;position:absolute;top:0;left:0;width:min(34%,340px);pointer-events:none;will-change:transform;
+  -webkit-mask-image:linear-gradient(to left,transparent 0,#000 42%),linear-gradient(to top,transparent 0,#000 58%);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to left,transparent 0,#000 42%),linear-gradient(to top,transparent 0,#000 58%);mask-composite:intersect}
+html[data-theme=light] #petals{opacity:.5}
+html[data-theme=light] .play{animation:pulseB 2.6s infinite}
+@keyframes pulseB{0%{box-shadow:0 0 0 0 rgba(30,111,224,.4)}70%{box-shadow:0 0 0 18px rgba(30,111,224,0)}100%{box-shadow:0 0 0 0 rgba(30,111,224,0)}}
+html[data-theme=light] .fcard,html[data-theme=light] .tcard,html[data-theme=light] .pillar{box-shadow:0 12px 34px rgba(20,45,90,.08)}
+html[data-theme=light] .fcard:hover{border-color:rgba(30,111,224,.45)}
+html[data-theme=light] .tcard:hover{border-color:rgba(30,111,224,.4)}
+html[data-theme=light] .pillar:hover{border-color:rgba(30,111,224,.4)}
+html[data-theme=light] .fc{box-shadow:0 18px 46px rgba(25,55,110,.22)}
+html[data-theme=light] .btn-red:hover{box-shadow:0 10px 30px rgba(30,111,224,.35)}
+html[data-theme=light] .btn-ghost{border-color:rgba(30,111,224,.5);background:rgba(30,111,224,.07)}
+html[data-theme=light] .dots a.on i{box-shadow:0 0 12px rgba(30,111,224,.7)}
+html[data-theme=light] .dots a{text-shadow:0 1px 8px rgba(255,255,255,.95)}
+html[data-theme=light] .flow-dots i.on{box-shadow:0 0 10px rgba(30,111,224,.7)}
+html[data-theme=light] .avat{display:none}
+html[data-theme=light] .avat-photo{display:block}
+html[data-theme=light] .ctaband{background:#e9f1fc}
+html[data-theme=light] footer{--ink:#f2f4f8;--muted:#98a2b6;--line:rgba(242,244,248,.12);--card:#10141f;background:#0a0f1c;color:#f2f4f8}
+
+@media (max-width:900px){
+  .nav{padding:16px 20px}
+  .links{display:none}
+  .nav .cta{display:none}
+  .burger{display:block}
+  .lyr-torii,.lyr-sakura,.lyr-temple{display:none}
+  .lyr-maple{width:48%}
+  .hero-in{padding:0 20px}
+  .art-right{width:130%;right:-30%;opacity:.85}
+  .art-left{height:56%}
+  .hero-foot{left:20px;right:20px}
+  .dots{display:none}
+  .socials{display:none}
+  .strip-in{padding:22px 20px;gap:18px 28px;justify-content:flex-start}
+  .split{grid-template-columns:1fr;gap:44px}
+  .stats-in{grid-template-columns:1fr 1fr;padding:28px 20px;gap:24px 0}
+  .stat+.stat{border-left:0}
+  .stat:nth-child(even){border-left:1px solid var(--line)}
+  .flow{grid-template-columns:1fr;gap:36px}
+  .flow-stage{height:280px}
+  .fc{width:190px;height:145px;margin:-72px 0 0 -95px}
+  .tests{grid-template-columns:1fr}
+  .ctaband{padding:72px 20px}
+  .ctaband .cl{width:55%}.ctaband .cr{display:none}
+  .bigfoot{grid-template-columns:1fr 1fr;padding:52px 20px 0;gap:32px}
+  .footbase{padding:20px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  [data-rv]{opacity:1;transform:none}
+  .h1 .mask-line span{transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#top" aria-label="GOAT UI home">
+    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <path d="M16 3 L21 8 L19 14 L22 13 L16 29 L10 13 L13 14 L11 8 Z" fill="#f2f4f8"/>
+      <circle cx="16" cy="11" r="1.6" fill="#e8232a"/>
+    </svg>
+    GOAT UI
+  </a>
+  <nav class="links" aria-label="Primary">
+    <a class="on" href="#top">Home</a>
+    <a href="#explore">Explore</a>
+    <a href="#features">Features</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#about">About</a>
+  </nav>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">
+    <svg class="ic-moon" viewBox="0 0 24 24"><path d="M20 13.5A8.5 8.5 0 1 1 10.5 4a6.8 6.8 0 0 0 9.5 9.5Z"/></svg>
+    <svg class="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5 5l1.7 1.7M17.3 17.3 19 19M19 5l-1.7 1.7M6.7 17.3 5 19"/></svg>
+  </button>
+  <a class="cta" href="#explore">Get Started
+    <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="#e8232a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <button class="burger" aria-label="Menu"><i></i><i></i></button>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-art">
+    <div class="hero-glow"></div>
+    <img class="art-right dark-only" id="artRight" src="/goat-red/assets/hero-right.png" alt="Red moon over a mountain temple and bridge">
+    <img class="art-right light-only" src="/goat-red/assets/light/hero-right.png" alt="Golden sun over a mountain pagoda and red bridge">
+    <img class="art-left-light light-only" src="/goat-red/assets/light/hero-left.png" alt="">
+    <img class="lyr-corner light-only a-sway" src="/goat-red/assets/light/sakura-corner.png" alt="">
+    
+    
+    
+    <div class="lyr lyr-mist blend" data-speed="0.24"><img class="a-drift2" src="/goat-red/assets/layers/mist.png" alt=""></div>
+    <div class="lyr lyr-temple" data-speed="0.30"><img src="/goat-red/assets/layers/temple-big.png" alt=""></div>
+    <div class="lyr lyr-torii" data-speed="0.38"><img src="/goat-red/assets/layers/torii.png" alt=""></div>
+    <div class="lyr lyr-lantern" data-speed="0.50"><img class="a-lantern" src="/goat-red/assets/layers/lantern.png" alt=""></div>
+    <div class="lyr lyr-maple" data-speed="0.42"><img class="a-sway" src="/goat-red/assets/layers/maple.png" alt=""></div>
+    <div class="lyr lyr-sakura" data-speed="0.47"><img class="a-sway2" src="/goat-red/assets/layers/sakura.png" alt=""></div>
+    <canvas id="petals" aria-hidden="true"></canvas>
+  </div>
+  <div class="hero-in">
+    <p class="eyebrow">Welcome to GOAT UI</p>
+    <h1 class="h1">
+      <span class="mask-line"><span>Crafted for</span></span>
+      <span class="mask-line"><span>the <em>Extraordinary</em></span></span>
+    </h1>
+    <p class="hero-sub">Experience a new dimension of digital design with GOAT UI — where creativity meets infinite possibilities.</p>
+    <a class="watch" href="#explore">
+      <span class="play"><svg viewBox="0 0 16 16" fill="none"><path d="M4 2.8v10.4L13 8Z" fill="#fff"/></svg></span>
+      Watch Experience
+    </a>
+  </div>
+  <div class="hero-foot">
+    <div class="slide-num"><b>01</b><span class="ticks"><i class="on"></i><i></i><i></i><i></i></span><span>04</span></div>
+    <div class="socials">
+      <a href="#" aria-label="X"><svg viewBox="0 0 16 16"><path d="M12.6 1h2.5L9.9 7.2 16 15h-4.7l-3.7-4.8L3.4 15H.9l5.5-6.6L.5 1h4.8l3.3 4.4Zm-.9 12.7h1.4L4.5 2.3H3Z"/></svg></a>
+      <a href="#" aria-label="Discord"><svg viewBox="0 0 16 16"><path d="M13.5 3.4A12.7 12.7 0 0 0 10.4 2l-.4.8a11 11 0 0 0-4 0L5.6 2a12.7 12.7 0 0 0-3.1 1.4C.6 6.6.2 9.7.5 12.7A13 13 0 0 0 4.5 15l.8-1.3a8 8 0 0 1-1.4-.7l.3-.2a9.2 9.2 0 0 0 7.6 0l.3.2c-.4.3-.9.5-1.4.7l.8 1.3a13 13 0 0 0 4-2.3c.4-3.5-.6-6.5-2-9.3ZM5.7 10.8c-.8 0-1.4-.7-1.4-1.6s.6-1.6 1.4-1.6 1.4.7 1.4 1.6-.6 1.6-1.4 1.6Zm4.6 0c-.8 0-1.4-.7-1.4-1.6s.6-1.6 1.4-1.6 1.4.7 1.4 1.6-.6 1.6-1.4 1.6Z"/></svg></a>
+      <a href="#" aria-label="YouTube"><svg viewBox="0 0 16 16"><path d="M15.7 4.6a2 2 0 0 0-1.4-1.4C13 2.8 8 2.8 8 2.8s-5 0-6.3.4A2 2 0 0 0 .3 4.6 21 21 0 0 0 0 8a21 21 0 0 0 .3 3.4 2 2 0 0 0 1.4 1.4c1.3.4 6.3.4 6.3.4s5 0 6.3-.4a2 2 0 0 0 1.4-1.4A21 21 0 0 0 16 8a21 21 0 0 0-.3-3.4ZM6.4 10.9V5.1L10.8 8Z"/></svg></a>
+      <a href="#" aria-label="Instagram"><svg viewBox="0 0 16 16"><path d="M8 1.4c2.1 0 2.4 0 3.2.1a4.3 4.3 0 0 1 1.5.3 2.9 2.9 0 0 1 1.6 1.6 4.3 4.3 0 0 1 .3 1.5c0 .8.1 1 .1 3.2s0 2.4-.1 3.2a4.3 4.3 0 0 1-.3 1.5 2.9 2.9 0 0 1-1.6 1.6 4.3 4.3 0 0 1-1.5.3c-.8 0-1 .1-3.2.1s-2.4 0-3.2-.1a4.3 4.3 0 0 1-1.5-.3 2.9 2.9 0 0 1-1.6-1.6 4.3 4.3 0 0 1-.3-1.5c0-.8-.1-1-.1-3.2s0-2.4.1-3.2a4.3 4.3 0 0 1 .3-1.5 2.9 2.9 0 0 1 1.6-1.6 4.3 4.3 0 0 1 1.5-.3c.8 0 1-.1 3.2-.1M8 0C5.8 0 5.5 0 4.7.1A5.7 5.7 0 0 0 2.8.5 4.4 4.4 0 0 0 .5 2.8a5.7 5.7 0 0 0-.4 1.9C0 5.5 0 5.8 0 8s0 2.5.1 3.3a5.7 5.7 0 0 0 .4 1.9 4.4 4.4 0 0 0 2.3 2.3 5.7 5.7 0 0 0 1.9.4c.8.1 1.1.1 3.3.1s2.5 0 3.3-.1a5.7 5.7 0 0 0 1.9-.4 4.4 4.4 0 0 0 2.3-2.3 5.7 5.7 0 0 0 .4-1.9c.1-.8.1-1.1.1-3.3s0-2.5-.1-3.3a5.7 5.7 0 0 0-.4-1.9A4.4 4.4 0 0 0 13.2.5a5.7 5.7 0 0 0-1.9-.4C10.5 0 10.2 0 8 0Zm0 3.9A4.1 4.1 0 1 0 12.1 8 4.1 4.1 0 0 0 8 3.9Zm0 6.8A2.7 2.7 0 1 1 10.7 8 2.7 2.7 0 0 1 8 10.7Zm5.3-7a1 1 0 1 1-1-1 1 1 0 0 1 1 1Z"/></svg></a>
+    </div>
+  </div>
+  <nav class="dots" aria-label="Sections">
+    <a class="on" href="#top"><span>Welcome</span><i></i></a>
+    <a href="#explore"><span>Explore</span><i></i></a>
+    <a href="#features"><span>Features</span><i></i></a>
+    <a href="#gallery"><span>Gallery</span><i></i></a>
+    <a href="#about"><span>About</span><i></i></a>
+  </nav>
+</section>
+
+<div class="strip">
+  <div class="strip-in">
+    <div class="feat"><svg viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5Z"/></svg><span><b>Smooth</b> Animations</span></div>
+    <div class="feat"><svg viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7Z"/><path d="M12 12 21 7M12 12v10M12 12 3 7"/></svg><span><b>Interactive</b> 3D</span></div>
+    <div class="feat"><svg viewBox="0 0 24 24"><path d="M12 3c-1.5 3.5-4.5 6-7 8.5C3.5 13 3 14.5 3 16a9 9 0 0 0 18 0c0-1.5-.5-3-2-4.5C16.5 9 13.5 6.5 12 3Z"/></svg><span><b>Premium</b> Assets</span></div>
+    <div class="feat"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg><span><b>Fully</b> Responsive</span></div>
+    <div class="feat"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><span><b>Optimized</b> Performance</span></div>
+  </div>
+</div>
+
+<section class="sec" id="features">
+  <div class="split">
+    <div data-rv>
+      <p class="sec-eyebrow">Powered by Creativity</p>
+      <h2 class="h2">Design Beyond <em style="font-style:normal;color:var(--red)">Boundaries</em></h2>
+      <p class="sec-note" style="margin:22px 0 30px;max-width:40ch">GOAT UI blends cutting-edge technology with stunning visuals to create immersive experiences that inspire and engage.</p>
+      <a class="btn-ghost" href="#gallery">Explore Features
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="#e8232a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div class="fcards">
+        <div class="fcard"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7Z"/><path d="M12 12 21 7M12 12v10M12 12 3 7"/></svg></div><b>3D Experiences</b><p>Immersive 3D environments with smooth performance.</p></div>
+        <div class="fcard"><div class="ic"><svg viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5Z"/></svg></div><b>Blazing Fast</b><p>Optimized for speed and seamless interaction.</p></div>
+        <div class="fcard"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></div><b>Beautiful Design</b><p>Modern, elegant and pixel-perfect UI.</p></div>
+        <div class="fcard"><div class="ic"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg></div><b>Fully Responsive</b><p>Perfect experience on every device.</p></div>
+      </div>
+    </div>
+    <div class="split-art" data-rv><img class="dark-only" src="/goat-red/assets/torii.png" alt="Crimson torii gate in misty mountains"><img class="light-only" src="/goat-red/assets/light/split-art.png" alt="Red torii gate on rocky cliffs above the clouds"></div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stats-in" data-rv>
+    <div class="stat"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.6"/><path d="M16 14.4c2.9.3 5 2.4 5 5.6"/></svg><div><b>100K+</b><span>Happy Users</span></div></div>
+    <div class="stat"><svg viewBox="0 0 24 24"><path d="M5 15c-1.8-1.2-3-3.1-3-5.3C2 5.9 5 3 9 3c2.5 0 4.7 1.3 6 3.3L20 4l-1 4.6c.6 1 .4 2.4.4 2.4"/><path d="M9 21v-6l4 3-4 3Z"/></svg><div><b>99.9%</b><span>Uptime</span></div></div>
+    <div class="stat"><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.2 1.1 6L12 16.6 6.6 19.5l1.1-6L3.2 9.4l6.1-.8Z"/></svg><div><b>4.9/5</b><span>User Rating</span></div></div>
+    <div class="stat"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3Z"/></svg><div><b>150+</b><span>Countries</span></div></div>
+  </div>
+</div>
+
+<section class="sec" id="gallery">
+  <div class="flow">
+    <div data-rv>
+      <p class="sec-eyebrow">Explore Our Work</p>
+      <h2 class="h2">Visual Journey <em style="font-style:normal;color:var(--red)">of Innovation</em></h2>
+      <p class="sec-note" style="margin:22px 0 30px">Discover a collection of stunning screens and immersive designs.</p>
+      <a class="btn-ghost" href="#about">View Gallery
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="#e8232a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div class="flow-ctl">
+        <button class="arrow" id="fPrev" aria-label="Previous"><svg viewBox="0 0 16 16"><path d="M10 2.5 4.5 8l5.5 5.5"/></svg></button>
+        <button class="arrow" id="fNext" aria-label="Next"><svg viewBox="0 0 16 16"><path d="M6 2.5 11.5 8 6 13.5"/></svg></button>
+        <div class="flow-dots" id="fDots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+      </div>
+    </div>
+    <div class="flow-stage" data-rv id="flowStage">
+      <div class="fc p0"><img class="dark-only" src="/goat-red/assets/car-l2.png" alt=""><img class="light-only" src="/goat-red/assets/light/car-l2.png" alt=""></div>
+      <div class="fc p1"><img class="dark-only" src="/goat-red/assets/car-l1.png" alt=""><img class="light-only" src="/goat-red/assets/light/car-l1.png" alt=""></div>
+      <div class="fc p2"><img class="dark-only" src="/goat-red/assets/car-c.png" alt="Temple lake at night"><img class="light-only" src="/goat-red/assets/light/car-c.png" alt="Temple lake at night"></div>
+      <div class="fc p3"><img class="dark-only" src="/goat-red/assets/car-r1.png" alt=""><img class="light-only" src="/goat-red/assets/light/car-r1.png" alt=""></div>
+      <div class="fc p4"><img class="dark-only" src="/goat-red/assets/car-r2.png" alt=""><img class="light-only" src="/goat-red/assets/light/car-r2.png" alt=""></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="explore">
+  <div data-rv>
+    <p class="sec-eyebrow">What Our Users Say</p>
+    <h2 class="h2">Trusted by <em style="font-style:normal;color:var(--red)">Creators Worldwide</em></h2>
+    <p class="sec-note" style="margin-top:22px">Join a growing community of designers, developers and dreamers.</p>
+  </div>
+  <div class="tests">
+    <div class="tcard" data-rv>
+      <div class="thead"><span class="avat av1">AM</span><img class="avat-photo" src="/goat-red/assets/light/avatar1.png" alt=""><div><b>Arjun Mehta</b><span>Developer</span></div></div>
+      <p>&ldquo;GOAT UI is absolutely incredible. The quality and performance are next level!&rdquo;</p>
+      <div class="stars"><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg></div>
+    </div>
+    <div class="tcard" data-rv>
+      <div class="thead"><span class="avat av2">PS</span><img class="avat-photo" src="/goat-red/assets/light/avatar2.png" alt=""><div><b>Priya Sharma</b><span>Designer</span></div></div>
+      <p>&ldquo;A masterpiece in UI design. Clean, fast and beautiful!&rdquo;</p>
+      <div class="stars"><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg></div>
+    </div>
+    <div class="tcard" data-rv>
+      <div class="thead"><span class="avat av3">RV</span><img class="avat-photo" src="/goat-red/assets/light/avatar3.png" alt=""><div><b>Rahul Verma</b><span>Product Builder</span></div></div>
+      <p>&ldquo;Simply the best. GOAT UI makes development fun!&rdquo;</p>
+      <div class="stars"><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg><svg viewBox="0 0 16 16"><path d="m8 1.5 2 4.1 4.5.6-3.3 3.1.8 4.5L8 11.7l-4 2.1.8-4.5L1.5 6.2l4.5-.6Z"/></svg></div>
+    </div>
+  </div>
+</section>
+
+<section class="ctaband" id="about">
+  <img class="cl dark-only" src="/goat-red/assets/cta-left.png" alt="">
+  <img class="cr dark-only" src="/goat-red/assets/cta-right.png" alt="">
+  <img class="cl light-only" src="/goat-red/assets/light/cta-left.png" alt="">
+  <img class="cr light-only" src="/goat-red/assets/light/cta-right.png" alt="">
+  <h2>Ready to Experience the Next Level?</h2>
+  <p>Join GOAT UI and bring your ideas to life with stunning design.</p>
+  <a class="btn-red" href="#top" style="position:relative">Get Started Free
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+</section>
+
+<footer>
+  <div class="bigfoot">
+    <div>
+      <div class="fbrand">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 3 L21 8 L19 14 L22 13 L16 29 L10 13 L13 14 L11 8 Z" fill="#f2f4f8"/><circle cx="16" cy="11" r="1.6" fill="#e8232a"/></svg>
+        GOAT UI
+      </div>
+      <p class="fdesc">Crafted for the Extraordinary. A component library that treats every pixel like it matters, because it does.</p>
+      <div class="socials" style="display:flex">
+        <a href="#" aria-label="X"><svg viewBox="0 0 16 16"><path d="M12.6 1h2.5L9.9 7.2 16 15h-4.7l-3.7-4.8L3.4 15H.9l5.5-6.6L.5 1h4.8l3.3 4.4Zm-.9 12.7h1.4L4.5 2.3H3Z"/></svg></a>
+        <a href="#" aria-label="Discord"><svg viewBox="0 0 16 16"><path d="M13.5 3.4A12.7 12.7 0 0 0 10.4 2l-.4.8a11 11 0 0 0-4 0L5.6 2a12.7 12.7 0 0 0-3.1 1.4C.6 6.6.2 9.7.5 12.7A13 13 0 0 0 4.5 15l.8-1.3a8 8 0 0 1-1.4-.7l.3-.2a9.2 9.2 0 0 0 7.6 0l.3.2c-.4.3-.9.5-1.4.7l.8 1.3a13 13 0 0 0 4-2.3c.4-3.5-.6-6.5-2-9.3ZM5.7 10.8c-.8 0-1.4-.7-1.4-1.6s.6-1.6 1.4-1.6 1.4.7 1.4 1.6-.6 1.6-1.4 1.6Zm4.6 0c-.8 0-1.4-.7-1.4-1.6s.6-1.6 1.4-1.6 1.4.7 1.4 1.6-.6 1.6-1.4 1.6Z"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 16 16"><path d="M15.7 4.6a2 2 0 0 0-1.4-1.4C13 2.8 8 2.8 8 2.8s-5 0-6.3.4A2 2 0 0 0 .3 4.6 21 21 0 0 0 0 8a21 21 0 0 0 .3 3.4 2 2 0 0 0 1.4 1.4c1.3.4 6.3.4 6.3.4s5 0 6.3-.4a2 2 0 0 0 1.4-1.4A21 21 0 0 0 16 8a21 21 0 0 0-.3-3.4ZM6.4 10.9V5.1L10.8 8Z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 16 16"><path d="M8 1.4c2.1 0 2.4 0 3.2.1a4.3 4.3 0 0 1 1.5.3 2.9 2.9 0 0 1 1.6 1.6 4.3 4.3 0 0 1 .3 1.5c0 .8.1 1 .1 3.2s0 2.4-.1 3.2a4.3 4.3 0 0 1-.3 1.5 2.9 2.9 0 0 1-1.6 1.6 4.3 4.3 0 0 1-1.5.3c-.8 0-1 .1-3.2.1s-2.4 0-3.2-.1a4.3 4.3 0 0 1-1.5-.3 2.9 2.9 0 0 1-1.6-1.6 4.3 4.3 0 0 1-.3-1.5c0-.8-.1-1-.1-3.2s0-2.4.1-3.2a4.3 4.3 0 0 1 .3-1.5 2.9 2.9 0 0 1 1.6-1.6 4.3 4.3 0 0 1 1.5-.3c.8 0 1-.1 3.2-.1M8 0C5.8 0 5.5 0 4.7.1A5.7 5.7 0 0 0 2.8.5 4.4 4.4 0 0 0 .5 2.8a5.7 5.7 0 0 0-.4 1.9C0 5.5 0 5.8 0 8s0 2.5.1 3.3a5.7 5.7 0 0 0 .4 1.9 4.4 4.4 0 0 0 2.3 2.3 5.7 5.7 0 0 0 1.9.4c.8.1 1.1.1 3.3.1s2.5 0 3.3-.1a5.7 5.7 0 0 0 1.9-.4 4.4 4.4 0 0 0 2.3-2.3 5.7 5.7 0 0 0 .4-1.9c.1-.8.1-1.1.1-3.3s0-2.5-.1-3.3a5.7 5.7 0 0 0-.4-1.9A4.4 4.4 0 0 0 13.2.5a5.7 5.7 0 0 0-1.9-.4C10.5 0 10.2 0 8 0Zm0 3.9A4.1 4.1 0 1 0 12.1 8 4.1 4.1 0 0 0 8 3.9Zm0 6.8A2.7 2.7 0 1 1 10.7 8 2.7 2.7 0 0 1 8 10.7Zm5.3-7a1 1 0 1 1-1-1 1 1 0 0 1 1 1Z"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <h5>Quick Links</h5>
+      <ul><li><a href="#top">Home</a></li><li><a href="#gallery">Explore</a></li><li><a href="#features">Features</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#about">About</a></li></ul>
+    </div>
+    <div>
+      <h5>Resources</h5>
+      <ul><li><a href="#">Documentation</a></li><li><a href="#">Support</a></li><li><a href="#">Community</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li></ul>
+    </div>
+    <div>
+      <h5>Legal</h5>
+      <ul><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li><li><a href="#">Cookie Settings</a></li></ul>
+    </div>
+    <div class="newsl">
+      <h5>Subscribe to our newsletter</h5>
+      <p>Get the latest updates and design insights.</p>
+      <div class="row"><input type="email" placeholder="Enter your email" aria-label="Email"><button aria-label="Subscribe"><svg viewBox="0 0 16 16"><path d="M2 8h11M9 3.5 13.5 8 9 12.5"/></svg></button></div>
+    </div>
+  </div>
+  <div class="footbase"><span>&copy; 2026 GOAT UI. All rights reserved.</span><span>Designed with <em>&#10084;</em> for creators</span></div>
+</footer>
+
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // nav solid on scroll
+  var nav = document.getElementById('nav');
+  addEventListener('scroll', function(){ nav.classList.toggle('solid', scrollY > 30); }, {passive:true});
+
+  // hero parallax
+  var ars = [].slice.call(document.querySelectorAll('.art-right'));
+  var mx = 0, my = 0, tx = 0, ty = 0;
+  if(!reduce){
+    addEventListener('pointermove', function(e){
+      tx = e.clientX/innerWidth - .5; ty = e.clientY/innerHeight - .5;
+    }, {passive:true});
+    (function loop(){
+      mx += (tx-mx)*.06; my += (ty-my)*.06;
+      for(var ai=0;ai<ars.length;ai++){ ars[ai].style.transform = 'translate3d('+(mx*-14)+'px,'+(my*-10)+'px,0)'; }
+      requestAnimationFrame(loop);
+    })();
+  }
+
+  // layer parallax (wrapper moves on scroll; inner img keeps its loop animation)
+  var lyrs=[].slice.call(document.querySelectorAll('.hero-art [data-speed]'));
+  var heroEl=document.querySelector('.hero'), praf=null;
+  function para(){
+    praf=null;
+    var y=window.scrollY||window.pageYOffset;
+    if(y>heroEl.offsetHeight) return;
+    for(var i=0;i<lyrs.length;i++){
+      var sp=parseFloat(lyrs[i].getAttribute('data-speed'));
+      lyrs[i].style.transform='translate3d(0,'+(y*sp).toFixed(1)+'px,0)';
+    }
+  }
+  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    window.addEventListener('scroll',function(){if(!praf)praf=requestAnimationFrame(para)},{passive:true});
+  }
+  // falling petals
+  var cv = document.getElementById('petals'), cx = cv.getContext('2d');
+  var W, H, P = [];
+  function size(){ W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; }
+  size(); addEventListener('resize', size);
+  for(var i=0;i<42;i++) P.push({x:Math.random(), y:Math.random(), s:2+Math.random()*4, r:Math.random()*6.28, v:.0006+Math.random()*.0012, w:.4+Math.random()*.8});
+  function petal(p){
+    cx.save(); cx.translate(p.x*W, p.y*H); cx.rotate(p.r);
+    cx.fillStyle = 'rgba(200,30,38,'+(0.35+p.s*0.08)+')';
+    cx.beginPath();
+    cx.moveTo(0,-p.s); cx.quadraticCurveTo(p.s*.9,-p.s*.2, 0,p.s); cx.quadraticCurveTo(-p.s*.9,-p.s*.2, 0,-p.s);
+    cx.fill(); cx.restore();
+  }
+  if(!reduce){
+    (function anim(){
+      cx.clearRect(0,0,W,H);
+      for(var k=0;k<P.length;k++){ var p=P[k];
+        p.y += p.v; p.x += Math.sin(p.y*9+p.w)*.0006; p.r += .01*p.w;
+        if(p.y>1.05){ p.y=-.05; p.x=Math.random(); }
+        petal(p);
+      }
+      requestAnimationFrame(anim);
+    })();
+  }
+
+  // carousel
+  var order = [0,1,2,3,4];
+  var cards = document.querySelectorAll('#flowStage .fc');
+  var fdots = document.querySelectorAll('#fDots i');
+  function applyFlow(){
+    cards.forEach(function(c,i){
+      var pos = order.indexOf(i);
+      c.className = 'fc p'+pos;
+    });
+    fdots.forEach(function(d,i){ d.classList.toggle('on', order[2]===i); });
+  }
+  document.getElementById('fNext').addEventListener('click', function(){ order.push(order.shift()); applyFlow(); });
+  document.getElementById('fPrev').addEventListener('click', function(){ order.unshift(order.pop()); applyFlow(); });
+  if(!reduce){ setInterval(function(){ order.push(order.shift()); applyFlow(); }, 4200); }
+
+  // theme toggle
+  try{ var savedTheme = localStorage.getItem('goat-theme'); if(savedTheme){ document.documentElement.setAttribute('data-theme', savedTheme); } }catch(e){}
+  document.getElementById('themeToggle').addEventListener('click', function(){
+    var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    try{ localStorage.setItem('goat-theme', next); }catch(e){}
+  });
+
+  // reveals
+  var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('in'); }); }, {threshold:.15});
+  document.querySelectorAll('[data-rv]').forEach(function(el){ io.observe(el); });
+
+  // dot nav active state
+  var secs = ['top','explore','features','gallery','about'];
+  var dots = document.querySelectorAll('.dots a');
+  addEventListener('scroll', function(){
+    var y = scrollY + innerHeight*.4, cur = 0;
+    secs.forEach(function(id,i){ var el=document.getElementById(id); if(el && el.offsetTop<=y) cur=i; });
+    dots.forEach(function(d,i){ d.classList.toggle('on', i===cur); });
+  }, {passive:true});
+})();
+</script>
+</body>
+</html>
