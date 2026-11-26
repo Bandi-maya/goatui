@@ -42,6 +42,20 @@ function useEscape(active: boolean, onClose: () => void) {
   }, [active, onClose]);
 }
 
+
+/* Keeps an overlay mounted while it plays its exit (slide down). */
+function usePresence(open: boolean, ms = 360) {
+  const [mounted, setMounted] = useState(open);
+  const [closing, setClosing] = useState(false);
+  useEffect(() => {
+    if (open) { setMounted(true); setClosing(false); return; }
+    setClosing(true);
+    const t = window.setTimeout(() => { setMounted(false); setClosing(false); }, ms);
+    return () => window.clearTimeout(t);
+  }, [open, ms]);
+  return { mounted: mounted || open, closing: closing && !open };
+}
+
 function useAutofocus<T extends HTMLElement>(active: boolean) {
   const ref = useRef<T | null>(null);
   useEffect(() => {
@@ -55,6 +69,7 @@ function useAutofocus<T extends HTMLElement>(active: boolean) {
 
 function Overlay({
   contained,
+  closing = false,
   className = "",
   label,
   onBackdrop,
@@ -62,6 +77,7 @@ function Overlay({
   children,
 }: {
   contained?: boolean;
+  closing?: boolean;
   className?: string;
   label: string;
   onBackdrop?: () => void;
@@ -70,7 +86,7 @@ function Overlay({
 }) {
   return (
     <div
-      className={`gmf-overlay ${className} ${contained ? "is-contained" : ""}`}
+      className={`gmf-overlay ${className} ${contained ? "is-contained" : ""} ${closing ? "is-closing" : ""}`}
       role="dialog"
       aria-modal="true"
       aria-label={label}
@@ -106,14 +122,15 @@ function Trigger({ onOpen, children }: { onOpen: () => void; children: React.Rea
    ============================================================ */
 export function CenterSpringModal({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   const ref = useAutofocus<HTMLDivElement>(open);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Sparkles size={14} /> Open dialog</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-cs" label="Publish project" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-cs" label="Publish project" onBackdrop={close}>
           <div className="gmf-cs-panel" ref={ref} tabIndex={-1}>
             <CloseBtn onClose={close} className="gmf-cs-close" />
             <div className="gmf-cs-badge"><Sparkles size={20} /></div>
@@ -145,14 +162,15 @@ const SOR_ROWS = [
 ];
 export function SlideOverRight({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   const ref = useAutofocus<HTMLDivElement>(open);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Folder size={14} /> Open drawer</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-sor" label="Project files" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-sor" label="Project files" onBackdrop={close}>
           <div className="gmf-sor-panel" ref={ref} tabIndex={-1}>
             <div className="gmf-sor-head">
               <h3>Recent files</h3>
@@ -183,6 +201,7 @@ export function SlideOverRight({ contained, defaultOpen }: ModalVariantProps) {
    ============================================================ */
 export function BottomSheetSnap({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -227,8 +246,8 @@ export function BottomSheetSnap({ contained, defaultOpen }: ModalVariantProps) {
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><ListChecks size={14} /> Open sheet</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-bs" label="Choose a destination" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-bs" label="Choose a destination" onBackdrop={close}>
           <div
             className="gmf-bs-panel"
             ref={panelRef}
@@ -266,13 +285,14 @@ export function BottomSheetSnap({ contained, defaultOpen }: ModalVariantProps) {
    ============================================================ */
 export function TopDropBanner({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Zap size={14} /> Show banner</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-td" label="New version available" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-td" label="New version available" onBackdrop={close}>
           <div className="gmf-td-panel" role="alert">
             <div className="gmf-td-ico"><Zap size={20} color="#fff" /></div>
             <div className="gmf-td-body">
@@ -301,6 +321,7 @@ const CMD_ITEMS = [
 ];
 export function CommandPalette({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const [q, setQ] = useState("");
   const [idx, setIdx] = useState(0);
   const close = useCallback(() => { setOpen(false); setQ(""); setIdx(0); }, []);
@@ -320,8 +341,8 @@ export function CommandPalette({ contained, defaultOpen }: ModalVariantProps) {
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Command size={14} /> Command menu <span className="gmf-kbd">K</span></Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-cmd" label="Command palette" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-cmd" label="Command palette" onBackdrop={close}>
           <div className="gmf-cmd-panel" onKeyDown={onKey}>
             <div className="gmf-cmd-inputrow">
               <Search size={16} color="#68738a" />
@@ -385,6 +406,7 @@ const LB_SLIDES = [
 ];
 export function LightboxGallery({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const [idx, setIdx] = useState(0);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
@@ -393,9 +415,9 @@ export function LightboxGallery({ contained, defaultOpen }: ModalVariantProps) {
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><ImageIcon size={14} /> Open lightbox</Trigger>
-      {open && (
+      {pres.mounted && (
         <div
-          className={`gmf-overlay gmf-lb ${contained ? "is-contained" : ""}`}
+          className={`gmf-overlay gmf-lb ${contained ? "is-contained" : ""} ${pres.closing ? "is-closing" : ""}`}
           role="dialog" aria-modal="true" aria-label="Image lightbox"
         >
           <div className="gmf-lb-frame" ref={ref} tabIndex={-1}>
@@ -435,14 +457,15 @@ export function LightboxGallery({ contained, defaultOpen }: ModalVariantProps) {
    ============================================================ */
 export function ConfirmDestructive({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   const ref = useAutofocus<HTMLDivElement>(open);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Trash2 size={14} /> Delete project</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-cfd" label="Delete project confirmation" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-cfd" label="Delete project confirmation" onBackdrop={close}>
           <div className="gmf-cfd-panel" ref={ref} tabIndex={-1}>
             <div className="gmf-cfd-ring"><Trash2 size={24} /></div>
             <h3 className="gmf-cfd-title">Delete "Marketing site"?</h3>
@@ -466,14 +489,15 @@ export function ConfirmDestructive({ contained, defaultOpen }: ModalVariantProps
    ============================================================ */
 export function IOSAlertDialog({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   const ref = useAutofocus<HTMLDivElement>(open);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Bell size={14} /> Show alert</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-ios" label="Allow notifications" onBackdrop={close} plain>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-ios" label="Allow notifications" onBackdrop={close} plain>
           <div className="gmf-ios-panel" ref={ref} tabIndex={-1}>
             <div className="gmf-ios-body">
               <div className="gmf-ios-title">Allow Notifications</div>
@@ -496,13 +520,14 @@ export function IOSAlertDialog({ contained, defaultOpen }: ModalVariantProps) {
    ============================================================ */
 export function ActionToastDialog({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Check size={14} /> Trigger toast</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-tst" label="Export complete" plain onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-tst" label="Export complete" plain onBackdrop={close}>
           <div className="gmf-tst-panel" role="status">
             <div className="gmf-tst-ico"><Check size={18} /></div>
             <div className="gmf-tst-body">
@@ -527,13 +552,14 @@ export function ActionToastDialog({ contained, defaultOpen }: ModalVariantProps)
    ============================================================ */
 export function FullScreenTakeover({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Maximize2 size={14} /> Launch takeover</Trigger>
-      {open && (
-        <div className={`gmf-overlay gmf-fst ${contained ? "is-contained" : ""}`} role="dialog" aria-modal="true" aria-label="Welcome to GOAT UI Pro">
+      {pres.mounted && (
+        <div className={`gmf-overlay gmf-fst ${contained ? "is-contained" : ""} ${pres.closing ? "is-closing" : ""}`} role="dialog" aria-modal="true" aria-label="Welcome to GOAT UI Pro">
           <div className="gmf-fst-inner">
             <CloseBtn onClose={close} className="gmf-fst-close" />
             <span className="gmf-fst-eyebrow">Introducing Pro</span>
@@ -572,6 +598,7 @@ const LDD_ITEMS = [
 ];
 export function LeftDockDrawer({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const [sel, setSel] = useState(1);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
@@ -579,8 +606,8 @@ export function LeftDockDrawer({ contained, defaultOpen }: ModalVariantProps) {
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Home size={14} /> Open dock</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-ldd" label="Navigation dock" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-ldd" label="Navigation dock" onBackdrop={close}>
           <div className="gmf-ldd-panel" ref={ref} tabIndex={-1}>
             <div className="gmf-ldd-brand">
               <span className="gmf-ldd-logo">G</span>
@@ -616,13 +643,14 @@ export function LeftDockDrawer({ contained, defaultOpen }: ModalVariantProps) {
    ============================================================ */
 export function AnchoredPopover({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Users size={14} /> Assign to...</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-pop-ov" label="Assign member" plain onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-pop-ov" label="Assign member" plain onBackdrop={close}>
           <div className="gmf-pop-anchor">
             <div className="gmf-pop-panel">
               {[
@@ -661,13 +689,14 @@ const FAN = [
 ];
 export function FanContextMenu({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Plus size={14} /> Fan menu</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-fan-ov" label="Quick actions" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-fan-ov" label="Quick actions" onBackdrop={close}>
           <div className="gmf-fan-root">
             <div className="gmf-fan-core"><Sparkles size={20} /></div>
             {FAN.map((f) => (
@@ -693,6 +722,7 @@ export function FanContextMenu({ contained, defaultOpen }: ModalVariantProps) {
 const WIZ_STEPS = ["Project", "Details", "Review"];
 export function WizardStepsModal({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const [step, setStep] = useState(0);
   const close = useCallback(() => { setOpen(false); setStep(0); }, []);
   useEscape(open, close);
@@ -700,8 +730,8 @@ export function WizardStepsModal({ contained, defaultOpen }: ModalVariantProps) 
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><ListChecks size={14} /> New project</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-wiz" label="Create project wizard" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-wiz" label="Create project wizard" onBackdrop={close}>
           <div className="gmf-wiz-panel" ref={ref} tabIndex={-1}>
             <CloseBtn onClose={close} className="gmf-cs-close" />
             <div className="gmf-wiz-rail" aria-label={`Step ${step + 1} of 3`}>
@@ -777,6 +807,7 @@ export function WizardStepsModal({ contained, defaultOpen }: ModalVariantProps) 
    ============================================================ */
 export function CookieConsentBar({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const [toggles, setToggles] = useState([true, true, false]);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
@@ -784,8 +815,8 @@ export function CookieConsentBar({ contained, defaultOpen }: ModalVariantProps) 
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Lock size={14} /> Cookie preferences</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-cck" label="Cookie preferences" plain onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-cck" label="Cookie preferences" plain onBackdrop={close}>
           <div className="gmf-cck-panel" role="region" aria-label="Cookie consent">
             <div className="gmf-cck-text">
               <b>We use cookies</b>
@@ -820,14 +851,15 @@ export function CookieConsentBar({ contained, defaultOpen }: ModalVariantProps) 
    ============================================================ */
 export function PaywallGradientModal({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   const ref = useAutofocus<HTMLDivElement>(open);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Crown size={14} /> Upgrade</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-pay" label="Upgrade to Pro" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-pay" label="Upgrade to Pro" onBackdrop={close}>
           <div className="gmf-pay-panel">
             <div className="gmf-pay-inner" ref={ref} tabIndex={-1}>
               <CloseBtn onClose={close} className="gmf-cs-close" />
@@ -859,13 +891,14 @@ export function PaywallGradientModal({ contained, defaultOpen }: ModalVariantPro
    ============================================================ */
 export function CinemaVideoModal({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Play size={14} /> Watch intro</Trigger>
-      {open && (
-        <div className={`gmf-overlay gmf-cin ${contained ? "is-contained" : ""}`} role="dialog" aria-modal="true" aria-label="Video player">
+      {pres.mounted && (
+        <div className={`gmf-overlay gmf-cin ${contained ? "is-contained" : ""} ${pres.closing ? "is-closing" : ""}`} role="dialog" aria-modal="true" aria-label="Video player">
           <div className="gmf-cin-panel">
             <div className="gmf-cin-screen">
               <button type="button" className="gmf-cin-play" aria-label="Play video" onClick={close}>
@@ -895,14 +928,15 @@ export function CinemaVideoModal({ contained, defaultOpen }: ModalVariantProps) 
    ============================================================ */
 export function SpotlightSearch({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   const ref = useAutofocus<HTMLInputElement>(open);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Search size={14} /> Spotlight</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-spt" label="Spotlight search" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-spt" label="Spotlight search" onBackdrop={close}>
           <div className="gmf-spt-panel">
             <div className="gmf-spt-field">
               <Search size={19} color="#9d8cff" />
@@ -936,13 +970,14 @@ const SHARE_APPS = [
 ];
 export function ShareSheet({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Share2 size={14} /> Share</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-shr" label="Share component" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-shr" label="Share component" onBackdrop={close}>
           <div className="gmf-shr-wrap">
             <div className="gmf-shr-card">
               <div className="gmf-shr-grid">
@@ -977,6 +1012,7 @@ const COA_STEPS = [
 ];
 export function CoachmarkTour({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const [step, setStep] = useState(0);
   const close = useCallback(() => { setOpen(false); setStep(0); }, []);
   useEscape(open, close);
@@ -984,8 +1020,8 @@ export function CoachmarkTour({ contained, defaultOpen }: ModalVariantProps) {
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Sparkles size={14} /> Start tour</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-coa-ov" label="Product tour" plain onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-coa-ov" label="Product tour" plain onBackdrop={close}>
           <div className="gmf-coa-ring" aria-hidden="true" />
           <div className="gmf-coa-tip" role="status">
             <b>{s.t}</b>
@@ -1010,14 +1046,15 @@ export function CoachmarkTour({ contained, defaultOpen }: ModalVariantProps) {
    ============================================================ */
 export function NeoBrutalistModal({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   const ref = useAutofocus<HTMLDivElement>(open);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Zap size={14} /> Brutalist confirm</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-bru" label="Confirm publish" plain onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-bru" label="Confirm publish" plain onBackdrop={close}>
           <div className="gmf-bru-panel" ref={ref} tabIndex={-1}>
             <span className="gmf-bru-tag">Heads up</span>
             <h3 className="gmf-bru-title">SHIP IT TO PROD?</h3>
@@ -1040,14 +1077,15 @@ export function NeoBrutalistModal({ contained, defaultOpen }: ModalVariantProps)
    ============================================================ */
 export function GlassOrbitModal({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   const ref = useAutofocus<HTMLDivElement>(open);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Gem size={14} /> Glass stats</Trigger>
-      {open && (
-        <div className={`gmf-overlay gmf-gls ${contained ? "is-contained" : ""}`} role="dialog" aria-modal="true" aria-label="Workspace stats">
+      {pres.mounted && (
+        <div className={`gmf-overlay gmf-gls ${contained ? "is-contained" : ""} ${pres.closing ? "is-closing" : ""}`} role="dialog" aria-modal="true" aria-label="Workspace stats">
           <div className="gmf-backdrop" onClick={close} aria-hidden="true" />
           <div className="gmf-gls-stage">
             <div className="gmf-gls-blob" aria-hidden="true" />
@@ -1074,6 +1112,7 @@ export function GlassOrbitModal({ contained, defaultOpen }: ModalVariantProps) {
    ============================================================ */
 export function Tilt3DModal({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -1116,8 +1155,8 @@ export function Tilt3DModal({ contained, defaultOpen }: ModalVariantProps) {
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Gem size={14} /> 3D tilt card</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-tlt" label="Pro member card" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-tlt" label="Pro member card" onBackdrop={close}>
           <div className="gmf-tlt-panel" ref={panelRef} onPointerMove={onMove} onPointerLeave={onLeave}>
             <div className="gmf-tlt-card" ref={cardRef}>
               <div className="gmf-tlt-shine" aria-hidden="true" />
@@ -1143,13 +1182,14 @@ export function Tilt3DModal({ contained, defaultOpen }: ModalVariantProps) {
    ============================================================ */
 export function MorphFabModal({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Plus size={14} /> Quick create</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-fab-ov" label="Quick create" plain onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-fab-ov" label="Quick create" plain onBackdrop={close}>
           <div className="gmf-fab-root">
             <div className="gmf-fab-panel">
               <h3 className="gmf-fab-title">Quick create</h3>
@@ -1185,14 +1225,15 @@ const NTC = [
 ];
 export function NotificationCenter({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   const ref = useAutofocus<HTMLDivElement>(open);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Bell size={14} /> Notifications</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-ntc" label="Notification center" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-ntc" label="Notification center" onBackdrop={close}>
           <div className="gmf-ntc-panel" ref={ref} tabIndex={-1}>
             <div className="gmf-ntc-head">
               <div><h3>Notifications</h3><span className="num">2 unread</span></div>
@@ -1236,14 +1277,15 @@ const KBD_ROWS: [string, string[]][] = [
 ];
 export function ShortcutsDialog({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   const ref = useAutofocus<HTMLDivElement>(open);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Keyboard size={14} /> Shortcuts</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-kb" label="Keyboard shortcuts" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-kb" label="Keyboard shortcuts" onBackdrop={close}>
           <div className="gmf-kb-panel" ref={ref} tabIndex={-1}>
             <div className="gmf-kb-head">
               <h3><Keyboard size={16} color="#9d8cff" /> Keyboard shortcuts</h3>
@@ -1269,6 +1311,7 @@ export function ShortcutsDialog({ contained, defaultOpen }: ModalVariantProps) {
    ============================================================ */
 export function TaskProgressModal({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   const ref = useAutofocus<HTMLDivElement>(open);
@@ -1277,8 +1320,8 @@ export function TaskProgressModal({ contained, defaultOpen }: ModalVariantProps)
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><ListChecks size={14} /> Sprint progress</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-prg" label="Sprint progress" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-prg" label="Sprint progress" onBackdrop={close}>
           <div className="gmf-prg-panel" ref={ref} tabIndex={-1}>
             <CloseBtn onClose={close} className="gmf-cs-close" />
             <div className="gmf-prg-top">
@@ -1338,6 +1381,7 @@ function RatingFace({ level }: { level: number }) {
 }
 export function RatingFeedbackModal({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const [sel, setSel] = useState<number | null>(4);
   const close = useCallback(() => { setOpen(false); }, []);
   useEscape(open, close);
@@ -1345,8 +1389,8 @@ export function RatingFeedbackModal({ contained, defaultOpen }: ModalVariantProp
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Star size={14} /> Give feedback</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-rat" label="Rate your experience" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-rat" label="Rate your experience" onBackdrop={close}>
           <div className="gmf-rat-panel" ref={ref} tabIndex={-1}>
             <h3 className="gmf-rat-title">How's the modal family?</h3>
             <p className="gmf-rat-sub">Your taste shapes the next batch of variants.</p>
@@ -1383,6 +1427,7 @@ const SPL_ITEMS = [
 ];
 export function SplitPreviewModal({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const [sel, setSel] = useState(0);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
@@ -1391,8 +1436,8 @@ export function SplitPreviewModal({ contained, defaultOpen }: ModalVariantProps)
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><ImageIcon size={14} /> Browse themes</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-spl" label="Theme browser" onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-spl" label="Theme browser" onBackdrop={close}>
           <div className="gmf-spl-panel" ref={ref} tabIndex={-1}>
             <CloseBtn onClose={close} className="gmf-spl-close" />
             <div className="gmf-spl-list" role="listbox" aria-label="Themes">
@@ -1429,14 +1474,15 @@ export function SplitPreviewModal({ contained, defaultOpen }: ModalVariantProps)
    ============================================================ */
 export function MiniPlayerModal({ contained, defaultOpen }: ModalVariantProps) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const pres = usePresence(open);
   const [playing, setPlaying] = useState(true);
   const close = useCallback(() => setOpen(false), []);
   useEscape(open, close);
   return (
     <>
       <Trigger onOpen={() => setOpen(true)}><Play size={14} /> Mini player</Trigger>
-      {open && (
-        <Overlay contained={contained} className="gmf-mpl" label="Now playing" plain onBackdrop={close}>
+      {pres.mounted && (
+        <Overlay closing={pres.closing} contained={contained} className="gmf-mpl" label="Now playing" plain onBackdrop={close}>
           <div className="gmf-mpl-panel" role="region" aria-label="Mini music player">
             <span className="gmf-mpl-art"><Volume2 size={17} /></span>
             <span className="gmf-mpl-meta">

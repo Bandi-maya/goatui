@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from "react"
 import { Check, ChevronRight, Code2, Copy, Eye, Monitor, Smartphone, Sparkles, Tablet } from "lucide-react"
 
-export type DetailFile = { name: string; code: string }
+export type DetailFile = { name: string; code: string; alt?: string; altName?: string }
 
 type Props = {
   title: string
@@ -38,7 +38,11 @@ export function DetailView(p: Props) {
   const [file, setFile] = useState(0)
   const [vp, setVp] = useState<"desktop" | "tablet" | "mobile">("desktop")
   const { done, copy } = useCopy()
-  const cur = p.files[Math.min(file, p.files.length - 1)] || { name: "", code: "" }
+  const [lang, setLang] = useState<"tsx" | "jsx">("tsx")
+  const base = p.files[Math.min(file, p.files.length - 1)] || { name: "", code: "" }
+  const cur = lang === "jsx" && base.alt ? { name: base.altName || base.name, code: base.alt } : base
+  const hasLang = p.files.some((f) => f.alt)
+  const mainFile = p.files[0] ? (lang === "jsx" && p.files[0].alt ? p.files[0].alt : p.files[0].code) : ""
   const lines = useMemo(() => cur.code.split("\n"), [cur.code])
   const prompt =
     p.prompt ||
@@ -66,7 +70,7 @@ export function DetailView(p: Props) {
             {done === "prompt" ? <Check className="h-4 w-4 text-emerald-500" /> : <Sparkles className="h-4 w-4" />}
             {done === "prompt" ? "Copied" : "Copy prompt"}
           </button>
-          <button onClick={() => copy("code", p.files.map((f) => f.code).join("\n\n"))} className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-foreground px-3.5 py-2 text-sm font-semibold text-background transition-opacity hover:opacity-90 sm:flex-none">
+          <button onClick={() => copy("code", mainFile)} className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-foreground px-3.5 py-2 text-sm font-semibold text-background transition-opacity hover:opacity-90 sm:flex-none">
             {done === "code" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             {done === "code" ? "Copied" : "Copy code"}
           </button>
@@ -137,7 +141,15 @@ export function DetailView(p: Props) {
       ) : (
         <div className="overflow-hidden rounded-xl border border-border bg-card">
           <div className="flex items-center justify-between border-b border-border px-3 py-2">
-            <span className="font-mono text-xs text-muted-foreground">{cur.name}</span>
+            <span className="flex items-center gap-2"><span className="font-mono text-xs text-muted-foreground">{cur.name}</span>
+              {hasLang && base.alt && (
+                <span className="inline-flex rounded-md border border-border p-0.5 text-[11px]">
+                  {(["tsx", "jsx"] as const).map((l) => (
+                    <button key={l} onClick={() => setLang(l)} className={`rounded px-2 py-0.5 font-medium uppercase ${lang === l ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}>{l}</button>
+                  ))}
+                </span>
+              )}
+            </span>
             <button onClick={() => copy("file", cur.code)} className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
               {done === "file" ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
               {done === "file" ? "Copied" : "Copy"}

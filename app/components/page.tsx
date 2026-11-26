@@ -51,6 +51,8 @@ function Thumb({ it }: { it: Item }) {
 }
 
 
+const OVERLAY_FAMILIES = new Set(["ModalFamily", "OverlayFamily"])
+
 // Measures where the visible leaf elements of a live render actually sit and returns the shift that puts their middle on the frame's middle.
 export function useCenterShift(frame: React.RefObject<HTMLElement | null>, content: React.RefObject<HTMLElement | null>, dep: unknown) {
   const [d, setD] = useState({ x: 0, y: 0 })
@@ -84,10 +86,7 @@ export function useCenterShift(frame: React.RefObject<HTMLElement | null>, conte
       setD((p) => (Math.abs(dx) < 1 && Math.abs(dy) < 1 ? p : { x: Math.round(p.x + dx), y: Math.round(p.y + dy) }))
     }
     const ts = [150, 500, 1200, 2500].map((ms) => setTimeout(run, ms))
-    let deb: ReturnType<typeof setTimeout> | undefined
-    const mo = new MutationObserver(() => { clearTimeout(deb); deb = setTimeout(run, 250) })
-    if (content.current) mo.observe(content.current, { childList: true, subtree: true })
-    return () => { ts.forEach(clearTimeout); clearTimeout(deb); mo.disconnect() }
+    return () => { ts.forEach(clearTimeout) }
   }, [frame, content, dep])
   return d
 }
@@ -141,8 +140,13 @@ function useSource(it: Item | null) {
     const done = (f: DetailFile[]) => live && setFiles(f)
     if (it.kind === "prim") done([{ name: `${it.name.toLowerCase()}.tsx`, code: it.ref.source || "" }])
     else if (it.kind === "cat") {
-      Promise.all([fetch(`/catalog-src/${it.family}.json`).then((r) => r.json()), fetch(`/catalog-src/${it.family}.css`).then((r) => r.text())])
-        .then(([j, css]) => done([{ name: `${it.name}.tsx`, code: j.fns?.[it.name] || j.full }, { name: `${it.family}.tsx (full file)`, code: j.full }, { name: `${it.family}.css`, code: css }]))
+      Promise.all([fetch(`/catalog-src/${it.family}.json`).then((r) => r.json()), fetch(`/catalog-src/${it.family}.css`).then((r) => (r.ok ? r.text() : ""))])
+        .then(async ([j, css]) => {
+          const sa = j.standalone?.[it.name]
+          if (!sa) return done([{ name: `${it.name}.tsx`, code: j.fns?.[it.name] || j.full }])
+          const extra = await Promise.all((sa.css as string[]).filter((c) => c !== `${it.family}.css`).map((c) => fetch(`/catalog-src/${c}`).then((r) => (r.ok ? r.text() : "")).then((t) => ({ name: c, code: t }))))
+          done([{ name: `${it.name}.tsx`, altName: `${it.name}.jsx`, code: sa.tsx, alt: sa.jsx }, ...(css ? [{ name: `${it.family}.css`, code: css }] : []), ...extra.filter((e) => e.code)])
+        })
         .catch(() => done([{ name: "source.tsx", code: "// source unavailable" }]))
     } else if (it.kind === "glass") {
       Promise.all([`/goat-glass/${it.ref.id}`, "/goat-glass/glass-engine.js"].map((u) => fetch(u).then((r) => r.text())))
@@ -193,14 +197,39 @@ export default function ComponentsExplorer() {
     }
     sync()
     window.addEventListener("hashchange", sync)
-    return () => window.removeEventListener("hashchange", sync)
+    window.addEventListener("popstate", sync)
+    return () => { window.removeEventListener("hashchange", sync); window.removeEventListener("popstate", sync) }
   }, [items])
-  const open = (i: Item | null) => { setSel(i); if (typeof window !== "undefined") history.replaceState(null, "", i ? `#${encodeURIComponent(i.key)}` : window.location.pathname); window.scrollTo?.(0, 0) }
+  // Opening a component is a real history entry, so Back returns to the list with its category and search intact.
+  const open = (i: Item | null) => {
+    if (typeof window === "undefined") return
+    if (i) {
+      listScroll.current = mainRef.current?.scrollTop ?? 0
+      history.pushState({ goatDetail: true }, "", `#${encodeURIComponent(i.key)}`)
+      setSel(i)
+    } else if (history.state && history.state.goatDetail) {
+      history.back()
+    } else {
+      history.replaceState(null, "", window.location.pathname)
+      setSel(null)
+    }
+    window.scrollTo?.(0, 0)
+  }
   const files = useSource(sel)
   const [variant, setVariant] = useState("default")
   useEffect(() => setVariant("default"), [sel])
   const mainRef = React.useRef<HTMLElement>(null)
-  useEffect(() => { mainRef.current?.scrollTo?.(0, 0) }, [sel])
+  // Remember where the list was so Back returns to the same card, not the top.
+  const listScroll = React.useRef(0)
+  const prevSel = React.useRef<Item | null>(null)
+  React.useLayoutEffect(() => {
+    const m = mainRef.current
+    if (!m) return
+    if (sel && !prevSel.current) m.scrollTo?.(0, 0)
+    else if (!sel && prevSel.current) m.scrollTo?.(0, listScroll.current)
+    else if (sel) m.scrollTo?.(0, 0)
+    prevSel.current = sel
+  }, [sel])
 
 
   const preview = (it: Item): { node: React.ReactNode; fill?: boolean } => {
@@ -214,7 +243,6 @@ export default function ComponentsExplorer() {
     <div className="flex h-[100dvh] overflow-hidden bg-background text-foreground">
       <div onClick={() => setSidebarOpen(false)} className={`liq-backdrop fixed inset-0 z-40 bg-black/60 lg:hidden ${sidebarOpen ? "is-open" : "pointer-events-none"}`} />
       <aside className={`liq-drawer fixed inset-y-0 left-0 z-50 flex w-[280px] max-w-[85vw] flex-col border-r border-border bg-card lg:static lg:z-auto lg:translate-x-0 ${sidebarOpen ? "is-open" : ""}`}>
-        <span aria-hidden className="liq-bulge lg:hidden" />
         <div className="relative border-b border-border p-6">
           <Link href="/" className="flex items-center gap-3" aria-label="Back to home">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-neutral-950"><img src="/goat-red/assets/goat-logo.png" alt="" className="h-6 w-6 object-contain" /></div>
@@ -260,12 +288,7 @@ export default function ComponentsExplorer() {
                 <h2 className="mb-2 text-2xl font-bold sm:text-3xl">Components</h2>
                 <p className="text-muted-foreground">{items.length} components and blocks. Every card is a live render, open one to use it and copy the code.</p>
               </div>
-              <div className="mb-6 flex flex-wrap items-center gap-2">
-                {["All", ...categories.map((c) => c[0])].map((c) => (
-                  <button key={c} onClick={() => setCat(c)} className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${cat === c ? "border-foreground bg-foreground text-background" : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"}`}>{c}</button>
-                ))}
-                <span className="ml-auto text-xs text-muted-foreground">{filtered.length} results</span>
-              </div>
+              <div className="mb-4 text-xs text-muted-foreground">{cat === "All" ? "All components" : cat} · {filtered.length} results</div>
               {filtered.length === 0 ? <p className="py-12 text-center text-muted-foreground">Nothing matches your search.</p> : (
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
                   {filtered.slice(0, shown).map((it) => (
@@ -328,17 +351,15 @@ function DetailStage({ it }: { it: Item }) {
       const natural = ur > ul ? (ur - ul) / sc : 0
       const kk = natural > avail && avail > 0 ? Math.max(0.3, avail / natural) : 1
       setK((p) => (Math.abs(p - kk) > 0.01 ? kk : p))
-      setHh(ce.offsetHeight * kk)
+      setHh((p) => (p === undefined ? ce.offsetHeight * kk : p))
     }
-    const ts = [200, 800, 2000].map((ms) => setTimeout(fit, ms))
-    const ro = new ResizeObserver(fit)
-    if (f.current) ro.observe(f.current)
-    return () => { ts.forEach(clearTimeout); ro.disconnect() }
+    const ts = [200, 800].map((ms) => setTimeout(fit, ms))
+    return () => { ts.forEach(clearTimeout) }
   }, [it.name])
   const d = useCenterShift(f, c, `${it.name}|${k}`)
   return (
-    <div ref={f} style={{ background: STAGE_BG[it.family!] || "hsl(var(--card))", color: STAGE_BG[it.family!] ? "#1b1b18" : "hsl(var(--foreground))" }} className="flex min-h-[320px] w-full min-w-0 items-center justify-center overflow-hidden rounded-lg p-3 sm:p-6">
-      <div style={{ height: hh, width: "100%" }} className="flex items-center justify-center">
+    <div ref={f} style={{ background: STAGE_BG[it.family!] || "hsl(var(--card))", color: STAGE_BG[it.family!] ? "#1b1b18" : "hsl(var(--foreground))" }} className={`flex w-full min-w-0 items-center justify-center overflow-hidden rounded-lg p-3 sm:p-6 ${OVERLAY_FAMILIES.has(it.family!) ? "min-h-[620px]" : "min-h-[320px]"}`}>
+      <div style={{ minHeight: hh, width: "100%" }} className="flex items-start justify-center">
         <div ref={c} style={{ transform: `translate(${d.x}px,${d.y}px) scale(${k})`, transformOrigin: "center" }} className={`flex w-full flex-none justify-center ${FULL.has(it.family!) ? "[&>*]:w-full" : ""}`}><LiveFamily family={it.family!} name={it.name} /></div>
       </div>
     </div>

@@ -194,4 +194,13 @@ ctx.beginPath(); ctx.moveTo(606,302.5); ctx.lineTo(624,280); ctx.stroke();
 
 window.__draw=function(t){};
 window.__draw(0);
+(function(){
+  const st=document.createElement('style');
+  st.textContent='.ib{position:absolute;top:253px;width:90px;height:96px;border:0;border-radius:44px;background:transparent;cursor:pointer;transition:background .18s,transform .12s;-webkit-tap-highlight-color:transparent}.ib:hover{background:rgba(57,126,227,.10)}.ib:active{background:rgba(57,126,227,.22)}.ib[aria-pressed=true]{background:rgba(57,126,227,.18);box-shadow:inset 0 0 0 2px rgba(57,126,227,.55)}';
+  document.head.appendChild(st);
+  [[189,'Home'],[262,'Notifications'],[537,'Reply'],[609,'Send']].forEach(([cx,l])=>{
+    const b=document.createElement('button');b.className='ib';b.setAttribute('aria-label',l);b.setAttribute('aria-pressed','false');
+    b.style.left=(cx-45)+'px';b.onclick=()=>b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');
+    document.body.appendChild(b);});
+})();
 </script></body></html>

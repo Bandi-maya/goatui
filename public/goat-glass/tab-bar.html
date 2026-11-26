@@ -1,8 +1,53 @@
 <!DOCTYPE html><html><head><title>Liquid glass tab bar</title><meta charset="utf-8"><style>
 html,body{margin:0;padding:0;width:800px;height:600px;overflow:hidden;}
 canvas{display:block;}
+.ui{position:absolute;inset:0;font-family:Arial,sans-serif}
+.ui button{all:unset;position:absolute;display:grid;place-items:center;cursor:pointer;border-radius:50%;color:#eeeef0;-webkit-tap-highlight-color:transparent;transition:background .2s,transform .15s}
+.ui button:focus-visible{outline:2px solid #6aa8ff;outline-offset:2px}
+.ui button:active{transform:scale(.92)}
+.ui button svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+#plus{left:99px;top:272px;width:56px;height:56px;color:#fff}
+#plus svg{width:28px;height:28px}
+#q{position:absolute;left:168px;top:278px;width:316px;height:44px;background:transparent;border:0;outline:0;color:#e8e8ea;font:400 23px Arial,sans-serif;letter-spacing:-.02em;caret-color:#fff}
+#q::placeholder{color:rgb(185,186,188)}
+#mic{left:479px;top:277px;width:66px;height:46px;border-radius:23px}
+#mic svg{width:34px;height:34px}
+#wave{left:555px;top:277px;width:66px;height:46px;border-radius:23px}
+#wave svg{width:34px;height:34px}
+#x{left:651px;top:264px;width:73px;height:73px;color:#d1d1d3}
+#x svg{width:24px;height:24px}
+.ui button.on{background:rgba(255,255,255,.16);color:#fff}
+#mic.on svg{animation:pulse 1s ease-in-out infinite}
+#wave.on svg line{animation:bar .7s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+#wave.on svg line:nth-child(2){animation-delay:.1s}#wave.on svg line:nth-child(3){animation-delay:.2s}#wave.on svg line:nth-child(4){animation-delay:.3s}#wave.on svg line:nth-child(5){animation-delay:.4s}
+@keyframes pulse{50%{transform:scale(1.15)}}
+@keyframes bar{50%{transform:scaleY(.45)}}
+#st{position:absolute;left:168px;top:344px;font:500 13px Arial,sans-serif;color:rgba(255,255,255,.75);opacity:0;transition:opacity .2s}
+#st.show{opacity:1}
+
 </style></head><body>
 <canvas id="c" width="800" height="600"></canvas>
+<div class="ui">
+<button id="plus" aria-label="Add attachment"><svg viewBox="0 0 28 28" stroke-width="3"><path d="M3 14h22M14 3v22"/></svg></button>
+<input id="q" type="text" placeholder="Ask AI" aria-label="Ask AI" autocomplete="off">
+<button id="mic" aria-label="Record voice" aria-pressed="false"><svg viewBox="0 0 34 34" stroke-width="2.2"><rect x="13" y="5" width="9" height="16" rx="4.5"/><path d="M8 16a9.5 9.5 0 0 0 19 0M17.5 26v3"/></svg></button>
+<button id="wave" aria-label="Voice mode" aria-pressed="false"><svg viewBox="0 0 34 34" stroke-width="2.4"><line x1="6" y1="14" x2="6" y2="20"/><line x1="12" y1="9" x2="12" y2="25"/><line x1="18" y1="5" x2="18" y2="29"/><line x1="24" y1="10" x2="24" y2="24"/><line x1="29" y1="14" x2="29" y2="20"/></svg></button>
+<button id="x" aria-label="Clear"><svg viewBox="0 0 24 24" stroke-width="2.6"><path d="M4 4l16 16M20 4L4 20"/></svg></button>
+<div id="st" role="status"></div>
+</div>
+<script>
+(function(){
+ var q=document.getElementById('q'),mic=document.getElementById('mic'),wave=document.getElementById('wave'),st=document.getElementById('st');
+ function say(t){st.textContent=t;st.classList.toggle('show',!!t)}
+ function tog(b,label){var on=!b.classList.contains('on');b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);say(on?label:'');return on}
+ mic.onclick=function(){wave.classList.remove('on');tog(mic,'Recording...')};
+ wave.onclick=function(){mic.classList.remove('on');tog(wave,'Listening...')};
+ document.getElementById('plus').onclick=function(){q.focus()};
+ document.getElementById('x').onclick=function(){q.value='';mic.classList.remove('on');wave.classList.remove('on');say('');q.focus()};
+ q.addEventListener('keydown',function(e){if(e.key==='Enter'&&q.value.trim()){say('Sent: '+q.value.trim().slice(0,28));q.value=''}});
+})();
+</script>
+
 <script src="/goat-glass/glass-engine.js"></script>
 <script>
 // Tab-bar "Ask AI" v3 - strict pass: measured weave (period-9 stripe waveforms + zone amplitude fields) + glass3 frosted pill and circle. Own code.
@@ -58,31 +103,6 @@ const frosty4={nearest:true,menMode:2,et:7,rimPow:2.1,refrRim:26,refrBase:4,tint
 glass4(Object.assign({sdf:sdfRR(356.5,299.5,281.5,54.5,54.5),x0:60,y0:230,x1:660,y1:372,shadowK:0.3,shadowDX:0,shadowDY:3,shadowBlur:2.5,brGlow:0.22,brGX:618,brGY:346,brGR:12},frosty4));
 glass4(Object.assign({sdf:sdfRR(687.5,300,36.5,36.5,36.5),x0:640,y0:252,x1:735,y1:348},Object.assign({},frosty4,{tint:[24,24,28],tintMix:0.62,frostMix:0.45,rimT:56,rimB:30,rimR:9,rimL:17,fresK:0.03,sp1K:0.3,sp2K:0.2})));
 ctx.drawImage(sc,0,0);
-// ---------- content (traced v2) ----------
-ctx.save();
-ctx.lineCap='round';
-ctx.strokeStyle='rgb(255,255,255)';
-// plus
-ctx.lineWidth=3; ctx.beginPath();
-ctx.moveTo(127-14,300); ctx.lineTo(127+14,300); ctx.moveTo(127,300-14); ctx.lineTo(127,300+14); ctx.stroke();
-// mic: capsule + cradle + stem
-ctx.strokeStyle='rgb(238,238,240)'; ctx.lineWidth=2.2;
-ctx.beginPath(); ctx.roundRect(504.5,284.5,14,22,6.5); ctx.stroke();
-ctx.beginPath(); ctx.arc(511.5,300,14.5,0.12*Math.PI,0.88*Math.PI); ctx.stroke();
-ctx.beginPath(); ctx.moveTo(511.5,314.5); ctx.lineTo(511.5,317.5); ctx.stroke();
-// waveform 5 bars
-ctx.lineWidth=2.4; ctx.beginPath();
-const wb=[[572.5,297,302],[579,291,308.5],[586,285,314],[593,290,309],[598.5,297,302]];
-for(const [x,y0,y1] of wb){ ctx.moveTo(x,y0); ctx.lineTo(x,y1); }
-ctx.stroke();
-// X
-ctx.strokeStyle='rgb(209,209,211)'; ctx.lineWidth=2.6; ctx.beginPath();
-ctx.moveTo(687.5-8,300-8); ctx.lineTo(687.5+8,300+8); ctx.moveTo(687.5+8,300-8); ctx.lineTo(687.5-8,300+8); ctx.stroke();
-ctx.restore();
-// text
-ctx.save(); ctx.font='400 23px Arial, sans-serif'; ctx.fillStyle='rgb(185,186,188)';
-ctx.textAlign='left'; ctx.textBaseline='middle';
-ctx.translate(168,301); ctx.scale(0.62,1); ctx.fillText('Ask AI',0,0); ctx.restore();
 window.__draw=function(t){};
 window.__ready=true;
 </script></body></html>
