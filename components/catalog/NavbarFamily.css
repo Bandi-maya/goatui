@@ -130,12 +130,12 @@
 @keyframes nf-aurora-slide { to { background-position: 300% 0; } }
 .nf-aurora .inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 18px; border-radius: calc(var(--nf-r-xl) - 1.5px); background: rgba(9, 13, 24, 0.92); backdrop-filter: blur(8px); }
 .nf-aurora .brand { display: flex; align-items: center; gap: 10px; color: #f2f4f7; font-weight: 700; font-size: 15px; }
-.nf-aurora .brand .glow { width: 24px; height: 24px; border-radius: 50%; background: radial-gradient(circle at 32% 32%, #a5b4fc, #6366f1 60%, #312e81); box-shadow: 0 0 14px rgba(129,140,248,0.8); }
+.nf-aurora .brand .glow { width: 24px; height: 24px; border-radius: 50%; background: radial-gradient(circle at 32% 32%, #9cc4ff, #3b82f6 60%, #1e3a8a); box-shadow: 0 0 14px rgba(129,140,248,0.8); }
 .nf-aurora nav { display: flex; gap: 2px; }
 .nf-aurora .lnk { position: relative; background: none; border: 0; color: #98a2b3; font-size: 13.5px; padding: 8px 14px; border-radius: 999px; transition: color 0.25s, background 0.25s; }
 .nf-aurora .lnk:hover { color: #fff; background: rgba(255,255,255,0.06); }
 .nf-aurora .lnk[aria-current="page"] { color: #fff; }
-.nf-aurora .lnk .pip { position: absolute; left: 50%; bottom: 1px; width: 5px; height: 5px; border-radius: 50%; background: #a5b4fc; box-shadow: 0 0 8px #a5b4fc; transform: translateX(-50%) scale(0); transition: transform 0.4s var(--nf-spring); }
+.nf-aurora .lnk .pip { position: absolute; left: 50%; bottom: 1px; width: 5px; height: 5px; border-radius: 50%; background: #9cc4ff; box-shadow: 0 0 8px #9cc4ff; transform: translateX(-50%) scale(0); transition: transform 0.4s var(--nf-spring); }
 .nf-aurora .lnk[aria-current="page"] .pip { transform: translateX(-50%) scale(1); }
 .nf-aurora .cta { border: 1px solid rgba(165,180,252,0.5); background: rgba(99,102,241,0.16); color: #e0e7ff; border-radius: 999px; padding: 8px 16px; font-size: 13px; font-weight: 600; transition: transform 0.35s var(--nf-spring), background 0.25s; }
 .nf-aurora .cta:hover { background: rgba(99,102,241,0.32); transform: translateY(-1px); }

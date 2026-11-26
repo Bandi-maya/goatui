@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GOAT UI — Newsletter 01</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style type="text/tailwindcss">@custom-variant dark (&:where(.dark, .dark *));</style>
+</head>
+<body class="bg-white dark:bg-gray-900">
+<section class="goat-news bg-gray-100 dark:bg-gray-800">
+  <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div class="max-w-prose">
+      <h2 class="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-white">Sign up for our newsletter</h2>
+      <p class="mt-4 text-pretty text-gray-700 dark:text-gray-200">Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur doloremque saepe architecto maiores repudiandae amet perferendis repellendus, reprehenderit voluptas sequi.</p>
+    </div>
+    <form action="#" class="mt-6 flex max-w-xl flex-col gap-4 sm:flex-row sm:items-center">
+      <label for="goat-news-email" class="flex-1">
+        <span class="sr-only">Email</span>
+        <input type="email" autocomplete="email" id="goat-news-email" placeholder="Enter your email" class="h-12 w-full rounded border-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white">
+      </label>
+      <button type="submit" class="h-12 rounded-sm border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-blue-600 dark:text-white dark:hover:bg-blue-700 dark:hover:text-white">Sign Up</button>
+    </form>
+  </div>
+</section>
+</body>
+</html>

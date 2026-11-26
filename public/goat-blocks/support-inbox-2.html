@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ticket #4819 — Support inbox</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style type="text/tailwindcss">
+@custom-variant dark (&:where(.dark, .dark *));
+</style>
+</head>
+<body
+    data-rail="closed"
+    data-details="closed"
+    class="group flex h-screen flex-col overflow-hidden bg-gray-50 dark:bg-gray-950"
+  ><header class="flex h-14 shrink-0 items-center gap-4 border-b border-gray-200 bg-white px-4 sm:px-6 dark:border-gray-700 dark:bg-gray-900">
+      <button type="button" id="rail-btn" aria-expanded="false" aria-controls="queue-panel" class="rounded-md p-2 text-gray-600 transition hover:bg-gray-100 lg:hidden dark:text-gray-300 dark:hover:bg-gray-800">
+        <span class="sr-only">Toggle queues</span>
+        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
+
+      <a href="#" class="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 rtl:rotate-180">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+        My tickets
+      </a>
+
+      <div class="ms-auto flex items-center gap-3">
+        <button type="button" id="details-btn" title="Toggle ticket details" aria-expanded="false" aria-controls="details-panel" class="rounded-md p-2 text-gray-600 transition hover:bg-gray-100 xl:hidden dark:text-gray-300 dark:hover:bg-gray-800">
+          <span class="sr-only">Toggle ticket details</span>
+          <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125Z" />
+          </svg>
+        </button>
+
+        <img alt="" src="data:image/png;base64,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" class="size-8 rounded-full object-cover" />
+      </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+      <div data-rail-overlay aria-hidden="true" class="fixed inset-0 z-30 hidden bg-gray-900/50 group-data-[rail=open]:block lg:hidden dark:bg-black/60"></div>
+
+      <nav id="queue-panel" aria-label="Queues" class="fixed inset-y-14 start-0 z-40 w-56 overflow-y-auto border-e border-gray-200 bg-white p-3 transition-[transform,visibility] duration-300 max-lg:invisible max-lg:-translate-x-full max-lg:group-data-[rail=open]:visible max-lg:group-data-[rail=open]:translate-x-0 lg:static max-lg:rtl:translate-x-full max-lg:rtl:group-data-[rail=open]:translate-x-0 dark:border-gray-700 dark:bg-gray-900">
+        <ul class="space-y-1">
+          <li>
+            <a href="#" class="flex items-center justify-between rounded-lg bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 dark:bg-blue-800 dark:text-blue-200">
+              My tickets
+              <span class="rounded-full bg-white px-2 py-0.5 text-xs text-blue-700 dark:bg-gray-900 dark:text-blue-200">4</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+              Unassigned
+              <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300">11</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+              All open
+              <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300">37</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+              Closed
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <main class="flex flex-1 flex-col overflow-y-auto">
+        <div class="border-b border-gray-200 bg-white px-4 py-4 sm:px-6 dark:border-gray-700 dark:bg-gray-900">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Ticket #4819</p>
+              <h1 class="mt-0.5 text-lg font-semibold text-gray-900 dark:text-white">
+                Team seats not syncing after upgrade
+              </h1>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs text-blue-700 dark:bg-blue-800 dark:text-blue-200">
+                Open
+              </span>
+              <span class="rounded-full bg-red-100 px-2.5 py-0.5 text-xs text-red-700 dark:bg-red-800 dark:text-red-200">
+                High priority
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex-1 space-y-6 p-4 sm:p-6">
+          <ol class="relative space-y-6 before:absolute before:-ms-px before:h-full before:w-0.5 before:rounded-full before:bg-gray-200 dark:before:bg-gray-700">
+            <li class="relative -ms-1.5 flex items-start gap-4">
+              <span class="size-3 shrink-0 rounded-full bg-gray-400 dark:bg-gray-500"></span>
+
+              <div class="-mt-2 w-full">
+                <div class="flex items-center gap-2">
+                  <p class="text-sm font-medium text-gray-900 dark:text-white">Priya Natarajan</p>
+                  <time class="text-xs text-gray-500 dark:text-gray-400">Today at 09:12</time>
+                </div>
+
+                <div class="mt-1.5 rounded-lg rounded-ss-none border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
+                  <p class="text-sm text-gray-700 dark:text-gray-200">
+                    We upgraded to the Team plan yesterday but two of the five seats we paid for
+                    still show as pending. Tried removing and re-inviting one person, still stuck.
+                  </p>
+                </div>
+              </div>
+            </li>
+
+            <li class="relative -ms-1.5 flex items-start gap-4">
+              <span class="size-3 shrink-0 rounded-full bg-blue-600 dark:bg-blue-300"></span>
+
+              <div class="-mt-2 w-full">
+                <div class="flex items-center gap-2">
+                  <p class="text-sm font-medium text-gray-900 dark:text-white">You</p>
+                  <time class="text-xs text-gray-500 dark:text-gray-400">Today at 09:41</time>
+                </div>
+
+                <div class="mt-1.5 rounded-lg rounded-ss-none border border-blue-100 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-800">
+                  <p class="text-sm text-gray-700 dark:text-gray-200">
+                    Thanks for flagging &mdash; looks like the seat sync job is stuck on your
+                    account specifically. I'm re-running it manually now and will confirm once both
+                    seats show as active.
+                  </p>
+                </div>
+              </div>
+            </li>
+
+            <li class="relative -ms-1.5 flex items-start gap-4">
+              <span class="size-3 shrink-0 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+
+              <div class="-mt-2">
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  <time>Today at 09:42</time> &middot; Internal note added by you
+                </p>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="border-t border-gray-200 bg-white p-4 sm:p-6 dark:border-gray-700 dark:bg-gray-900">
+          <div class="flex gap-1">
+            <button type="button" id="composer-tab-reply" aria-pressed="true" aria-controls="composer" class="rounded-t-md px-3 py-1.5 text-xs font-medium aria-pressed:border aria-pressed:border-b-0 aria-pressed:border-gray-200 aria-pressed:bg-white aria-pressed:text-gray-900 aria-[pressed=false]:text-gray-500 aria-[pressed=false]:hover:text-gray-700 dark:aria-pressed:border-gray-700 dark:aria-pressed:bg-gray-900 dark:aria-pressed:text-white dark:aria-[pressed=false]:text-gray-400 dark:aria-[pressed=false]:hover:text-gray-200">
+              Reply
+            </button>
+            <button type="button" id="composer-tab-note" aria-pressed="false" aria-controls="composer" class="rounded-t-md px-3 py-1.5 text-xs font-medium aria-pressed:border aria-pressed:border-b-0 aria-pressed:border-gray-200 aria-pressed:bg-white aria-pressed:text-gray-900 aria-[pressed=false]:text-gray-500 aria-[pressed=false]:hover:text-gray-700 dark:aria-pressed:border-gray-700 dark:aria-pressed:bg-gray-900 dark:aria-pressed:text-white dark:aria-[pressed=false]:text-gray-400 dark:aria-[pressed=false]:hover:text-gray-200">
+              Internal note
+            </button>
+          </div>
+
+          <div id="composer">
+            <label for="composer-message" id="composer-label" class="sr-only">Reply to Priya</label>
+            <textarea id="composer-message" rows="3" placeholder="Type your reply&hellip;" data-mode="reply" class="w-full resize-none rounded-se-md rounded-b-md text-sm shadow-xs data-[mode=note]:border-amber-200 data-[mode=note]:bg-amber-50 data-[mode=note]:focus:border-amber-500 data-[mode=note]:focus:ring-amber-500 data-[mode=reply]:border-gray-200 data-[mode=reply]:focus:border-blue-600 data-[mode=reply]:focus:ring-blue-600 dark:bg-gray-900 dark:text-white dark:data-[mode=note]:border-amber-700 dark:data-[mode=note]:bg-amber-800 dark:data-[mode=note]:focus:border-amber-400 dark:data-[mode=note]:focus:ring-amber-400 dark:data-[mode=reply]:border-gray-700 dark:data-[mode=reply]:focus:border-blue-300 dark:data-[mode=reply]:focus:ring-blue-300"></textarea>
+
+            <div class="mt-3 flex items-center justify-end gap-3">
+              <p id="composer-hint" class="text-xs text-gray-500 dark:text-gray-400">
+                Priya will see this by email.
+              </p>
+
+              <button type="button" id="composer-submit" data-mode="reply" class="rounded-md px-4 py-2 text-sm font-medium text-white transition data-[mode=note]:bg-amber-600 data-[mode=note]:hover:bg-amber-700 data-[mode=reply]:bg-blue-600 data-[mode=reply]:hover:bg-blue-700 dark:text-gray-900 dark:data-[mode=note]:bg-amber-300 dark:data-[mode=note]:hover:bg-amber-200 dark:data-[mode=reply]:bg-blue-300 dark:data-[mode=reply]:hover:bg-blue-200">
+                Send reply
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div data-details-overlay aria-hidden="true" class="fixed inset-0 z-30 hidden bg-gray-900/50 group-data-[details=open]:block xl:hidden dark:bg-black/60"></div>
+
+      <aside id="details-panel" class="fixed inset-y-14 end-0 z-40 w-72 space-y-6 overflow-y-auto border-s border-gray-200 bg-white p-4 transition-[transform,visibility] duration-300 max-xl:invisible max-xl:translate-x-full max-xl:group-data-[details=open]:visible max-xl:group-data-[details=open]:translate-x-0 xl:static max-xl:rtl:-translate-x-full max-xl:rtl:group-data-[details=open]:translate-x-0 dark:border-gray-700 dark:bg-gray-900">
+        <div class="flex items-center gap-3">
+          <img alt="" src="data:image/png;base64,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" class="size-10 rounded-full object-cover" />
+
+          <div>
+            <p class="text-sm font-medium text-gray-900 dark:text-white">Priya Natarajan</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">priya@orbitly.com</p>
+          </div>
+        </div>
+
+        <dl class="space-y-3 border-t border-gray-200 pt-4 text-sm dark:border-gray-700">
+          <div class="flex items-center justify-between">
+            <dt class="text-gray-500 dark:text-gray-400">Plan</dt>
+            <dd class="font-medium text-gray-900 dark:text-white">Team, 5 seats</dd>
+          </div>
+          <div class="flex items-center justify-between">
+            <dt class="text-gray-500 dark:text-gray-400">Customer since</dt>
+            <dd class="font-medium text-gray-900 dark:text-white">Feb 2024</dd>
+          </div>
+          <div class="flex items-center justify-between">
+            <dt class="text-gray-500 dark:text-gray-400">Open tickets</dt>
+            <dd class="font-medium text-gray-900 dark:text-white">1</dd>
+          </div>
+        </dl>
+
+        <div class="space-y-3 border-t border-gray-200 pt-4 dark:border-gray-700">
+          <label for="TicketStatus" class="block text-xs font-medium text-gray-700 dark:text-gray-200">Status</label>
+          <select id="TicketStatus" class="w-full rounded-md border-gray-200 text-sm shadow-xs focus:border-blue-600 focus:ring-blue-600 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:focus:border-blue-300 dark:focus:ring-blue-300">
+            <option>Open</option>
+            <option>Pending</option>
+            <option>Closed</option>
+          </select>
+
+          <label for="TicketPriority" class="block text-xs font-medium text-gray-700 dark:text-gray-200">
+            Priority
+          </label>
+          <select id="TicketPriority" class="w-full rounded-md border-gray-200 text-sm shadow-xs focus:border-blue-600 focus:ring-blue-600 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:focus:border-blue-300 dark:focus:ring-blue-300">
+            <option>Low</option>
+            <option selected>High</option>
+            <option>Urgent</option>
+          </select>
+
+          <label for="TicketAssignee" class="block text-xs font-medium text-gray-700 dark:text-gray-200">
+            Assignee
+          </label>
+          <select id="TicketAssignee" class="w-full rounded-md border-gray-200 text-sm shadow-xs focus:border-blue-600 focus:ring-blue-600 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:focus:border-blue-300 dark:focus:ring-blue-300">
+            <option>You</option>
+            <option>Marcus Boyle</option>
+            <option>Unassigned</option>
+          </select>
+        </div>
+
+        <div class="border-t border-gray-200 pt-4 dark:border-gray-700">
+          <p class="text-xs font-medium text-gray-700 dark:text-gray-200">Tags</p>
+          <div class="mt-2 flex flex-wrap gap-1.5">
+            <span class="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs text-amber-700 dark:bg-amber-800 dark:text-amber-200">
+              Bug
+            </span>
+            <span class="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+              Billing
+            </span>
+          </div>
+        </div>
+      </aside>
+    </div><script>
+// panel state lives on <body> as data-{panel}="open"|"closed"
+const panelBtns = {}
+for (const panel of ['rail', 'details']) {
+  panelBtns[panel] = document.getElementById(panel + '-btn')
+}
+
+function togglePanel(panel, open) {
+  document.body.dataset[panel] = open ? 'open' : 'closed'
+  panelBtns[panel].setAttribute('aria-expanded', String(open))
+}
+
+for (const [panel, btn] of Object.entries(panelBtns)) {
+  btn.addEventListener('click', () => togglePanel(panel, document.body.dataset[panel] !== 'open'))
+  document.querySelector('[data-' + panel + '-overlay]').addEventListener('click', () => togglePanel(panel, false))
+}
+
+document.addEventListener('keydown', (event) => {
+  if (event.key !== 'Escape') return
+  for (const [panel, btn] of Object.entries(panelBtns)) {
+    if (document.body.dataset[panel] === 'open') {
+      togglePanel(panel, false)
+      btn.focus()
+    }
+  }
+})
+
+const modeTabs = document.querySelectorAll('#composer-tab-reply, #composer-tab-note')
+const label = document.getElementById('composer-label')
+const message = document.getElementById('composer-message')
+const hint = document.getElementById('composer-hint')
+const submit = document.getElementById('composer-submit')
+
+function setMode(tab) {
+  const note = tab.id === 'composer-tab-note'
+  modeTabs.forEach((t) => t.setAttribute('aria-pressed', String(t === tab)))
+  message.dataset.mode = note ? 'note' : 'reply'
+  submit.dataset.mode = note ? 'note' : 'reply'
+  message.placeholder = note ? 'Add an internal note…' : 'Type your reply…'
+  label.textContent = note ? 'Internal note' : 'Reply to Priya'
+  hint.textContent = note ? 'Only visible to your team, not sent to Priya.' : 'Priya will see this by email.'
+  submit.textContent = note ? 'Add note' : 'Send reply'
+}
+
+modeTabs.forEach((tab) => tab.addEventListener('click', () => setMode(tab)))
+</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fieldnote case study — Guillermo de la Cruz</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style type="text/tailwindcss">
+@custom-variant dark (&:where(.dark, .dark *));
+</style>
+</head>
+<body>
+<header class="sticky top-0 z-40 border-b border-gray-100 bg-white/90 backdrop-blur dark:border-gray-800 dark:bg-gray-900/90">
+  <div class="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
+    <a href="#" class="text-sm font-semibold tracking-tight text-gray-900 dark:text-white">Guillermo de la Cruz</a>
+    <nav aria-label="Global" class="hidden md:block">
+      <ul class="flex items-center gap-8 text-sm text-gray-600 dark:text-gray-300">
+        <li><a href="#work" class="transition hover:text-gray-900 dark:hover:text-white">Work</a></li>
+        <li><a href="#about" class="transition hover:text-gray-900 dark:hover:text-white">About</a></li>
+        <li><a href="#contact" class="transition hover:text-gray-900 dark:hover:text-white">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="flex items-center gap-3">
+      <a href="#contact" class="hidden rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 sm:block dark:bg-blue-300 dark:text-gray-900 dark:hover:bg-blue-200">Book a call</a>
+      <button type="button" id="menu-btn" aria-expanded="false" aria-controls="menu-panel" class="rounded-md p-2 text-gray-600 transition hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 md:hidden dark:text-gray-300 dark:hover:bg-gray-800 dark:focus-visible:ring-blue-300">
+        <span class="sr-only">Toggle menu</span>
+        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav id="menu-panel" hidden aria-label="Global Mobile" class="border-t border-gray-100 bg-white md:hidden dark:border-gray-800 dark:bg-gray-900">
+    <ul class="space-y-1 px-4 py-4 text-sm">
+      <li><a href="#work" class="block rounded-lg px-3 py-2 text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">Work</a></li>
+      <li><a href="#about" class="block rounded-lg px-3 py-2 text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">About</a></li>
+      <li><a href="#contact" class="block rounded-lg px-3 py-2 text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <article class="mx-auto max-w-3xl px-4 pt-12 pb-20 sm:px-6 sm:pt-16">
+    <a href="#" class="inline-flex items-center gap-1 text-sm font-medium text-gray-600 transition hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 rtl:rotate-180"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
+      Back to work
+    </a>
+    <p class="mt-6 text-xs font-medium tracking-wide text-blue-600 uppercase dark:text-blue-300">Fieldnote &middot; Product design &middot; 2025</p>
+    <h1 class="mt-3 text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl dark:text-white">Redesigning the editor that field engineers actually trust</h1>
+    <p class="mt-4 text-lg text-pretty text-gray-600 dark:text-gray-300">Cut average report time from 11 minutes to 4 by rebuilding the note editor around offline-first sync, not adding features on top of it.</p>
+    <dl class="mt-8 flex flex-wrap gap-x-8 gap-y-4 border-y border-gray-200 py-6 text-sm dark:border-gray-700">
+      <div>
+        <dt class="text-gray-500 dark:text-gray-400">Role</dt>
+        <dd class="mt-1 font-medium text-gray-900 dark:text-white">Lead product designer</dd>
+      </div>
+      <div>
+        <dt class="text-gray-500 dark:text-gray-400">Timeline</dt>
+        <dd class="mt-1 font-medium text-gray-900 dark:text-white">14 weeks</dd>
+      </div>
+      <div>
+        <dt class="text-gray-500 dark:text-gray-400">Team</dt>
+        <dd class="mt-1 font-medium text-gray-900 dark:text-white">2 engineers, 1 PM</dd>
+      </div>
+      <div>
+        <dt class="text-gray-500 dark:text-gray-400">Reading time</dt>
+        <dd class="mt-1 font-medium text-gray-900 dark:text-white">6 min</dd>
+      </div>
+    </dl>
+
+    <img alt="Field engineer using a tablet on site to file a report" src="data:image/png;base64,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hAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaAAAAABihAYAAAAgRmgAAAAAYoQGAAAAIEZoAAAAAGKEBgAAACBGaCjkP04ubHqEVnjhzLKmRxgb/3luVdMjtMIfL9zR9Ahj478uv6/pEVrhT1fvbnqEsfHfP/9o0yO0wp+fvbfpEcbG//z6002P0Ar/+9t/bXqEsfF/v1/X9Ait8NfnNzU9wsCEBgAAACBGaCjHQw3D5nGGQXmoYdg8zjAoDzUM25+u3tX0CGPGQw3D5nGGQXmoYdj+8tznmh5hzHioYdjG8XGGSmgoTGsYHpWhHq1heFSGerSG4VEZ6tEahkdlqEdrGB6VoR6tYXjGtDJUQkN5WsMwqAwzoTUMg8owE1rDMKgMM6E1DIPKMBNawzCoDDOhNQzD+FaGqqo6N9x4U2qr0DaZfTojNk/vr88blp8P7dxqL5xeOrx7NMDKEZihe5s6+7xu0bHM6e023cTQmt/rBhnh2rWvnfvMzIahqvokhrb/Xtdnm2nP8+rbno6c2HI1EsNk/143kxledctTod1a7ZrE4Pe6qTa63j6vvPlA5pR2m2liGIH/hoWGKTcagZs0AjN0b+Me9Y7Q/Azd27hHvSM0P0P3Nu5R7wjNz9C9jXvUO0LzM3Rv4x71jtD8DN3buEe9IzQ/Q/c27lHvCM3P0L2Ne9Q7QvMzdG/jHl3LqxMAAABAjNAAAAAAxAgNAAAAQIzQAAAAAMQIDQAAAECM0AAAAADECA0AAABAjNAAAAAAxAgNAAAAQIzQAAAAAMQIDQAAAECM0AAAAADECA0AAABAjNAAAAAAxAgNAAAAQIzQAAAAAMQIDQAAAECM0AAAAADECA0AAABAjNAAAAAAxAgNAAAAQIzQAAAAAMQIDQAAAECM0AAAAADECA0AAABAjNAAAAAAxAgNAAAAQIzQAAAAAMQIDQAAAECM0AAAAADECA0AAABAjNAAAAAAxAgNAAAAQIzQAAAAAMQIDQAAAECM0AAAAADECA0AAABAjNAAAAAAxPw/I2O4RaNfkrgAAAAASUVORK5CYII=" class="mt-10 aspect-video w-full rounded-lg object-cover">
+
+    <div class="mt-10 space-y-6 text-gray-600 dark:text-gray-300">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">The problem</h2>
+      <p>Fieldnote's engineers file inspection reports from sites with patchy signal &mdash; the bottom of a wind turbine, a basement plant room, a truck cab between stops. The existing editor synced on every keystroke, so a dropped connection didn't just pause saving, it silently discarded it. Support tickets about "where did my report go" outnumbered every other category combined.</p>
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">What we tried first</h2>
+      <p>The obvious fix was a longer retry queue and a "saving&hellip;" indicator that stayed honest about connection state. It shipped in a week and made the problem worse: engineers now watched a spinner that never resolved, then closed the tab anyway. The editor needed to stop treating the network as a dependency, not get better at apologising for it.</p>
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">The rebuild</h2>
+      <p>Every report now writes to local storage first and syncs in the background whenever a connection exists, with the UI never blocking on it. Conflicts &mdash; two engineers editing the same report after a signal gap &mdash; resolve with a field-level merge and a manual review only when the same field changed on both sides, which turned out to be rare enough to not need solving upfront.</p>
+    </div>
+
+    <figure class="mt-10 border-s-2 border-blue-600 py-1 ps-6 dark:border-blue-300">
+      <blockquote>
+        <p class="text-lg font-medium text-pretty text-gray-900 dark:text-white">Nobody on the team thinks about the editor anymore, which is exactly the point. It just works, even out of signal.</p>
+      </blockquote>
+      <figcaption class="mt-3 text-sm text-gray-500 dark:text-gray-400">Marcus Boyle, Engineering Lead at Fieldnote</figcaption>
+    </figure>
+
+    <div class="mt-10 space-y-6 text-gray-600 dark:text-gray-300">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">The result</h2>
+      <p>Three months after launch, average report time had dropped from 11 minutes to 4, and adoption in the field crews that had quietly gone back to paper recovered fully. No report has been lost to a dropped connection since.</p>
+    </div>
+
+    <dl class="mt-10 grid grid-cols-1 gap-6 rounded-lg bg-gray-50 p-8 text-center sm:grid-cols-3 dark:bg-gray-800">
+      <div>
+        <dd class="text-3xl font-semibold text-gray-900 dark:text-white">4 min</dd>
+        <dt class="mt-1 text-sm text-gray-500 dark:text-gray-400">Average report time, down from 11</dt>
+      </div>
+      <div>
+        <dd class="text-3xl font-semibold text-gray-900 dark:text-white">92%</dd>
+        <dt class="mt-1 text-sm text-gray-500 dark:text-gray-400">Field adoption within a quarter</dt>
+      </div>
+      <div>
+        <dd class="text-3xl font-semibold text-gray-900 dark:text-white">0</dd>
+        <dt class="mt-1 text-sm text-gray-500 dark:text-gray-400">Reports lost to dropped connections since launch</dt>
+      </div>
+    </dl>
+
+    <div class="mt-16 border-t border-gray-200 pt-10 dark:border-gray-700">
+      <p class="text-sm font-medium text-blue-600 dark:text-blue-300">Next up</p>
+      <a href="#" class="group mt-2 flex items-center justify-between gap-4">
+        <h2 class="text-xl font-semibold text-gray-900 group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-300">Taking a team dashboard from spreadsheet to shippable</h2>
+        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 shrink-0 text-gray-400 transition group-hover:text-blue-600 rtl:rotate-180 dark:group-hover:text-blue-300"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+      </a>
+    </div>
+  </article>
+</main>
+
+<footer class="border-t border-gray-100 dark:border-gray-800">
+  <div class="mx-auto flex max-w-5xl flex-col items-center gap-4 px-4 py-8 sm:flex-row sm:justify-between sm:px-6">
+    <p class="text-sm text-gray-500 dark:text-gray-400">&copy; 2026 Guillermo de la Cruz. Lisbon, Portugal.</p>
+    <ul class="flex items-center gap-5">
+      <li><a href="#" class="text-sm text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">Dribbble</a></li>
+      <li><a href="#" class="text-sm text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">LinkedIn</a></li>
+      <li><a href="#" class="text-sm text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">Read.cv</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+const menuBtn = document.getElementById('menu-btn')
+const menuPanel = document.getElementById('menu-panel')
+
+function toggleMenu(open) {
+  menuBtn.setAttribute('aria-expanded', String(open))
+  menuPanel.hidden = !open
+}
+
+menuBtn.addEventListener('click', () => {
+  toggleMenu(menuBtn.getAttribute('aria-expanded') !== 'true')
+})
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && !menuPanel.hidden) {
+    toggleMenu(false)
+    menuBtn.focus()
+  }
+})
+</script>
+</body>
+</html>

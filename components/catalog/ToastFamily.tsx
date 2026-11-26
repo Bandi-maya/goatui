@@ -24,20 +24,35 @@ function Stage({
   children: React.ReactNode;
 }) {
   const [replayKey, setReplayKey] = useState(0);
+  const [gone, setGone] = useState(false);
+  const demoRef = React.useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState<[number, number] | null>(null);
+  const hide = () => { const r = demoRef.current?.getBoundingClientRect(); if (r) setSize([r.width, r.height]); setGone(true); };
+  const onDismiss = (e: React.MouseEvent) => {
+    const el = e.target as HTMLElement;
+    const b = el.closest("button,[role=button]") as HTMLElement | null;
+    if (b) {
+      const t = ((b.getAttribute("aria-label") || "") + " " + b.className + " " + (b.textContent || "")).toLowerCase();
+      if (/dismiss|close|-x\b|tf-x|later|got it|not now|no thanks|cancel/.test(t)) hide();
+      return;
+    }
+    // Tapping the toast itself dismisses it (like a real toast); Replay brings it back.
+    if (el.closest("[role=status],[role=alert],[role=alertdialog],[role=note],[class*=tf-field],[class*=toast],[class*=banner],[class*=snack]")) hide();
+  };
   return (
     <div className="tf-cell">
       <p className="tf-label">
         <span>{String(index).padStart(2, "0")}</span>
         <b>{name}</b>
       </p>
-      <div className={tall ? "tf-demo tf-demo-tall" : "tf-demo"}>
-        <div key={replayKey} style={{ display: "contents" }}>
-          {children}
+      <div ref={demoRef} style={gone && size ? { width: size[0], minHeight: size[1], boxSizing: "border-box" } : undefined} className={tall ? "tf-demo tf-demo-tall" : "tf-demo"}>
+        <div key={replayKey} style={{ display: "contents" }} onClickCapture={onDismiss}>
+          {gone ? <span className="tf-gone">Dismissed. Press Replay to show it again.</span> : children}
         </div>
         <button
           type="button"
           className="tf-replay"
-          onClick={() => setReplayKey((k) => k + 1)}
+          onClick={() => { setGone(false); setSize(null); setReplayKey((k) => k + 1); }}
           aria-label={`Replay ${name} animation`}
         >
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

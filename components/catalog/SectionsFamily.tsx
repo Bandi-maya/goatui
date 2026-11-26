@@ -154,7 +154,7 @@ export function MagneticHero() {
 
 /* v02 — Orbit ring with drag inertia */
 const ORBIT = [
-  ["Ada", "Design Eng", "#f97316"], ["Linus", "Platform", "#22d3ee"], ["Grace", "Compilers", "#a3e635"], ["Dan", "Motion", "#f472b6"],
+  ["Ada", "Design Eng", "#f97316"], ["Linus", "Platform", "#22d3ee"], ["Grace", "Compilers", "#a3e635"], ["Dan", "Motion", "#60a5fa"],
   ["Mae", "Research", "#facc15"], ["Ken", "Infra", "#818cf8"], ["Ivy", "Brand", "#34d399"], ["Raj", "Growth", "#fb7185"],
 ];
 export function OrbitHero() {
@@ -361,7 +361,7 @@ export function CommandHero() {
 
 /* v06 — Draggable stickers */
 const STICKERS = [
-  ["Ship it", 6, 8, -8, "#facc15"], ["Spring", 72, 8, 6, "#f472b6"], ["No lock-in", 4, 80, 5, "#34d399"],
+  ["Ship it", 6, 8, -8, "#facc15"], ["Spring", 72, 8, 6, "#60a5fa"], ["No lock-in", 4, 80, 5, "#34d399"],
   ["Tiny", 78, 78, -6, "#60a5fa"], ["A11y", 32, 86, 4, "#fb923c"], ["Free", 56, 88, -4, "#c4b5fd"], ["Copy me", 40, 2, 3, "#f87171"],
 ] as const;
 function Sticker({ label, left, top, rot, color }: { label: string; left: number; top: number; rot: number; color: string }) {
@@ -783,7 +783,7 @@ export function UsagePricing() {
   const sp = useSp("soft");
   const base = 9, r = Math.max(0, req - 5) * 2, s = Math.max(0, gb - 50) * 0.1;
   const total = base + r + s;
-  const parts: [string, number, string][] = [["Base", base, "#a3e635"], ["Requests", r, "#22d3ee"], ["Storage", s, "#f472b6"]];
+  const parts: [string, number, string][] = [["Base", base, "#a3e635"], ["Requests", r, "#22d3ee"], ["Storage", s, "#60a5fa"]];
   return (
     <Sec id="v16" theme="ink" label="Usage pricing calculator">
       <div className="gs-split">
@@ -845,7 +845,7 @@ export function MorphPricing() {
   const sp = useSp();
   const ok = useMotionOK();
   const p = PLANS[a];
-  const cols = ["#38bdf8", "#bef264", "#f472b6"];
+  const cols = ["#38bdf8", "#bef264", "#60a5fa"];
   return (
     <Sec id="v18" theme="ink" label="Morphing plan pricing">
       <div className="gs-stack center">

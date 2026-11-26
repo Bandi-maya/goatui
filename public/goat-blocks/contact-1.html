@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GOAT UI — Contact 01</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style type="text/tailwindcss">@custom-variant dark (&:where(.dark, .dark *));</style>
+</head>
+<body class="p-6 bg-white dark:bg-gray-900">
+<form action="#" class="goat-contact mx-auto max-w-md space-y-4 rounded-lg border border-gray-300 bg-gray-100 p-6 dark:border-gray-600 dark:bg-gray-800">
+  <div>
+    <label for="goat-c-name" class="block text-sm font-medium text-gray-900 dark:text-white">Name</label>
+    <input type="text" id="goat-c-name" placeholder="Your name" class="mt-1 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-900 dark:text-white">
+  </div>
+  <div>
+    <label for="goat-c-email" class="block text-sm font-medium text-gray-900 dark:text-white">Email</label>
+    <input type="email" id="goat-c-email" placeholder="Your email" class="mt-1 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-900 dark:text-white">
+  </div>
+  <div>
+    <label for="goat-c-msg" class="block text-sm font-medium text-gray-900 dark:text-white">Message</label>
+    <textarea id="goat-c-msg" rows="4" placeholder="Your message" class="mt-1 w-full resize-none rounded-lg border-gray-300 focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-900 dark:text-white"></textarea>
+  </div>
+  <button type="submit" class="block w-full rounded-lg border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition-colors hover:bg-transparent hover:text-blue-600 dark:hover:bg-blue-700 dark:hover:text-white">Send Message</button>
+</form>
+</body>
+</html>

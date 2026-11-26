@@ -1,0 +1,86 @@
+// Previous right-hand Properties panel of app/components/page.tsx (replaced by detail-view.tsx).
+      {/* Right Properties Panel */}
+      {false && selectedComponent && (
+        <aside className="hidden w-[320px] border-l border-border bg-card overflow-y-auto xl:block">
+          <div className="p-6">
+            <h3 className="text-lg font-semibold mb-6">Properties</h3>
+            
+            {/* Metadata */}
+            <div className="space-y-4 mb-8">
+              <div className="flex items-center justify-between py-2 border-b border-border">
+                <span className="text-sm text-muted-foreground">Name</span>
+                <span className="text-sm font-medium">{selectedComponent?.name}</span>
+              </div>
+              <div className="flex items-center justify-between py-2 border-b border-border">
+                <span className="text-sm text-muted-foreground">Category</span>
+                <span className="text-sm font-medium">{selectedComponent?.category}</span>
+              </div>
+              <div className="flex items-center justify-between py-2 border-b border-border">
+                <span className="text-sm text-muted-foreground">Status</span>
+                <span className={`text-sm font-medium ${
+                  selectedComponent?.status === "stable" ? "text-green-500" : "text-yellow-500"
+                }`}>
+                  {selectedComponent?.status}
+                </span>
+              </div>
+              <div className="flex items-center justify-between py-2 border-b border-border">
+                <span className="text-sm text-muted-foreground">Last Updated</span>
+                <span className="text-sm font-medium">
+                  {selectedComponent?.lastUpdated ? new Date(selectedComponent.lastUpdated).toLocaleDateString() : 'N/A'}
+                </span>
+              </div>
+            </div>
+
+            {/* Props */}
+            <div className="mb-8">
+              <h4 className="text-sm font-semibold mb-4 flex items-center gap-2">
+                <TagIcon className="w-4 h-4" />
+                Props
+              </h4>
+              <div className="space-y-3">
+                <div className="p-3 rounded-lg bg-muted/50">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-mono font-medium">variant</span>
+                    <span className="text-xs text-muted-foreground">string</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Component style variant</p>
+                </div>
+                <div className="p-3 rounded-lg bg-muted/50">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-mono font-medium">size</span>
+                    <span className="text-xs text-muted-foreground">string</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Component size</p>
+                </div>
+                <div className="p-3 rounded-lg bg-muted/50">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-mono font-medium">disabled</span>
+                    <span className="text-xs text-muted-foreground">boolean</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Disable interaction</p>
+                </div>
+                <div className="p-3 rounded-lg bg-muted/50">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-mono font-medium">className</span>
+                    <span className="text-xs text-muted-foreground">string</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Additional CSS classes</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Accessibility */}
+            <div>
+              <h4 className="text-sm font-semibold mb-4 flex items-center gap-2">
+                <Shield className="w-4 h-4" />
+                Accessibility
+              </h4>
+              <div className="p-3 rounded-lg bg-muted/50">
+                <p className="text-xs text-muted-foreground">
+                  This component follows WAI-ARIA best practices and is fully keyboard accessible.
+                </p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      )}

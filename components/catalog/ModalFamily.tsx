@@ -242,7 +242,7 @@ export function BottomSheetSnap({ contained, defaultOpen }: ModalVariantProps) {
             <p className="gmf-bs-sub">Drag down to dismiss, or pick a destination below.</p>
             <div className="gmf-bs-opts">
               {[
-                ["#6d6cff", "GOAT UI Library", "32 components"],
+                ["#4d8dff", "GOAT UI Library", "32 components"],
                 ["#34d399", "Marketing site", "18 components"],
                 ["#fbbf24", "Mobile app shell", "9 components"],
                 ["#fb4d6d", "Archive", "Read only"],
@@ -626,7 +626,7 @@ export function AnchoredPopover({ contained, defaultOpen }: ModalVariantProps) {
           <div className="gmf-pop-anchor">
             <div className="gmf-pop-panel">
               {[
-                ["BM", "Bandi Maya", "Owner - online", "#6d6cff,#b16cff", true],
+                ["BM", "Bandi Maya", "Owner - online", "#4d8dff,#b16cff", true],
                 ["AR", "Ananya Rao", "Design - 2h ago", "#34d399,#5cc8ff", false],
                 ["VK", "Vikram K", "Engineering - 5m ago", "#fbbf24,#fb923c", false],
               ].map(([ini, name, meta, grad, dot]) => (
@@ -925,9 +925,9 @@ export function SpotlightSearch({ contained, defaultOpen }: ModalVariantProps) {
    19 - ShareSheet
    ============================================================ */
 const SHARE_APPS = [
-  { n: "Copy link", g: "linear-gradient(135deg,#6d6cff,#9d8cff)", icon: <Link2 size={20} /> },
+  { n: "Copy link", g: "linear-gradient(135deg,#4d8dff,#9d8cff)", icon: <Link2 size={20} /> },
   { n: "Messages", g: "linear-gradient(135deg,#34d399,#0ea5e9)", icon: <MessageCircle size={20} /> },
-  { n: "Mail", g: "linear-gradient(135deg,#5cc8ff,#6d6cff)", icon: <Mail size={20} /> },
+  { n: "Mail", g: "linear-gradient(135deg,#5cc8ff,#4d8dff)", icon: <Mail size={20} /> },
   { n: "X / Post", g: "linear-gradient(135deg,#334155,#0f172a)", icon: <Share2 size={20} /> },
   { n: "WhatsApp", g: "linear-gradient(135deg,#22c55e,#15803d)", icon: <MessageCircle size={20} /> },
   { n: "Save file", g: "linear-gradient(135deg,#fbbf24,#fb923c)", icon: <Download size={20} /> },
@@ -1180,7 +1180,7 @@ const NTC = [
   ]},
   { g: "Earlier", items: [
     { ini: "GH", grad: "#94a3b8,#475569", b: "Build succeeded", s: "goatui.vercel.app deployed in 41s.", t: "3h ago", unread: false },
-    { ini: "BM", grad: "#6d6cff,#b16cff", b: "You shipped v2.3", s: "Tabs family - 30 variants.", t: "1d ago", unread: false },
+    { ini: "BM", grad: "#4d8dff,#b16cff", b: "You shipped v2.3", s: "Tabs family - 30 variants.", t: "1d ago", unread: false },
   ]},
 ];
 export function NotificationCenter({ contained, defaultOpen }: ModalVariantProps) {
@@ -1286,7 +1286,7 @@ export function TaskProgressModal({ contained, defaultOpen }: ModalVariantProps)
                 <svg width="84" height="84" viewBox="0 0 84 84">
                   <defs>
                     <linearGradient id="gmfPrgGrad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#6d6cff" />
+                      <stop offset="0%" stopColor="#4d8dff" />
                       <stop offset="100%" stopColor="#34d399" />
                     </linearGradient>
                   </defs>
@@ -1376,7 +1376,7 @@ export function RatingFeedbackModal({ contained, defaultOpen }: ModalVariantProp
    29 - SplitPreviewModal
    ============================================================ */
 const SPL_ITEMS = [
-  { n: "Aurora", sw: "linear-gradient(135deg,#6d6cff,#5cc8ff)", h: "linear-gradient(120deg,#312e81,#0e7490)", d: "Cool violet-to-cyan sweep with a soft inner glow. Ships as the default theme.", tags: ["Dark", "Default", "v2.4"] },
+  { n: "Aurora", sw: "linear-gradient(135deg,#4d8dff,#5cc8ff)", h: "linear-gradient(120deg,#1e3a8a,#0e7490)", d: "Cool violet-to-cyan sweep with a soft inner glow. Ships as the default theme.", tags: ["Dark", "Default", "v2.4"] },
   { n: "Ember", sw: "linear-gradient(135deg,#fb923c,#fb4d6d)", h: "linear-gradient(120deg,#7c2d12,#9f1239)", d: "Warm ember gradient for marketing surfaces. Pairs with cream type.", tags: ["Dark", "Warm"] },
   { n: "Meadow", sw: "linear-gradient(135deg,#34d399,#a3e635)", h: "linear-gradient(120deg,#064e3b,#3f6212)", d: "Fresh green system tuned for dashboards and data-dense overlays.", tags: ["Dark", "Data"] },
   { n: "Mono", sw: "linear-gradient(135deg,#e2e8f0,#64748b)", h: "linear-gradient(120deg,#1e293b,#0f172a)", d: "Pure grayscale. Zero hue, maximum contrast, editorial feel.", tags: ["Neutral", "axe AAA"] },

@@ -737,7 +737,7 @@ export function FileDrop() {
 
   const badge = (name: string) => {
     const ext = (name.split(".").pop() || "file").slice(0, 3).toUpperCase();
-    const colors: Record<string, string> = { PDF: "#dc2626", PNG: "#0e7490", JPG: "#0e7490", ZIP: "#7c3aed", DOC: "#1d4ed8" };
+    const colors: Record<string, string> = { PDF: "#dc2626", PNG: "#0e7490", JPG: "#0e7490", ZIP: "#1e6fe0", DOC: "#1d4ed8" };
     return <span className="ifx-file-badge" style={{ background: colors[ext] || "#52525b" }}>{ext}</span>;
   };
 
@@ -837,7 +837,7 @@ export function StarRating() {
 /* ------------------------------------------------------------------ */
 /* 13 · Color picker — swatches + validated hex + live preview         */
 /* ------------------------------------------------------------------ */
-const SWATCH_HEX = ["#17171c", "#0033ff", "#0e7490", "#15803d", "#b45309", "#dc2626", "#7c3aed", "#db2777"];
+const SWATCH_HEX = ["#17171c", "#0033ff", "#0e7490", "#15803d", "#b45309", "#dc2626", "#1e6fe0", "#db2777"];
 export function ColorPicker() {
   const [hex, setHex] = useState("#0033FF");
   const [input, setInput] = useState("0033FF");
@@ -1434,7 +1434,7 @@ export function ExpiryCvcFields() {
 const PEOPLE = [
   { name: "Ava Lewis", init: "AL", color: "#b45309", role: "Design" },
   { name: "Miles Chen", init: "MC", color: "#0e7490", role: "Engineering" },
-  { name: "Priya Nair", init: "PN", color: "#7c3aed", role: "Product" },
+  { name: "Priya Nair", init: "PN", color: "#1e6fe0", role: "Product" },
   { name: "Tom Okafor", init: "TO", color: "#15803d", role: "Engineering" },
   { name: "Sana Iqbal", init: "SI", color: "#db2777", role: "Research" },
 ];

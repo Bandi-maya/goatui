@@ -353,8 +353,8 @@ export function RingRadialMenu({ defaultOpen = false }: VariantProps) {
 const regions = [
   { name: "Mumbai", code: "BOM", dot: "#f59e0b" },
   { name: "Bengaluru", code: "BLR", dot: "#10b981" },
-  { name: "Delhi NCR", code: "DEL", dot: "#6366f1" },
-  { name: "Hyderabad", code: "HYD", dot: "#ec4899" },
+  { name: "Delhi NCR", code: "DEL", dot: "#3b82f6" },
+  { name: "Hyderabad", code: "HYD", dot: "#3b82f6" },
   { name: "Chennai", code: "MAA", dot: "#06b6d4" },
 ];
 
@@ -422,9 +422,9 @@ export function FlipPanelSelect({ defaultOpen = false }: VariantProps) {
 
 const dockApps = [
   { icon: <Home size={22} />, label: "Home", hue: "#60a5fa" },
-  { icon: <Search size={22} />, label: "Search", hue: "#a78bfa" },
+  { icon: <Search size={22} />, label: "Search", hue: "#7db1ff" },
   { icon: <LayoutGrid size={22} />, label: "Apps", hue: "#34d399" },
-  { icon: <MessageSquare size={22} />, label: "Chat", hue: "#f472b6" },
+  { icon: <MessageSquare size={22} />, label: "Chat", hue: "#60a5fa" },
   { icon: <Calendar size={22} />, label: "Calendar", hue: "#fbbf24" },
   { icon: <Settings size={22} />, label: "Settings", hue: "#94a3b8" },
 ];
@@ -754,7 +754,7 @@ export function ContextRippleMenu({ defaultOpen = false }: VariantProps) {
 /* ================================================================== */
 
 const members = ["Asha", "Ravi", "Meera", "Kiran", "Zoya", "Arjun", "Nila"];
-const memberHues = ["#6d7cff", "#34d399", "#f472b6", "#fbbf24", "#06b6d4", "#a78bfa", "#fb7185"];
+const memberHues = ["#4d8dff", "#34d399", "#60a5fa", "#fbbf24", "#06b6d4", "#7db1ff", "#fb7185"];
 
 export function ChipMultiSelect({ defaultOpen = false }: VariantProps) {
   const [open, setOpen] = useState(defaultOpen);
@@ -1049,7 +1049,7 @@ export function DialRotarySelect({ defaultOpen }: VariantProps) {
 /* ================================================================== */
 
 const dialActions = [
-  { icon: <Pencil size={16} />, label: "Compose", hue: "#6d7cff" },
+  { icon: <Pencil size={16} />, label: "Compose", hue: "#4d8dff" },
   { icon: <UserPlus size={16} />, label: "Invite", hue: "#34d399" },
   { icon: <Paperclip size={16} />, label: "Attach", hue: "#fbbf24" },
   { icon: <Flag size={16} />, label: "Report", hue: "#fb7185" },
@@ -1494,10 +1494,10 @@ export function PieContextMenu({ defaultOpen = false }: VariantProps) {
 
 const gridApps = [
   { icon: <Home size={19} />, label: "Home", hue: "#60a5fa" },
-  { icon: <MessageSquare size={19} />, label: "Chat", hue: "#f472b6" },
+  { icon: <MessageSquare size={19} />, label: "Chat", hue: "#60a5fa" },
   { icon: <Calendar size={19} />, label: "Cal", hue: "#fbbf24" },
   { icon: <ImageIcon size={19} />, label: "Media", hue: "#34d399" },
-  { icon: <LayoutGrid size={19} />, label: "Boards", hue: "#a78bfa" },
+  { icon: <LayoutGrid size={19} />, label: "Boards", hue: "#7db1ff" },
   { icon: <Globe size={19} />, label: "Sites", hue: "#06b6d4" },
   { icon: <Bell size={19} />, label: "Alerts", hue: "#fb7185" },
   { icon: <User size={19} />, label: "Team", hue: "#f97316" },
@@ -2250,7 +2250,7 @@ interface Toast {
 let toastSeq = 3;
 const initialToasts: Toast[] = [
   { id: 0, icon: <Check size={15} />, title: "Deployed", desc: "goatui.vercel.app is live", hue: "#34d399" },
-  { id: 1, icon: <UserPlus size={15} />, title: "Asha joined", desc: "Studio North workspace", hue: "#6d7cff" },
+  { id: 1, icon: <UserPlus size={15} />, title: "Asha joined", desc: "Studio North workspace", hue: "#4d8dff" },
   { id: 2, icon: <Bell size={15} />, title: "3 mentions", desc: "in #design-review", hue: "#fbbf24" },
 ];
 
@@ -2260,7 +2260,7 @@ export function ToastStackMenu(_: VariantProps) {
   const push = () =>
     setToasts((t) => [
       ...t.slice(-2),
-      { id: toastSeq++, icon: <Zap size={15} />, title: `Event ${toastSeq}`, desc: "just now", hue: "#f472b6" },
+      { id: toastSeq++, icon: <Zap size={15} />, title: `Event ${toastSeq}`, desc: "just now", hue: "#60a5fa" },
     ]);
   const dismiss = (id: number) => setToasts((t) => t.filter((x) => x.id !== id));
 

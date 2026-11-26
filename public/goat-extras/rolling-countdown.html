@@ -1,0 +1,32 @@
+<!doctype html><meta charset=utf-8><title>Countdown (own code)</title>
+<style>@font-face{font-family:GOATText;src:url(/goat-extras/GOATText.woff2) format("woff2");font-weight:100 900}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;height:100vh;overflow:hidden;font-family:GOATText,system-ui,sans-serif;font-size:16px;line-height:1.5;color:#000;-webkit-font-smoothing:antialiased;text-rendering:geometricprecision}
+#r{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:fit-content}
+#a{display:flex;align-items:center;gap:4px;height:48px}
+.i{font-size:48px;line-height:48px;height:48px;overflow:hidden;text-align:center}
+.i span{display:inline;position:relative;white-space:pre;transition:top 1s cubic-bezier(1,0,0,1)}
+.s{font-size:32px;line-height:48px}
+#c{display:flex;justify-content:center;margin-top:16px}
+button{display:flex;align-items:center;justify-content:center;font:inherit;font-weight:500;padding:4px 16px;height:34px;background:#fff;border:1px solid rgb(212,212,216);border-radius:0;color:#000;cursor:pointer}
+button:hover{background:rgb(244,244,245)}
+button:focus-visible{outline:2px solid rgb(47,133,90);outline-offset:2px}
+[hidden]{display:none!important}
+</style>
+<div id=r><div id=a role=timer aria-label="Countdown"></div><div id=c><button id=p type=button>Pause</button><button id=u type=button hidden>Resume</button></div></div>
+<script>
+const a=document.getElementById('a'),p=document.getElementById('p'),u=document.getElementById('u');
+let left=2*86400+7,run=false,h=null;
+const pad=n=>String(n).padStart(2,'0');
+const lim=[100,24,60,60];
+const lst=n=>Array.from({length:n},(_,k)=>pad(k)).join('\n')+'\n';
+const els=[];lim.forEach((n,i)=>{if(i){const sp=document.createElement('span');sp.className='s';sp.textContent=':';a.appendChild(sp)}const d=document.createElement('div');d.className='i';const t=document.createElement('span');t.textContent=lst(n);d.appendChild(t);a.appendChild(d);els.push(t)});
+const draw=()=>{const v=[Math.floor(left/86400),Math.floor(left/3600)%24,Math.floor(left/60)%60,left%60];v.forEach((x,i)=>els[i].style.top=(-x*48)+'px')};
+const tick=()=>{if(left>0)left--;draw()};
+const start=d=>{run=true;clearTimeout(h);h=setTimeout(function f(){tick();h=setTimeout(f,1000)},d)};
+const stop=()=>{run=false;clearTimeout(h)};
+window.go=(s,d)=>{left=s;draw();start(d)};
+draw();start(1000);
+p.onclick=()=>{stop();p.hidden=true;u.hidden=false};
+u.onclick=()=>{start(1000);u.hidden=true;p.hidden=false};
+</script>

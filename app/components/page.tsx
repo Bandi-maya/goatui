@@ -1,1008 +1,346 @@
 "use client"
 
-import React, { useState, useEffect, useMemo, useCallback } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { entryFor } from "@/components/catalog/overview-previews"
-import { useTheme } from "next-themes"
+import React, { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
+import { Search, Sun, Moon, Menu, X } from "lucide-react"
+import { componentsRegistry } from "@/lib/component-registry"
+import { catalogItems } from "@/lib/catalog-index"
 import { glassItems } from "@/components/catalog/glass-items"
-import { 
-  Search, 
-  Code, 
-  Copy, 
-  Download, 
-  ChevronRight, 
-  ChevronDown, 
-  Settings, 
-  Moon, 
-  Sun,
-  Monitor,
-  Layout,
-  Component,
-  FileText,
-  Layers,
-  Grid,
-  X,
-  Check,
-  Smartphone,
-  Tablet,
-  Monitor as Desktop,
-  Zap,
-  Package,
-  Clock,
-  Shield,
-  User,
-  Tag as TagIcon
-} from "lucide-react"
+import { entryFor } from "@/components/catalog/overview-previews"
+import { DetailView, DetailFile } from "@/components/catalog/detail-view"
+import { renderComponentDemo } from "@/components/catalog/primitive-demo"
+import { LiveFamily } from "@/components/catalog/family-loaders"
+import { ScaledFrame, WhenVisible } from "@/components/catalog/scaled-frame"
+import { CategoryIcon } from "@/components/catalog/category-icons"
+import { useTheme } from "@/components/theme-provider"
 
-import { componentsRegistry } from "@/lib/component-registry";
+type Kind = "prim" | "cat" | "glass" | "block"
+type Item = { key: string; kind: Kind; name: string; category: string; family?: string; blurb: string; ref?: any }
 
-// Component metadata interface
-interface ComponentMeta {
-  name: string
-  category: string
-  component: React.ComponentType<any>
-  description: string
-  tags: string[]
-  status: "stable" | "beta" | "experimental"
-  lastUpdated: string
-  props?: PropMeta[]
-  variants?: string[]
-  source?: string
-}
+const PRIM = "Primitives"
+const GLASS = "Liquid glass"
+const BLOCKS = "Blocks"
+const EXTRA = "Standalone"
 
-interface PropMeta {
-  name: string
-  type: string
-  default: string
-  description: string
-}
+const blockFiles = ["404-1","app-download-1","banner-1","billing-page-1","blog-cards-1","checkout-1","coming-soon-1","comparison-1","contact-1","content-1","cta-1","cta-split-1","dashboard-1","dashboard-page-1","developer-tool-1","faq-1","feature-grid-1","footer-1","footer-2","gallery-1","hero-1","integrations-1","login-1","logo-cloud-1","newsletter-1","poll-1","portfolio-1","portfolio-2","press-logos-1","pricing-1","pricing-page-1","profile-1","saas-landing-1","settings-1","signup-1","stats-1","stats-chart-1","steps-1","storefront-1","storefront-2","support-inbox-1","support-inbox-2","team-1","testimonial-1","timeline-1"]
 
-// Category mapping
-const CATEGORY_MAP: Record<string, string> = {
-  button: "Forms",
-  input: "Forms",
-  select: "Forms",
-  checkbox: "Forms",
-  radio: "Forms",
-  switch: "Forms",
-  card: "Layout",
-  accordion: "Layout",
-  tabs: "Layout",
-  dialog: "Overlay",
-  drawer: "Overlay",
-  popover: "Overlay",
-  tooltip: "Overlay",
-  dropdown: "Navigation",
-  breadcrumb: "Navigation",
-  pagination: "Navigation",
-  table: "Data Display",
-  badge: "Data Display",
-  avatar: "Data Display",
-  progress: "Data Display",
-  skeleton: "Utilities",
-  spinner: "Utilities",
-  alert: "Feedback",
-  toast: "Feedback",
-  calendar: "Forms",
-  date: "Forms",
-  time: "Forms",
-  file: "Forms",
-  upload: "Forms",
-  search: "Forms",
-  autocomplete: "Forms",
-  combobox: "Forms",
-  multi: "Forms",
-  rating: "Forms",
-  slider: "Forms",
-  stepper: "Forms",
-  steps: "Forms",
-  timeline: "Data Display",
-  tree: "Data Display",
-  data: "Data Display",
-  metric: "Data Display",
-  stat: "Data Display",
-  analytics: "Data Display",
-  empty: "Feedback",
-  notification: "Feedback",
-  modal: "Overlay",
-  sheet: "Overlay",
-  context: "Overlay",
-  command: "Overlay",
-  hover: "Overlay",
-  chip: "Data Display",
-  tag: "Data Display",
-  list: "Data Display",
-  group: "Data Display",
-  otp: "Forms",
-  password: "Forms",
-  textarea: "Forms",
-  hero: "Layout",
-  navbar: "Layout",
-  responsive: "Layout",
-  app: "Overlay",
-  outline: "Utilities",
-  loading: "Utilities",
-  result: "Feedback",
-  popconfirm: "Overlay",
-  spin: "Utilities",
-}
+const pretty = (s: string) => s.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/-/g, " ").replace(/\b1$/, "").trim().replace(/^\w/, (c) => c.toUpperCase())
+// Families whose pieces are big get a smaller scale in grid thumbnails.
+// Stages follow the theme: card surface and foreground ink from the active theme. Button designs keep their warm paper stage in light mode.
+const STAGE_BG: Record<string, string> = { ButtonFamily: "#efece6" }
+const FULL = new Set(["SectionsFamily"])
+const BIG = new Set(["SectionsFamily", "NavbarFamily", "TableFamily", "ChartFamily", "CardFamily", "NavFlowFamily", "DataDisplayFamily"])
+const UP: Record<string, number> = { ModalFamily: 1.15, ButtonFamily: 1.1, FormsFamily: 0.9, MenuFamily: 1, InputFamily: 0.9, AccordionFamily: 0.9 }
 
-// Component descriptions
-const COMPONENT_DESCRIPTIONS: Record<string, string> = {
-  button: "Buttons allow users to take actions, submit forms, and trigger events.",
-  input: "Input fields allow users to enter and edit text content.",
-  card: "Cards contain content and actions about a single subject.",
-  select: "Select allows users to choose from a list of options.",
-  checkbox: "Checkboxes allow users to select one or more options from a set.",
-  dialog: "Dialogs focus user attention on a specific task or piece of information.",
-  tabs: "Tabs organize content into separate views that users can switch between.",
-  table: "Tables display data in rows and columns for easy comparison.",
-  badge: "Badges display small counts or labels.",
-  avatar: "Avatars represent users or entities.",
-  alert: "Alerts display important messages to users.",
-  tooltip: "Tooltips display additional information when users hover over elements.",
-  dropdown: "Dropdown menus display a list of actions or options.",
-  accordion: "Accordions allow users to expand and collapse sections of content.",
-  switch: "Switches toggle between two states, typically on/off.",
-  slider: "Sliders allow users to select a value from a range.",
-  progress: "Progress bars indicate the completion status of a task.",
-  skeleton: "Skeleton screens show placeholder content while data loads.",
-  toast: "Toasts display brief messages that appear and disappear automatically.",
-  pagination: "Pagination allows users to navigate through large datasets.",
-  breadcrumb: "Breadcrumbs show the user's location within a hierarchy.",
-  calendar: "Calendars allow users to select dates from a calendar view.",
-  file: "File inputs allow users to upload files.",
-  rating: "Rating components allow users to provide feedback on a scale.",
-  stepper: "Steppers guide users through multi-step processes.",
-  timeline: "Timelines display events in chronological order.",
-  tree: "Tree views display hierarchical data.",
-  data: "Data tables display structured data with sorting and filtering.",
-  metric: "Metric cards display key performance indicators.",
-  stat: "Stat cards display statistics and metrics.",
-  analytics: "Analytics cards display data visualizations.",
-  empty: "Empty states indicate when no content is available.",
-  notification: "Notifications display important alerts and messages.",
-  modal: "Modals focus user attention on a specific task.",
-  sheet: "Sheets slide in from the edge of the screen.",
-  context: "Context menus display actions relevant to the current context.",
-  command: "Command palettes allow users to quickly execute commands.",
-  hover: "Hover cards display additional information on hover.",
-  chip: "Chips represent entities or attributes.",
-  tag: "Tags categorize and label content.",
-  list: "List groups display related items.",
-  group: "List groups organize related content.",
-  otp: "OTP inputs allow users to enter one-time passwords.",
-  password: "Password inputs allow users to enter sensitive information.",
-  textarea: "Textareas allow users to enter multi-line text.",
-  hero: "Hero sections introduce the main content of a page.",
-  navbar: "Navbars provide navigation and branding.",
-  responsive: "Responsive tabs adapt to different screen sizes.",
-  app: "App modals display full-screen overlays.",
-  outline: "Outline draws animated borders around elements.",
-  loading: "Loading spinners indicate content is loading.",
-  result: "Result cards display search or operation results.",
-  popconfirm: "Pop confirms ask for confirmation before actions.",
-  spin: "Spin components display loading animations.",
-}
+const bsrc = (it: Item) => (String(it.ref).startsWith("/") ? it.ref : `/goat-blocks/${it.ref}`)
+const bw = (it: Item) => (it.category === EXTRA ? 640 : 1280)
+const bh = (it: Item) => (it.category === EXTRA ? 260 : 800)
 
-
-
-const renderComponentDemo = (Component: React.ComponentType<any>, name: string, variant: string) => {
-  try {
-    const nameLower = name.toLowerCase();
-    
-    if (nameLower === 'accordion') {
-      return (
-        <Component>
-          <div className="p-4 border border-border rounded-lg mb-2">Accordion Trigger 1</div>
-          <div className="p-4 border border-border rounded-lg">Accordion Trigger 2</div>
-        </Component>
-      );
-    }
-    if (nameLower === 'alert') {
-      return <Component variant={variant}>This is an alert message!</Component>;
-    }
-    if (nameLower === 'breadcrumb') {
-      return <Component />;
-    }
-    if (nameLower === 'avatar') {
-      return <Component src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" fallback="JD" />;
-    }
-    if (nameLower === 'avatargroup') {
-      return <Component max={3} />;
-    }
-    if (nameLower === 'badge') {
-      return <Component variant={variant}>Badge</Component>;
-    }
-    if (nameLower === 'button') {
-      return <Component variant={variant}>Button</Component>;
-    }
-    if (nameLower === 'card') {
-      return (
-        <Component className="w-[300px] p-6 border rounded-xl">
-          <div className="font-bold text-lg mb-2">Card Title</div>
-          <p className="text-sm text-muted-foreground">This is the card body content.</p>
-        </Component>
-      );
-    }
-    if (nameLower === 'checkbox') {
-      return <Component id="checkbox-demo" label="Accept terms and conditions" />;
-    }
-    if (nameLower === 'chip') {
-      return <Component label="Chip Label" />;
-    }
-    if (nameLower === 'combobox' || nameLower === 'autocomplete' || nameLower === 'select') {
-      return <Component placeholder="Select option..." />;
-    }
-    if (nameLower === 'input' || nameLower === 'passwordinput' || nameLower === 'textarea' || nameLower === 'searchinput') {
-      return <Component placeholder="Type here..." />;
-    }
-    if (nameLower === 'progress' || nameLower === 'progressbar') {
-      return <Component value={60} className="w-[250px]" />;
-    }
-    if (nameLower === 'progresscircle') {
-      return <Component value={75} />;
-    }
-    if (nameLower === 'rating') {
-      return <Component value={4} />;
-    }
-    if (nameLower === 'slider') {
-      return <Component defaultValue={[50]} max={100} step={1} className="w-[250px]" />;
-    }
-    if (nameLower === 'switch') {
-      return <Component id="switch-demo" label="Toggle Option" />;
-    }
-    if (nameLower === 'tab' || nameLower === 'tabs' || nameLower === 'responsivetabs') {
-      return <Component />;
-    }
-    if (nameLower === 'tag') {
-      return <Component>Tag text</Component>;
-    }
-    if (nameLower === 'toast') {
-      return <Component message="This is a toast notification!" />;
-    }
-    if (nameLower === 'timeline') {
-      return <Component />;
-    }
-    if (nameLower === 'steps' || nameLower === 'stepper') {
-      return <Component currentStep={1} steps={['Step 1', 'Step 2', 'Step 3']} />;
-    }
-    if (nameLower === 'loadingspinner' || nameLower === 'spin') {
-      return <Component />;
-    }
-    if (nameLower === 'skeleton') {
-      return <Component className="h-6 w-[200px]" />;
-    }
-    if (nameLower === 'navbar') {
-      return <Component />;
-    }
-    if (nameLower === 'hero') {
-      return <Component />;
-    }
-    
-    return <Component variant={variant}>Demo content</Component>;
-  } catch (err) {
-    console.error(`Error rendering component ${name}:`, err);
-    return <div className="text-destructive font-mono text-xs">Failed to render {name}: {String(err)}</div>;
+function Thumb({ it }: { it: Item }) {
+  if (it.kind === "prim") {
+    return <div className="flex h-full items-center justify-center p-4 pointer-events-none select-none">{renderComponentDemo(it.ref.component, it.name, "default")}</div>
   }
+  if (it.kind === "glass") return <ScaledFrame src={`/goat-glass/${it.ref.id}`} title={it.name} w={800} h={600} interactive={false} lazy />
+  if (it.kind === "block") return <WhenVisible className="h-full"><ScaledFrame src={bsrc(it)} title={it.name} w={bw(it)} h={bh(it)} interactive={false} maxScale={it.category === EXTRA ? 1 : 0.3} /></WhenVisible>
+  const s = UP[it.family!] ?? (BIG.has(it.family!) ? 0.5 : 0.8)
+  return (
+    <WhenVisible className="h-full overflow-hidden">
+      <FitStage it={it} base={s} />
+    </WhenVisible>
+  )
+}
+
+
+// Measures where the visible leaf elements of a live render actually sit and returns the shift that puts their middle on the frame's middle.
+export function useCenterShift(frame: React.RefObject<HTMLElement | null>, content: React.RefObject<HTMLElement | null>, dep: unknown) {
+  const [d, setD] = useState({ x: 0, y: 0 })
+  useEffect(() => {
+    const run = () => {
+      const f = frame.current, c = content.current
+      if (!f || !c) return
+      const fr = f.getBoundingClientRect()
+      let l = 1e9, t = 1e9, r = -1e9, b = -1e9
+      c.querySelectorAll("*").forEach((el) => {
+        const e = el as HTMLElement
+        const ownText = Array.from(e.childNodes).some((n) => n.nodeType === 3 && (n.textContent || "").trim().length > 0)
+        if (e.children.length && !ownText && !(e instanceof SVGElement)) return
+        if (e.closest("svg") && e.tagName.toLowerCase() !== "svg") return
+        for (let n: HTMLElement | null = e; n && n !== c.parentElement; n = n.parentElement) {
+          const cs = getComputedStyle(n)
+          if (cs.display === "none" || cs.visibility === "hidden" || parseFloat(cs.opacity) < 0.05) return
+        }
+        const cs2 = getComputedStyle(e)
+        const tag = e.tagName.toLowerCase()
+        const paints = (e.textContent || "").trim().length > 0 || ["svg", "img", "canvas", "input", "video", "select", "textarea"].includes(tag) || (cs2.backgroundColor !== "rgba(0, 0, 0, 0)" && cs2.backgroundColor !== "transparent") || cs2.backgroundImage !== "none" || parseFloat(cs2.borderTopWidth) > 0 || parseFloat(cs2.borderBottomWidth) > 0 || cs2.boxShadow !== "none"
+        if (!paints) return
+        const q0 = e.getBoundingClientRect()
+        const q = { left: Math.max(q0.left, fr.left), right: Math.min(q0.right, fr.right), top: Math.max(q0.top, fr.top), bottom: Math.min(q0.bottom, fr.bottom), width: 0, height: 0 }
+        q.width = q.right - q.left; q.height = q.bottom - q.top
+        if (q.width < 2 || q.height < 2) return
+        l = Math.min(l, q.left); t = Math.min(t, q.top); r = Math.max(r, q.right); b = Math.max(b, q.bottom)
+      })
+      if (r < l) return
+      const dx = (fr.left + fr.right) / 2 - (l + r) / 2, dy = (fr.top + fr.bottom) / 2 - (t + b) / 2
+      setD((p) => (Math.abs(dx) < 1 && Math.abs(dy) < 1 ? p : { x: Math.round(p.x + dx), y: Math.round(p.y + dy) }))
+    }
+    const ts = [150, 500, 1200, 2500].map((ms) => setTimeout(run, ms))
+    let deb: ReturnType<typeof setTimeout> | undefined
+    const mo = new MutationObserver(() => { clearTimeout(deb); deb = setTimeout(run, 250) })
+    if (content.current) mo.observe(content.current, { childList: true, subtree: true })
+    return () => { ts.forEach(clearTimeout); clearTimeout(deb); mo.disconnect() }
+  }, [frame, content, dep])
+  return d
+}
+
+// Centres the live render in the card and shrinks it only as far as needed so nothing is cropped.
+function FitStage({ it, base }: { it: Item; base: number }) {
+  const outer = React.useRef<HTMLDivElement>(null)
+  const inner = React.useRef<HTMLDivElement>(null)
+  const [k, setK] = useState(base)
+  const [w, setW] = useState(0)
+  useEffect(() => {
+    const o = outer.current, i = inner.current
+    if (!o || !i) return
+    const fit = () => {
+      const W = o.clientWidth, H = o.clientHeight
+      setW(W / base)
+      const ih = i.offsetHeight, iw = i.firstElementChild ? (i.firstElementChild as HTMLElement).scrollWidth : 0
+      let kk = base
+      if (ih > 0) kk = Math.min(kk, (H * 0.94) / ih)
+      if (iw > 0 && W > 0) kk = Math.min(kk, (W * 0.96) / Math.max(iw, W / base))
+      const sc = i.getBoundingClientRect().width / Math.max(1, i.offsetWidth) || 1
+      let ul = 1e9, ur = -1e9
+      i.querySelectorAll("*").forEach((el) => { const e = el as HTMLElement; if (e.children.length) return; const q = e.getBoundingClientRect(); if (q.width < 2 || q.height < 2) return; ul = Math.min(ul, q.left); ur = Math.max(ur, q.right) })
+      if (ur > ul && W > 0) { const natural = (ur - ul) / sc; kk = Math.min(kk, (W * 0.96) / natural) }
+      setK(Math.max(0.2, kk))
+    }
+    fit()
+    const ro = new ResizeObserver(fit)
+    ro.observe(o); ro.observe(i)
+    const t = setTimeout(fit, 600)
+    return () => { ro.disconnect(); clearTimeout(t) }
+  }, [base])
+  const d = useCenterShift(outer, inner, `${k}|${w}`)
+  return (
+    <div ref={outer} style={{ background: STAGE_BG[it.family!] || "hsl(var(--card))", color: STAGE_BG[it.family!] ? "#1b1b18" : "hsl(var(--foreground))" }} className="pointer-events-none relative h-full select-none overflow-hidden">
+      <div style={{ position: "absolute", inset: 0, transform: `translate(${d.x}px,${d.y}px)` }}>
+        <div ref={inner} style={{ position: "absolute", left: "50%", top: "50%", width: w || `${100 / base}%`, transform: `translate(-50%,-50%) scale(${k})`, transformOrigin: "center" }} className="flex justify-center [contain:layout]">
+          <div className={`flex w-full justify-center ${FULL.has(it.family!) ? "[&>*]:w-full" : ""}`}><LiveFamily family={it.family!} name={it.name} /></div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function useSource(it: Item | null) {
+  const [files, setFiles] = useState<DetailFile[]>([])
+  useEffect(() => {
+    setFiles([])
+    if (!it) return
+    let live = true
+    const done = (f: DetailFile[]) => live && setFiles(f)
+    if (it.kind === "prim") done([{ name: `${it.name.toLowerCase()}.tsx`, code: it.ref.source || "" }])
+    else if (it.kind === "cat") {
+      Promise.all([fetch(`/catalog-src/${it.family}.json`).then((r) => r.json()), fetch(`/catalog-src/${it.family}.css`).then((r) => r.text())])
+        .then(([j, css]) => done([{ name: `${it.name}.tsx`, code: j.fns?.[it.name] || j.full }, { name: `${it.family}.tsx (full file)`, code: j.full }, { name: `${it.family}.css`, code: css }]))
+        .catch(() => done([{ name: "source.tsx", code: "// source unavailable" }]))
+    } else if (it.kind === "glass") {
+      Promise.all([`/goat-glass/${it.ref.id}`, "/goat-glass/glass-engine.js"].map((u) => fetch(u).then((r) => r.text())))
+        .then(([h, e]) => done([{ name: `${it.ref.id}.html`, code: h }, { name: "glass-engine.js", code: e }]))
+        .catch(() => {})
+    } else {
+      fetch(bsrc(it)).then((r) => r.text()).then((h) => done([{ name: String(it.ref).split("/").pop() + (String(it.ref).endsWith(".html") ? "" : ".html"), code: h }])).catch(() => {})
+    }
+    return () => { live = false }
+  }, [it])
+  return files
 }
 
 export default function ComponentsExplorer() {
   const { theme, setTheme } = useTheme()
-  const [components, setComponents] = useState<ComponentMeta[]>([])
-  const [loading, setLoading] = useState(true)
-  const [selectedComponent, setSelectedComponent] = useState<ComponentMeta | null>(null)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState<string>("All")
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
-  const [showCode, setShowCode] = useState(false)
-  const [selectedVariant, setSelectedVariant] = useState("default")
-  const [viewportSize, setViewportSize] = useState<"desktop" | "tablet" | "mobile">("desktop")
-  const [commandMenuOpen, setCommandMenuOpen] = useState(false)
-  const [copied, setCopied] = useState(false)
+  const isLight = theme === "goat-light" || theme === "glass-frost"
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [q, setQ] = useState("")
+  const [cat, setCat] = useState("All")
+  const [sel, setSel] = useState<Item | null>(null)
+  const [shown, setShown] = useState(60)
 
-  // Load components on mount
-  useEffect(() => {
-    const loaded = componentsRegistry.map(c => {
-      const lowerName = c.name.toLowerCase();
-      const description = COMPONENT_DESCRIPTIONS[lowerName] || `${c.name} component.`;
-      return {
-        name: c.name,
-        category: c.category,
-        component: c.component,
-        description,
-        tags: [c.category.toLowerCase(), "ui", "goat-ui"],
-        status: "stable" as const,
-        lastUpdated: "2026-06-20",
-        source: c.source
-      };
-    });
-    setComponents(loaded)
-    setExpandedCategories(new Set(Array.from(new Set(loaded.map(c => c.category)))))
-    setLoading(false)
+  const items = useMemo<Item[]>(() => {
+    const prim: Item[] = componentsRegistry.map((c: any) => ({ key: `prim.${c.name}`, kind: "prim", name: c.name, category: PRIM, blurb: entryFor(c.name).blurb, ref: c }))
+    const cats: Item[] = catalogItems.map((c) => ({ key: c.id, kind: "cat", name: c.name, category: c.category, family: c.family, blurb: pretty(c.name) + " · " + c.category }))
+    const gl: Item[] = glassItems.map((g) => ({ key: `glass.${g.id}`, kind: "glass", name: g.name, category: GLASS, blurb: g.blurb, ref: g }))
+    const bl: Item[] = blockFiles.map((f) => ({ key: `block.${f}`, kind: "block", name: pretty(f.replace(/\.html$/, "")), category: BLOCKS, blurb: "Full page block", ref: `${f}.html` }))
+    const ex: Item[] = [["inline-edit", "Inline edit", "Click to edit text, Enter saves, Esc cancels."], ["rolling-countdown", "Rolling countdown", "Digits roll like a counter, with pause and resume."], ["scrolling-strip", "Scrolling strip", "Endless marquee strip."], ["overlay-scrollbar", "Overlay scrollbar", "Scroll area with a thin overlay scrollbar."], ["floating-panel", "Floating panel", "Draggable, resizable panel with minimize and close."]].map(([f, n, b]) => ({ key: `extra.${f}`, kind: "block", name: n, category: EXTRA, blurb: b, ref: `/goat-extras/${f}` }))
+    return [...gl, ...ex, ...cats, ...prim, ...bl]
   }, [])
 
-  // Get unique categories
-  const CATEGORIES = Array.from(new Set(components.map(c => c.category))).sort()
+  const categories = useMemo(() => {
+    const m = new Map<string, number>()
+    items.forEach((i) => m.set(i.category, (m.get(i.category) || 0) + 1))
+    return Array.from(m.entries()).sort((a, b) => a[0].localeCompare(b[0]))
+  }, [items])
 
-  // Filter components
-  const filteredComponents = useMemo(() => {
-    return components.filter((component: ComponentMeta) => {
-      const matchesSearch = component.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           component.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           component.tags.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-      const matchesCategory = selectedCategory === "All" || component.category === selectedCategory
-      return matchesSearch && matchesCategory
-    })
-  }, [searchQuery, selectedCategory, components])
+  const filtered = useMemo(() => {
+    const s = q.toLowerCase()
+    return items.filter((i) => (cat === "All" || i.category === cat) && (!s || i.name.toLowerCase().includes(s) || pretty(i.name).toLowerCase().includes(s) || i.category.toLowerCase().includes(s)))
+  }, [items, q, cat])
 
-  // Group components by category
-  const groupedComponents = useMemo(() => {
-    const groups: Record<string, ComponentMeta[]> = {}
-    filteredComponents.forEach((component: ComponentMeta) => {
-      if (!groups[component.category]) {
-        groups[component.category] = []
-      }
-      groups[component.category].push(component)
-    })
-    return groups
-  }, [filteredComponents])
-
-  // Toggle category expansion
-  const toggleCategory = (category: string) => {
-    setExpandedCategories(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(category)) {
-        newSet.delete(category)
-      } else {
-        newSet.add(category)
-      }
-      return newSet
-    })
-  }
-
-  // Select component
-  const selectComponent = (component: ComponentMeta) => {
-    setSelectedComponent(component)
-    setSelectedVariant("default")
-    setShowCode(false)
-  }
-
-  // Copy code to clipboard
-  const copyCode = useCallback(() => {
-    if (!selectedComponent) return
-    
-    const code = `import { ${selectedComponent.name} } from "@/components/ui/${selectedComponent.name.toLowerCase()}"
-
-export default function Example() {
-  return (
-    <${selectedComponent.name}>
-      Example
-    </${selectedComponent.name}>
-  )
-}`
-    
-    navigator.clipboard.writeText(code)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }, [selectedComponent])
-
-  // Download code
-  const downloadCode = useCallback(() => {
-    if (!selectedComponent) return
-    
-    const code = `import { ${selectedComponent.name} } from "@/components/ui/${selectedComponent.name.toLowerCase()}"
-
-export default function Example() {
-  return (
-    <${selectedComponent.name}>
-      Example
-    </${selectedComponent.name}>
-  )
-}`
-    
-    const blob = new Blob([code], { type: "text/plain" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `${selectedComponent.name.toLowerCase()}-example.tsx`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-  }, [selectedComponent])
-
-  // Keyboard shortcuts
+  useEffect(() => setShown(60), [q, cat])
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-        e.preventDefault()
-        setCommandMenuOpen(true)
-      }
-      if (e.key === "Escape") {
-        setCommandMenuOpen(false)
-      }
+    const sync = () => {
+      const h = decodeURIComponent(window.location.hash.replace("#", ""))
+      setSel(h ? items.find((i) => i.key === h) || null : null)
     }
-    
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [])
+    sync()
+    window.addEventListener("hashchange", sync)
+    return () => window.removeEventListener("hashchange", sync)
+  }, [items])
+  const open = (i: Item | null) => { setSel(i); if (typeof window !== "undefined") history.replaceState(null, "", i ? `#${encodeURIComponent(i.key)}` : window.location.pathname); window.scrollTo?.(0, 0) }
+  const files = useSource(sel)
+  const [variant, setVariant] = useState("default")
+  useEffect(() => setVariant("default"), [sel])
+  const mainRef = React.useRef<HTMLElement>(null)
+  useEffect(() => { mainRef.current?.scrollTo?.(0, 0) }, [sel])
 
-  // Viewport size classes
-  const viewportClasses = {
-    desktop: "w-full",
-    tablet: "max-w-[768px] mx-auto",
-    mobile: "max-w-[375px] mx-auto",
+
+  const preview = (it: Item): { node: React.ReactNode; fill?: boolean } => {
+    if (it.kind === "prim") return { node: renderComponentDemo(it.ref.component, it.name, variant) }
+    if (it.kind === "cat") return { node: <DetailStage it={it} /> }
+    if (it.kind === "glass") return { node: <div className="mx-auto w-full max-w-[800px] overflow-hidden rounded-xl border border-border"><ScaledFrame src={`/goat-glass/${it.ref.id}`} title={it.name} w={800} h={600} /></div>, fill: true }
+    return it.category === EXTRA ? { node: <div className="w-full overflow-hidden rounded-xl border border-border bg-white"><ScaledFrame src={bsrc(it)} title={it.name} w={bw(it)} h={300} maxScale={1.6} /></div>, fill: true } : { node: <ScaledFrame src={bsrc(it)} title={it.name} w={1280} h={800} />, fill: true }
   }
 
   return (
-    <div className="flex h-screen bg-background text-foreground overflow-hidden">
-      {/* Left Sidebar */}
-      <aside className="w-[280px] border-r border-border bg-card flex flex-col">
-        {/* Logo */}
-        <div className="p-6 border-b border-border">
+    <div className="flex h-[100dvh] overflow-hidden bg-background text-foreground">
+      <div onClick={() => setSidebarOpen(false)} className={`liq-backdrop fixed inset-0 z-40 bg-black/60 lg:hidden ${sidebarOpen ? "is-open" : "pointer-events-none"}`} />
+      <aside className={`liq-drawer fixed inset-y-0 left-0 z-50 flex w-[280px] max-w-[85vw] flex-col border-r border-border bg-card lg:static lg:z-auto lg:translate-x-0 ${sidebarOpen ? "is-open" : ""}`}>
+        <span aria-hidden className="liq-bulge lg:hidden" />
+        <div className="relative border-b border-border p-6">
           <Link href="/" className="flex items-center gap-3" aria-label="Back to home">
-            {/* old logo tile: <div className="w-10 h-10 rounded-xl bg-primary ..."><Component .../></div> */}
-            <div className="w-10 h-10 rounded-xl bg-neutral-950 border border-border flex items-center justify-center">
-              <img src="/goat-red/assets/goat-logo.png" alt="" className="w-6 h-6 object-contain" />
-            </div>
-            <div>
-              <h1 className="font-bold text-lg tracking-wide">GOAT UI</h1>
-              <p className="text-xs text-muted-foreground">v0.1.0</p>
-            </div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-neutral-950"><img src="/goat-red/assets/goat-logo.png" alt="" className="h-6 w-6 object-contain" /></div>
+            <div><h1 className="text-lg font-bold tracking-wide">GOAT UI</h1><p className="text-xs text-muted-foreground">v0.1.0</p></div>
           </Link>
+          <button onClick={() => setSidebarOpen(false)} className="absolute right-3 top-5 rounded-lg p-2 text-muted-foreground hover:bg-muted lg:hidden" aria-label="Close menu"><X className="h-5 w-5" /></button>
         </div>
-
-        {/* Search */}
         <div className="p-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search components..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-            />
-            <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-0.5 text-xs bg-muted rounded">⌘K</kbd>
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Search ${items.length} components...`} className="w-full rounded-lg border border-border bg-background py-2 pl-10 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50" />
           </div>
         </div>
-
-        {/* Categories */}
         <div className="flex-1 overflow-y-auto px-4 pb-4">
-          <div className="space-y-0.5">
-            <p className="px-3 pb-1 pt-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Categories</p>
-            {[["All", components.length] as [string, number], ...CATEGORIES.map(c => [c, components.filter(x => x.category === c).length] as [string, number])].map(([cat, n]) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
-                  selectedCategory === cat ? "bg-muted font-semibold text-foreground" : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-                }`}
-              >
-                <span className="flex items-center gap-2">
-                  {React.createElement(cat === "All" ? Grid : entryFor((components.find(x => x.category === cat) || { name: "" }).name).icon, { className: "w-4 h-4" })}
-                  {cat === "All" ? "All components" : cat}
-                </span>
+          <p className="px-3 pb-1 pt-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Categories</p>
+          {[["All", items.length] as [string, number], ...categories].map(([c, n], idx) => {
+                        return (
+              <button key={c} style={{ "--i": idx } as React.CSSProperties} onClick={() => { setCat(c); open(null); setSidebarOpen(false) }} className={`liq-item flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors ${cat === c ? "bg-muted font-semibold text-foreground" : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"}`}>
+                <span className="flex items-center gap-2"><CategoryIcon name={c} className="h-4 w-4" />{c === "All" ? "All components" : c}</span>
                 <span className="text-xs opacity-60">{n}</span>
               </button>
-            ))}
-          </div>
-          {/* old nested tree sidebar (disabled):
-          <div className="space-y-1">
-            <button
-              onClick={() => setSelectedCategory("All")}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                selectedCategory === "All" ? "bg-primary text-primary-foreground" : "hover:bg-muted"
-              }`}
-            >
-              <span>All Components</span>
-              <span className="text-xs opacity-60">{components.length}</span>
-            </button>
-            
-            {CATEGORIES.map(category => (
-              <div key={category}>
-                <button
-                  onClick={() => toggleCategory(category)}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    selectedCategory === category ? "bg-primary text-primary-foreground" : "hover:bg-muted"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    {expandedCategories.has(category) ? (
-                      <ChevronDown className="w-4 h-4" />
-                    ) : (
-                      <ChevronRight className="w-4 h-4" />
-                    )}
-                    <span>{category}</span>
-                  </div>
-                  <span className="text-xs opacity-60">
-                    {groupedComponents[category]?.length || 0}
-                  </span>
-                </button>
-                
-                <AnimatePresence>
-                  {expandedCategories.has(category) && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="ml-4 space-y-1 overflow-hidden"
-                    >
-                      {(groupedComponents[category] || []).map(component => (
-                        <button
-                          key={component.name}
-                          onClick={() => selectComponent(component)}
-                          className={`w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                            selectedComponent?.name === component.name 
-                              ? "bg-primary/20 text-primary" 
-                              : "hover:bg-muted text-muted-foreground"
-                          }`}
-                        >
-                          { /* old generic icon: <Component className="w-3.5 h-3.5" /> * /}
-                          {React.createElement(entryFor(component.name).icon, { className: "w-3.5 h-3.5" })}
-                          <span>{component.name}</span>
-                        </button>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ))}
-          </div>
-          */}
+            )
+          })}
         </div>
-
-        {/* Bottom Actions */}
-        <div className="p-4 border-t border-border space-y-2">
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-sm"
-          >
-            {theme === "dark" ? (
-              <Sun className="w-4 h-4" />
-            ) : (
-              <Moon className="w-4 h-4" />
-            )}
-            <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
-          </button>
-          <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-sm">
-            <Settings className="w-4 h-4" />
-            <span>Settings</span>
+        <div className="space-y-2 border-t border-border p-4">
+          <button onClick={() => setTheme(isLight ? "leather-black" : "goat-light")} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted">
+            {!isLight ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            <span>{!isLight ? "Light Mode" : "Dark Mode"}</span>
           </button>
         </div>
       </aside>
 
-      {/* Center Content */}
-      <main className="flex-1 overflow-y-auto">
-        {!selectedComponent ? (
-          <div className="p-8">
-            <div className="max-w-6xl mx-auto">
+      <main ref={mainRef} className="min-w-0 flex-1 overflow-y-auto">
+        <div className="sticky top-0 z-30 flex items-center gap-3 border-b border-border bg-background/90 px-4 py-3 backdrop-blur lg:hidden">
+          <button onClick={() => setSidebarOpen(true)} className="rounded-lg border border-border p-2 hover:bg-muted" aria-label="Open menu"><Menu className="h-5 w-5" /></button>
+          <span className="font-semibold tracking-wide">GOAT UI</span>
+          <span className="ml-auto text-xs text-muted-foreground">{filtered.length} items</span>
+        </div>
+        {!sel ? (
+          <div className="p-4 sm:p-8">
+            <div className="mx-auto max-w-7xl">
               <div className="mb-6">
-                <h2 className="text-3xl font-bold mb-2">Components</h2>
-                <p className="text-muted-foreground">
-                  Explore {components.length} production-ready UI components for your next project.
-                </p>
+                <h2 className="mb-2 text-2xl font-bold sm:text-3xl">Components</h2>
+                <p className="text-muted-foreground">{items.length} components and blocks. Every card is a live render, open one to use it and copy the code.</p>
               </div>
               <div className="mb-6 flex flex-wrap items-center gap-2">
-                {["All", ...CATEGORIES].map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
-                      selectedCategory === cat ? "border-foreground bg-foreground text-background" : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/40"
-                    }`}
-                  >
-                    {cat}
-                  </button>
+                {["All", ...categories.map((c) => c[0])].map((c) => (
+                  <button key={c} onClick={() => setCat(c)} className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${cat === c ? "border-foreground bg-foreground text-background" : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"}`}>{c}</button>
                 ))}
-                <span className="ml-auto text-xs text-muted-foreground">{filteredComponents.length} results</span>
+                <span className="ml-auto text-xs text-muted-foreground">{filtered.length} results</span>
               </div>
-
-              {/* Liquid glass items (own engine, previews are scaled live renders) */}
-              {selectedCategory === "All" && searchQuery === "" && (
-                <div className="mb-10">
-                  <div className="mb-3 flex items-baseline justify-between">
-                    <h3 className="text-lg font-semibold">Liquid glass</h3>
-                    <Link href="/glass" className="text-xs text-muted-foreground hover:text-foreground">View all →</Link>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-                    {glassItems.map((g) => (
-                      <Link key={g.id} href={`/glass#${g.id}`} className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
-                        <div className="relative h-44 overflow-hidden border-b border-border bg-muted/30">
-                          <iframe src={`/goat-glass/${g.id}`} title={g.name} loading="lazy" tabIndex={-1} className="pointer-events-none absolute left-1/2 top-0 origin-top border-0" style={{ width: 800, height: 600, transform: "translateX(-50%) scale(0.5)", marginTop: -62 }} />
-                          <div className="absolute inset-0 flex items-end justify-between gap-2 bg-gradient-to-t from-background/80 via-transparent to-transparent p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                            <span className="rounded-md bg-foreground px-3 py-1.5 text-xs font-semibold text-background">Open</span>
-                          </div>
-                        </div>
-                        <div className="p-4">
-                          <h3 className="font-semibold leading-tight">{g.name}</h3>
-                          <p className="truncate text-xs text-muted-foreground">{g.blurb}</p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
+              {filtered.length === 0 ? <p className="py-12 text-center text-muted-foreground">Nothing matches your search.</p> : (
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                  {filtered.slice(0, shown).map((it) => (
+                    <button key={it.key} onClick={() => open(it)} className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card text-left transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
+                      <div className="relative h-44 w-full overflow-hidden border-b border-border bg-muted/30">
+                        <Thumb it={it} />
+                        <div className="absolute inset-0 flex items-end bg-gradient-to-t from-background/80 via-transparent to-transparent p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100"><span className="rounded-md bg-foreground px-3 py-1.5 text-xs font-semibold text-background">Open</span></div>
+                      </div>
+                      <div className="flex w-full items-center gap-3 p-4">
+                        <div className="min-w-0"><h3 className="truncate font-semibold leading-tight">{pretty(it.name)}</h3><p className="truncate text-xs text-muted-foreground">{it.blurb}</p></div>
+                        <span className="ml-auto shrink-0 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">{it.category}</span>
+                      </div>
+                    </button>
+                  ))}
                 </div>
               )}
-
-              {/* Component Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-                {loading ? (
-                  <div className="col-span-full text-center py-12">
-                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                    <p className="mt-4 text-muted-foreground">Loading components...</p>
-                  </div>
-                ) : filteredComponents.length === 0 ? (
-                  <div className="col-span-full text-center py-12">
-                    <p className="text-muted-foreground">No components found matching your search.</p>
-                  </div>
-                ) : (
-                  filteredComponents.map((component: ComponentMeta) => (
-                    /* old plain card (generic icon):
-                    <motion.div
-                      key={component.name}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      whileHover={{ y: -4 }}
-                      onClick={() => selectComponent(component)}
-                      className="group p-6 rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 cursor-pointer transition-all duration-300"
-                    >
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                          <Component className="w-6 h-6 text-primary" />
-                        </div>
-                        <span className={`px-2 py-1 text-xs rounded-full ${
-                          component.status === "stable" 
-                            ? "bg-green-500/10 text-green-500" 
-                            : "bg-yellow-500/10 text-yellow-500"
-                        }`}>
-                          {component.status}
-                        </span>
-                      </div>
-                      <h3 className="font-semibold text-lg mb-2">{component.name}</h3>
-                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                        {component.description}
-                      </p>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        {component.tags.map((tag: string) => (
-                          <span key={tag} className="px-2 py-0.5 text-xs bg-muted rounded">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </motion.div>
-                    */
-                    <motion.div
-                      key={component.name}
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      whileHover={{ y: -3 }}
-                      onClick={() => selectComponent(component)}
-                      className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 cursor-pointer transition-all duration-300"
-                    >
-                      <div className="relative">
-                        <div className="flex h-44 items-center justify-center overflow-hidden border-b border-border bg-muted/30 p-4 pointer-events-none select-none transition-transform duration-300 group-hover:scale-[1.03]">
-                          {entryFor(component.name).preview}
-                        </div>
-                        <div className="absolute inset-0 flex items-end justify-between gap-2 bg-gradient-to-t from-background/80 via-transparent to-transparent p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                          <span className="rounded-md bg-foreground px-3 py-1.5 text-xs font-semibold text-background">Open</span>
-                          <span
-                            role="button"
-                            onClick={(e) => { e.stopPropagation(); navigator.clipboard?.writeText(`import { ${component.name} } from "@/components/ui/${component.name.toLowerCase()}"`) }}
-                            className="flex items-center gap-1 rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-muted"
-                          >
-                            <Copy className="h-3 w-3" /> Copy import
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 p-4">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                          {React.createElement(entryFor(component.name).icon, { className: "h-4 w-4" })}
-                        </div>
-                        <div className="min-w-0">
-                          <h3 className="font-semibold leading-tight">{component.name}</h3>
-                          <p className="truncate text-xs text-muted-foreground">{entryFor(component.name).blurb}</p>
-                        </div>
-                        <span className="ml-auto shrink-0 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">{component.category}</span>
-                      </div>
-                    </motion.div>
-                  ))
-                )}
-              </div>
+              {filtered.length > shown && (
+                <div className="mt-8 flex justify-center"><button onClick={() => setShown((n) => n + 60)} className="rounded-lg border border-border px-5 py-2 text-sm font-medium hover:bg-muted">Show more ({filtered.length - shown} left)</button></div>
+              )}
             </div>
           </div>
         ) : (
-          <div className="p-8">
-            <div className="max-w-4xl mx-auto">
-              {/* Component Header */}
-              <div className="mb-8">
-                <button
-                  onClick={() => setSelectedComponent(null)}
-                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
-                >
-                  <ChevronRight className="w-4 h-4 rotate-[-90deg]" />
-                  Back to Components
-                </button>
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h2 className="text-3xl font-bold mb-2">{selectedComponent?.name}</h2>
-                    <p className="text-muted-foreground">{selectedComponent?.description}</p>
-                  </div>
-                  <span className={`px-3 py-1 text-sm rounded-full ${
-                    selectedComponent?.status === "stable" 
-                      ? "bg-green-500/10 text-green-500" 
-                      : "bg-yellow-500/10 text-yellow-500"
-                  }`}>
-                    {selectedComponent?.status}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  {selectedComponent?.tags.map((tag: string) => (
-                    <span key={tag} className="px-2 py-1 text-sm bg-muted rounded">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Variant Showcase */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold mb-4">Variants</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-                  {(selectedComponent?.variants || ["default", "secondary", "outline", "ghost"]).map((variant: string) => (
-                    <button
-                      key={variant}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${
-                        selectedVariant === variant
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "bg-background border-border hover:border-primary/50"
-                      }`}
-                    >
-                      {variant}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Live Preview */}
-              <div className="mb-8">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold">Live Preview</h3>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setViewportSize("desktop")}
-                      className={`p-2 rounded-lg transition-colors ${
-                        viewportSize === "desktop" ? "bg-primary text-primary-foreground" : "hover:bg-muted"
-                      }`}
-                    >
-                      <Desktop className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setViewportSize("tablet")}
-                      className={`p-2 rounded-lg transition-colors ${
-                        viewportSize === "tablet" ? "bg-primary text-primary-foreground" : "hover:bg-muted"
-                      }`}
-                    >
-                      <Tablet className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setViewportSize("mobile")}
-                      className={`p-2 rounded-lg transition-colors ${
-                        viewportSize === "mobile" ? "bg-primary text-primary-foreground" : "hover:bg-muted"
-                      }`}
-                    >
-                      <Smartphone className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-                <div className={`p-8 rounded-xl border border-border bg-card ${viewportClasses[viewportSize]} transition-all duration-300`}>
-                  <div className="flex items-center justify-center min-h-[200px] w-full overflow-auto">
-                    {selectedComponent && renderComponentDemo(selectedComponent.component, selectedComponent.name, selectedVariant)}
-                  </div>
-                </div>
-              </div>
-
-              {/* Code Playground */}
-              <div className="mb-8">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold">Code</h3>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setShowCode(!showCode)}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted transition-colors text-sm"
-                    >
-                      <Code className="w-4 h-4" />
-                      {showCode ? "Hide Code" : "Show Code"}
-                    </button>
-                    <button
-                      onClick={copyCode}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted transition-colors text-sm"
-                    >
-                      {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-                      {copied ? "Copied!" : "Copy"}
-                    </button>
-                    <button
-                      onClick={downloadCode}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted transition-colors text-sm"
-                    >
-                      <Download className="w-4 h-4" />
-                      Download
-                    </button>
-                  </div>
-                </div>
-                
-                <AnimatePresence>
-                  {showCode && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="p-4 rounded-xl bg-muted/50 border border-border">
-                        <pre className="text-sm overflow-x-auto">
-                          <code>{`import { ${selectedComponent?.name} } from "@/components/ui/${selectedComponent?.name.toLowerCase()}"
-
-export default function Example() {
-  return (
-    <${selectedComponent?.name} variant="${selectedVariant}">
-      Example
-    </${selectedComponent?.name}>
-  )
-}`}</code>
-                        </pre>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
+          <div className="p-4 sm:p-8">
+            <DetailView
+              title={pretty(sel.name)}
+              category={sel.category}
+              description={sel.kind === "cat" ? `${pretty(sel.name)} from the ${sel.category} set. Live and interactive, copy the code below.` : sel.blurb}
+              status={sel.kind === "prim" ? "stable" : undefined}
+              preview={preview(sel).node}
+              fillPreview={preview(sel).fill}
+              files={files.length ? files : [{ name: "loading…", code: "" }]}
+              usage={sel.kind === "cat" ? `import { ${sel.name} } from "@/components/${sel.family}"\n\nexport default function Example() {\n  return <${sel.name} />\n}` : sel.kind === "prim" ? `import { ${sel.name} } from "@/components/ui/${sel.name.toLowerCase()}"\n\nexport default function Example() {\n  return <${sel.name} />\n}` : undefined}
+              variants={sel.kind === "prim" ? ["default", "secondary", "outline", "ghost"] : undefined}
+              variant={variant}
+              onVariant={setVariant}
+              onBack={() => open(null)}
+              meta={[["Category", sel.category]]}
+            />
           </div>
         )}
       </main>
+    </div>
+  )
+}
 
-      {/* Right Properties Panel */}
-      {selectedComponent && (
-        <aside className="w-[320px] border-l border-border bg-card overflow-y-auto">
-          <div className="p-6">
-            <h3 className="text-lg font-semibold mb-6">Properties</h3>
-            
-            {/* Metadata */}
-            <div className="space-y-4 mb-8">
-              <div className="flex items-center justify-between py-2 border-b border-border">
-                <span className="text-sm text-muted-foreground">Name</span>
-                <span className="text-sm font-medium">{selectedComponent?.name}</span>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b border-border">
-                <span className="text-sm text-muted-foreground">Category</span>
-                <span className="text-sm font-medium">{selectedComponent?.category}</span>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b border-border">
-                <span className="text-sm text-muted-foreground">Status</span>
-                <span className={`text-sm font-medium ${
-                  selectedComponent?.status === "stable" ? "text-green-500" : "text-yellow-500"
-                }`}>
-                  {selectedComponent?.status}
-                </span>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b border-border">
-                <span className="text-sm text-muted-foreground">Last Updated</span>
-                <span className="text-sm font-medium">
-                  {selectedComponent?.lastUpdated ? new Date(selectedComponent.lastUpdated).toLocaleDateString() : 'N/A'}
-                </span>
-              </div>
-            </div>
-
-            {/* Props */}
-            <div className="mb-8">
-              <h4 className="text-sm font-semibold mb-4 flex items-center gap-2">
-                <TagIcon className="w-4 h-4" />
-                Props
-              </h4>
-              <div className="space-y-3">
-                <div className="p-3 rounded-lg bg-muted/50">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-mono font-medium">variant</span>
-                    <span className="text-xs text-muted-foreground">string</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground">Component style variant</p>
-                </div>
-                <div className="p-3 rounded-lg bg-muted/50">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-mono font-medium">size</span>
-                    <span className="text-xs text-muted-foreground">string</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground">Component size</p>
-                </div>
-                <div className="p-3 rounded-lg bg-muted/50">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-mono font-medium">disabled</span>
-                    <span className="text-xs text-muted-foreground">boolean</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground">Disable interaction</p>
-                </div>
-                <div className="p-3 rounded-lg bg-muted/50">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-mono font-medium">className</span>
-                    <span className="text-xs text-muted-foreground">string</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground">Additional CSS classes</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Accessibility */}
-            <div>
-              <h4 className="text-sm font-semibold mb-4 flex items-center gap-2">
-                <Shield className="w-4 h-4" />
-                Accessibility
-              </h4>
-              <div className="p-3 rounded-lg bg-muted/50">
-                <p className="text-xs text-muted-foreground">
-                  This component follows WAI-ARIA best practices and is fully keyboard accessible.
-                </p>
-              </div>
-            </div>
-          </div>
-        </aside>
-      )}
-
-      {/* Command Menu */}
-      <AnimatePresence>
-        {commandMenuOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50"
-              onClick={() => setCommandMenuOpen(false)}
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xl bg-card border border-border rounded-xl shadow-2xl z-50 overflow-hidden"
-            >
-              <div className="p-4 border-b border-border">
-                <div className="flex items-center gap-3">
-                  <Search className="w-5 h-5 text-muted-foreground" />
-                  <input
-                    type="text"
-                    placeholder="Search components, variants, props..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="flex-1 bg-transparent border-none outline-none text-sm"
-                    autoFocus
-                  />
-                  <kbd className="px-2 py-1 text-xs bg-muted rounded">ESC</kbd>
-                </div>
-              </div>
-              <div className="max-h-[400px] overflow-y-auto p-2">
-                {filteredComponents.slice(0, 10).map(component => (
-                  <button
-                    key={component.name}
-                    onClick={() => {
-                      selectComponent(component)
-                      setCommandMenuOpen(false)
-                    }}
-                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-left"
-                  >
-                    <Component className="w-4 h-4 text-muted-foreground" />
-                    <div className="flex-1">
-                      <div className="text-sm font-medium">{component.name}</div>
-                      <div className="text-xs text-muted-foreground">{component.category}</div>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+function DetailStage({ it }: { it: Item }) {
+  const f = React.useRef<HTMLDivElement>(null)
+  const c = React.useRef<HTMLDivElement>(null)
+  const [k, setK] = useState(1)
+  const [hh, setHh] = useState<number | undefined>(undefined)
+  useEffect(() => {
+    const fit = () => {
+      const fe = f.current, ce = c.current
+      if (!fe || !ce) return
+      const cs = getComputedStyle(fe)
+      const avail = fe.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
+      const sc = ce.getBoundingClientRect().width / Math.max(1, ce.offsetWidth) || 1
+      let ul = 1e9, ur = -1e9
+      ce.querySelectorAll("*").forEach((el) => { const e = el as HTMLElement; if (e.children.length) return; const q = e.getBoundingClientRect(); if (q.width < 2 || q.height < 2) return; ul = Math.min(ul, q.left); ur = Math.max(ur, q.right) })
+      const natural = ur > ul ? (ur - ul) / sc : 0
+      const kk = natural > avail && avail > 0 ? Math.max(0.3, avail / natural) : 1
+      setK((p) => (Math.abs(p - kk) > 0.01 ? kk : p))
+      setHh(ce.offsetHeight * kk)
+    }
+    const ts = [200, 800, 2000].map((ms) => setTimeout(fit, ms))
+    const ro = new ResizeObserver(fit)
+    if (f.current) ro.observe(f.current)
+    return () => { ts.forEach(clearTimeout); ro.disconnect() }
+  }, [it.name])
+  const d = useCenterShift(f, c, `${it.name}|${k}`)
+  return (
+    <div ref={f} style={{ background: STAGE_BG[it.family!] || "hsl(var(--card))", color: STAGE_BG[it.family!] ? "#1b1b18" : "hsl(var(--foreground))" }} className="flex min-h-[320px] w-full min-w-0 items-center justify-center overflow-hidden rounded-lg p-3 sm:p-6">
+      <div style={{ height: hh, width: "100%" }} className="flex items-center justify-center">
+        <div ref={c} style={{ transform: `translate(${d.x}px,${d.y}px) scale(${k})`, transformOrigin: "center" }} className={`flex w-full flex-none justify-center ${FULL.has(it.family!) ? "[&>*]:w-full" : ""}`}><LiveFamily family={it.family!} name={it.name} /></div>
+      </div>
     </div>
   )
 }

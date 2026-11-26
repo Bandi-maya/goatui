@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 /* ------------------------------------------------------------------ */
 /* shared demo data                                                    */
@@ -774,20 +774,26 @@ const CAL_EVENTS: Record<number, { label: string; cls?: string }[]> = {
 };
 
 export function CalendarEventTable() {
+  const [off, setOff] = useState(0); // months away from November 2026
+  const first = new Date(2026, 10 + off, 1);
+  const dim = new Date(2026, 11 + off, 0).getDate();
+  const lead = (first.getDay() + 6) % 7; // Monday first
+  const isNov = off === 0;
   const weeks: (number | null)[][] = [];
-  let day = 1 - 6; // Nov 2026 starts on Sunday; offset so week starts Monday
-  while (day <= 30) {
+  let day = 1 - lead;
+  while (day <= dim) {
     const wk: (number | null)[] = [];
-    for (let i = 0; i < 7; i++, day++) wk.push(day >= 1 && day <= 30 ? day : null);
+    for (let i = 0; i < 7; i++, day++) wk.push(day >= 1 && day <= dim ? day : null);
     weeks.push(wk);
   }
+  const title = first.toLocaleString("en-US", { month: "long", year: "numeric" });
   return (
     <div className="tf-root tfv18 tf-anim-enter">
       <div className="tfv18-head">
-        <h3>November 2026</h3>
+        <h3>{title}</h3>
         <span style={{ display: "flex", gap: 8 }}>
-          <button className="tf-btn" aria-label="Previous month">‹</button>
-          <button className="tf-btn" aria-label="Next month">›</button>
+          <button className="tf-btn" aria-label="Previous month" onClick={() => setOff((o) => o - 1)}>‹</button>
+          <button className="tf-btn" aria-label="Next month" onClick={() => setOff((o) => o + 1)}>›</button>
         </span>
       </div>
       <table>
@@ -799,8 +805,8 @@ export function CalendarEventTable() {
                 <td key={di} className={d === null ? "dim" : ""}>
                   {d !== null && (
                     <>
-                      <span className={"tfv18-day tf-num" + (d === 24 ? " today" : "")}>{d}</span>
-                      {(CAL_EVENTS[d] ?? []).map((e) => (
+                      <span className={"tfv18-day tf-num" + (isNov && d === 24 ? " today" : "")}>{d}</span>
+                      {(isNov ? CAL_EVENTS[d] ?? [] : []).map((e) => (
                         <span key={e.label} className={"tfv18-ev" + (e.cls ? " " + e.cls : "")}>{e.label}</span>
                       ))}
                     </>
@@ -920,20 +926,33 @@ const FILE_ICONS: Record<string, { icon: React.ReactNode; bg: string; fg: string
   },
 };
 
+const FM_FULL = ["goatui", "public", "assets"];
 export function FileManagerTable() {
-  const max = Math.max(...FILES.map((f) => f.size));
+  const [depth, setDepth] = useState(3); // how many crumbs of goatui/public/assets are open
+  const rows = depth >= 3
+    ? FILES
+    : [
+        { name: FM_FULL[depth], kind: "folder", size: 0, mod: "Nov 20" },
+        { name: depth === 1 ? "package.json" : "favicon.ico", kind: "code", size: 0.02, mod: "Nov 12" },
+      ];
+  const max = Math.max(...rows.map((f) => f.size));
   return (
     <div className="tf-root tfv21 tf-anim-enter">
       <div className="tfv21-crumbs">
-        <button>goatui</button><span>/</span><button>public</button><span>/</span><strong>assets</strong>
+        {FM_FULL.slice(0, depth).map((c, i) => (
+          <React.Fragment key={c}>
+            {i > 0 && <span>/</span>}
+            {i === depth - 1 ? <strong>{c}</strong> : <button onClick={() => setDepth(i + 1)}>{c}</button>}
+          </React.Fragment>
+        ))}
       </div>
       <table>
         <thead><tr><th>Name</th><th>Size</th><th>Modified</th></tr></thead>
         <tbody>
-          {FILES.map((f) => {
+          {rows.map((f) => {
             const ic = FILE_ICONS[f.kind];
             return (
-              <tr key={f.name}>
+              <tr key={f.name} onClick={() => f.kind === "folder" && setDepth((d) => Math.min(3, d + 1))} style={f.kind === "folder" ? { cursor: "pointer" } : undefined}>
                 <td><span className="tfv21-ico" style={{ background: ic.bg, color: ic.fg }}>{ic.icon}</span>{f.name}</td>
                 <td>
                   {f.size > 0 && (

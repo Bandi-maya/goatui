@@ -7,7 +7,7 @@
 .gs.t-paper{--bg:#f6f3ec;--fg:#1a1814;--mut:#6b655a;--line:rgba(26,24,20,.14);--ac:#e5471f;--acf:#fff;--card:rgba(26,24,20,.04)}
 .gs.t-sea{--bg:#071a1f;--fg:#e6fbff;--mut:#8fb4bd;--line:rgba(160,240,255,.14);--ac:#22d3ee;--acf:#04222a;--card:rgba(160,240,255,.05)}
 .gs.t-ember{--bg:#140a07;--fg:#fff1e8;--mut:#c4a493;--line:rgba(255,170,120,.16);--ac:#ff7a3d;--acf:#1a0a03;--card:rgba(255,170,120,.06)}
-.gs.t-violet{--bg:#0e0a1f;--fg:#f1ecff;--mut:#a79fc9;--line:rgba(190,170,255,.16);--ac:#a78bfa;--acf:#120a2e;--card:rgba(190,170,255,.06)}
+.gs.t-violet{--bg:#07101f;--fg:#ecf3ff;--mut:#9fb4d6;--line:rgba(140,180,255,.16);--ac:#7db1ff;--acf:#071428;--card:rgba(140,180,255,.06)}
 .gs.t-sand{--bg:#ede4d3;--fg:#241d12;--mut:#6f6450;--line:rgba(36,29,18,.16);--ac:#1f6f4a;--acf:#f4fff8;--card:rgba(36,29,18,.05)}
 .gs.t-lime{--bg:#d8f56a;--fg:#10130a;--mut:#4b5320;--line:rgba(16,19,10,.18);--ac:#10130a;--acf:#d8f56a;--card:rgba(16,19,10,.06)}
 .gs.t-rose{--bg:#1c0b14;--fg:#ffe9f2;--mut:#c9a0b4;--line:rgba(255,150,200,.16);--ac:#fb7185;--acf:#240812;--card:rgba(255,150,200,.06)}
@@ -113,7 +113,7 @@ kbd{font:inherit;font-size:11px;padding:2px 8px;border:1px solid var(--line);bor
 .gs-mock{position:absolute;inset:0;padding:20px;display:flex;flex-direction:column;gap:16px}
 .gs-mock.wire{background:#1a2142;color:#6c7aa8}
 .gs-mock.wire *{border:1px dashed #4a5683;background:transparent!important;border-radius:4px}
-.gs-mock.done{background:linear-gradient(160deg,#1e3a8a,#312e81 60%,#0a1230)}
+.gs-mock.done{background:linear-gradient(160deg,#1e3a8a,#1e3a8a 60%,#0a1230)}
 .gs-mock-nav{display:flex;gap:12px;align-items:center;height:20px}.gs-mock-nav i{width:32px;height:16px}.gs-mock-nav span{width:40px;height:8px;margin-left:auto}.gs-mock-nav span+span{margin-left:0}
 .gs-mock-h{display:flex;flex-direction:column;gap:8px;margin-top:12px}.gs-mock-h b{display:block;height:28px;width:70%}.gs-mock-h b+b{width:48%}
 .gs-mock-p{display:flex;flex-direction:column;gap:8px}.gs-mock-p u{display:block;height:8px;width:60%}.gs-mock-p u+u{width:40%}

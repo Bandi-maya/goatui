@@ -258,7 +258,6 @@ img{display:block;max-width:100%}
   .hero-in .play{width:3.6vw;height:3.6vw;min-width:30px;min-height:30px}
   html[data-theme=dark] .hero-foot .socials{display:none}
   html[data-theme=light] .hero{height:min(96vh,42.5vw)}
-  html[data-theme=dark] .theme-toggle{display:none}
   .nav .cta{padding:6px 16px;font-size:11px}
   .nav .links a{font-size:11px}
 }
@@ -773,11 +772,15 @@ html[data-theme=light] footer{--ink:#f2f4f8;--muted:#98a2b6;--line:rgba(242,244,
   if(!reduce){ setInterval(function(){ order.push(order.shift()); applyFlow(); }, 4200); }
 
   // theme toggle
-  try{ var savedTheme = localStorage.getItem('goat-theme'); if(savedTheme){ document.documentElement.setAttribute('data-theme', savedTheme); } }catch(e){}
+  function normT(v){ return (v==='goat-light'||v==='glass-frost'||v==='light') ? 'light' : 'dark'; }
+  function readT(){ try{ var v=localStorage.getItem('goat-theme'); if(v) return normT(v); }catch(e){} return 'dark'; }
+  function setT(t){ document.documentElement.setAttribute('data-theme', t); }
+  setT(readT());
+  addEventListener('storage', function(e){ if(e.key==='goat-theme') setT(readT()); });
   document.getElementById('themeToggle').addEventListener('click', function(){
     var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', next);
-    try{ localStorage.setItem('goat-theme', next); }catch(e){}
+    setT(next);
+    try{ localStorage.setItem('goat-theme', next==='light' ? 'goat-light' : 'leather-black'); }catch(e){}
   });
 
   // reveals

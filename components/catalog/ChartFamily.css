@@ -432,7 +432,7 @@
   animation-delay: var(--gf-d, 0ms);
 }
 .gf-grouped-pair .ga { background: var(--gf-accent); }
-.gf-grouped-pair .gb { background: #f472b6; }
+.gf-grouped-pair .gb { background: #60a5fa; }
 
 /* --- 18 TrendBadgeCard --- */
 .gf-trendbadge { display: flex; flex-direction: column; gap: 10px; }
@@ -535,7 +535,7 @@
 .gf-flip-front { background: #f6f7fd; }
 .gf-flip-back { background: var(--gf-ink); color: #fff; transform: rotateY(180deg); }
 .gf-back-row { font-size: 12.5px; font-variant-numeric: tabular-nums; }
-.gf-back-row b { color: #a5b4fc; }
+.gf-back-row b { color: #9cc4ff; }
 
 /* --- 26 WaterfallChart --- */
 .gf-wf { animation: gf-rise 480ms var(--gf-ease-out) both; animation-delay: var(--gf-d, 0ms); }

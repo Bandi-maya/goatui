@@ -1,0 +1,30 @@
+<!doctype html><meta charset=utf-8><title>Inline edit (own code)</title>
+<style>@font-face{font-family:GOATText;src:url(/goat-extras/GOATText.woff2) format("woff2");font-weight:100 900}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;height:100vh;overflow:hidden;font-family:GOATText,system-ui,sans-serif;font-size:16px;line-height:1.5;color:#000;-webkit-font-smoothing:antialiased;text-rendering:geometricprecision}
+#r{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:300px;display:flex;flex-direction:column;align-items:center;text-align:center}
+#a{display:block}
+input{font:inherit;color:inherit;background:transparent;border:0;outline:0;padding:0;width:199px;height:24px}
+input:focus{outline:2px solid rgb(47,133,90);outline-offset:2px}
+::selection{background-color:#0073ff4d}
+#bw{margin-top:12px}
+#e,#s,#c{display:inline-flex;align-items:center;justify-content:center;font:inherit;font-weight:500;padding:4px 16px;cursor:pointer;border-radius:0;color:#000}
+#e,#c{background:#fff;border:1px solid rgb(212,212,216);height:34px}
+#s{background:rgb(56,161,105);color:#fff;border:0;height:32px}
+#row{display:flex;gap:8px}
+button:focus-visible{outline:2px solid rgb(47,133,90);outline-offset:2px}
+#e:hover,#c:hover{background:rgb(244,244,245)}
+#s:hover{background:rgb(47,133,90)}
+[hidden]{display:none!important}
+</style>
+<div id=r><div id=a><input id=i placeholder="Enter text..." hidden aria-label="Value"><span id=p>Enter text...</span></div>
+<div id=bw><button id=e type=button>Edit</button><div id=row hidden><button id=s type=button>Save</button><button id=c type=button>Cancel</button></div></div></div>
+<script>
+const $=id=>document.getElementById(id),i=$('i'),p=$('p'),e=$('e'),row=$('row');let val='',ed=false;
+const open=()=>{ed=true;i.hidden=false;p.hidden=true;e.hidden=true;row.hidden=false;i.value=val;i.focus();i.select()};
+const done=(save,f)=>{if(!ed)return;ed=false;if(save)val=i.value;p.textContent=val||'Enter text...';i.hidden=true;p.hidden=false;row.hidden=true;e.hidden=false;if(f)e.focus()};
+e.onclick=open;p.onclick=open;
+$('s').onclick=()=>done(true,true);$('c').onclick=()=>done(false,true);
+i.addEventListener('keydown',ev=>{if(ev.key=='Enter'){ev.preventDefault();done(true,true)}else if(ev.key=='Escape'){done(false,true)}});
+document.addEventListener('mousedown',ev=>{if(ed&&!$('r').contains(ev.target))done(false,false)});
+</script>

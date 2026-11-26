@@ -16,7 +16,7 @@
   --ink-3: #68738a;
 
   /* accents */
-  --acc: #6d6cff;
+  --acc: #4d8dff;
   --acc-2: #9d8cff;
   --acc-soft: rgba(109, 108, 255, 0.16);
   --ok: #34d399;
@@ -728,7 +728,7 @@
 .gmf-pay { place-items: center; padding: 24px; }
 .gmf-pay-panel {
   position: relative; width: min(420px, 100%); border-radius: 26px; padding: 2px;
-  background: linear-gradient(140deg, #6d6cff, #b16cff 35%, #ff8ad4 65%, #ffd36c);
+  background: linear-gradient(140deg, #4d8dff, #b16cff 35%, #ff8ad4 65%, #ffd36c);
   animation: gmf-cs-in 500ms var(--spring) both;
   box-shadow: 0 24px 80px rgba(140, 100, 255, 0.35);
 }
@@ -753,7 +753,7 @@
 .gmf-pay-check { width: 20px; height: 20px; border-radius: var(--rpill); display: grid; place-items: center; background: rgba(52, 211, 153, 0.15); color: var(--ok); flex: none; }
 .gmf-pay-cta {
   width: 100%; padding: 13px; border-radius: var(--r3);
-  background: linear-gradient(120deg, #6d6cff, #b16cff);
+  background: linear-gradient(120deg, #4d8dff, #b16cff);
   color: #fff; font-weight: 700; font-size: 14.5px;
   box-shadow: 0 8px 28px rgba(109, 108, 255, 0.45);
   transition: transform 220ms var(--spring), box-shadow 200ms ease;
@@ -946,7 +946,7 @@
 .gmf-gls-blob {
   position: absolute; width: 220px; height: 220px; border-radius: 50%;
   filter: blur(46px); opacity: 0.75; z-index: 0;
-  background: conic-gradient(from 0deg, #6d6cff, #ff8ad4, #5cc8ff, #6d6cff);
+  background: conic-gradient(from 0deg, #4d8dff, #ff8ad4, #5cc8ff, #4d8dff);
   animation: gmf-orbit 9s linear infinite;
 }
 @keyframes gmf-orbit {
@@ -999,7 +999,7 @@
 .gmf-tlt-gem {
   width: 56px; height: 56px; border-radius: var(--r3);
   display: grid; place-items: center; margin-bottom: 16px;
-  background: linear-gradient(135deg, #5cc8ff, #6d6cff);
+  background: linear-gradient(135deg, #5cc8ff, #4d8dff);
   box-shadow: 0 10px 30px rgba(92, 200, 255, 0.4);
   color: #fff;
 }
@@ -1233,7 +1233,7 @@
 @keyframes gmf-mpl-in { from { opacity: 0; transform: translateY(80px) scale(0.85); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .gmf-mpl-art {
   width: 46px; height: 46px; border-radius: var(--rpill); flex: none;
-  background: conic-gradient(from 0deg, #6d6cff, #ff8ad4, #ffd36c, #6d6cff);
+  background: conic-gradient(from 0deg, #4d8dff, #ff8ad4, #ffd36c, #4d8dff);
   animation: gmf-rotate 6s linear infinite;
   display: grid; place-items: center; color: #fff;
   box-shadow: 0 4px 16px rgba(109, 108, 255, 0.4);

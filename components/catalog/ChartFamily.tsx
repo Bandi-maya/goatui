@@ -232,7 +232,7 @@ export function RoundedBars() {
 export function GradientHBars() {
   const rows = [
     { k: "Search", v: 82, c: "var(--gf-accent)" },
-    { k: "Social", v: 61, c: "#f472b6" },
+    { k: "Social", v: 61, c: "#60a5fa" },
     { k: "Email", v: 47, c: "#fbbf24" },
     { k: "Direct", v: 33, c: "#34d399" },
   ];
@@ -267,7 +267,7 @@ export function DonutCenter() {
   const parts = [
     { k: "Starter", v: 38, c: "#818cf8" },
     { k: "Pro", v: 34, c: "#38bdf8" },
-    { k: "Scale", v: 28, c: "#a78bfa" },
+    { k: "Scale", v: 28, c: "#7db1ff" },
   ];
   const total = parts.reduce((a, b) => a + b.v, 0);
   const R = 54;
@@ -320,7 +320,7 @@ export function DonutCenter() {
 /* ------------------------------------------------------------------ */
 export function SegmentedDonut() {
   const parts = [
-    { k: "Design", v: 30, c: "#f472b6" },
+    { k: "Design", v: 30, c: "#60a5fa" },
     { k: "Eng", v: 42, c: "#818cf8" },
     { k: "Ops", v: 16, c: "#34d399" },
     { k: "G&A", v: 12, c: "#fbbf24" },
@@ -565,7 +565,7 @@ export function StackedBars() {
         {rows.map((r, i) => (
           <div className="gf-stack-col" key={r.k}>
             <div className="gf-stack-bars">
-              {seg(r.c, "#a78bfa", i * 90 + 180, true)}
+              {seg(r.c, "#7db1ff", i * 90 + 180, true)}
               {seg(r.b, "#38bdf8", i * 90 + 90, false)}
               {seg(r.a, "#818cf8", i * 90, false)}
             </div>
@@ -576,7 +576,7 @@ export function StackedBars() {
       <ul className="gf-legend">
         <li><i style={{ background: "#818cf8" }} />Product</li>
         <li><i style={{ background: "#38bdf8" }} />Services</li>
-        <li><i style={{ background: "#a78bfa" }} />Other</li>
+        <li><i style={{ background: "#7db1ff" }} />Other</li>
       </ul>
     </ChartCard>
   );
@@ -587,7 +587,7 @@ export function StackedBars() {
 /* ------------------------------------------------------------------ */
 export function ActivityRings() {
   const rings = [
-    { k: "Move", v: 84, c: "#f472b6", r: 50 },
+    { k: "Move", v: 84, c: "#60a5fa", r: 50 },
     { k: "Exercise", v: 62, c: "#a3e635", r: 38 },
     { k: "Stand", v: 90, c: "#38bdf8", r: 26 },
   ];
@@ -764,7 +764,7 @@ export function GroupedBars() {
       </div>
       <ul className="gf-legend">
         <li><i style={{ background: "var(--gf-accent)" }} />Online</li>
-        <li><i style={{ background: "#f472b6" }} />Retail</li>
+        <li><i style={{ background: "#60a5fa" }} />Retail</li>
       </ul>
     </ChartCard>
   );
@@ -1203,7 +1203,7 @@ export function ProgressList() {
     { k: "Design system", v: 92, c: "#34d399" },
     { k: "Docs site", v: 74, c: "var(--gf-accent)" },
     { k: "Charts family", v: 55, c: "#fbbf24" },
-    { k: "Templates", v: 31, c: "#f472b6" },
+    { k: "Templates", v: 31, c: "#60a5fa" },
   ];
   return (
     <ChartCard title="Roadmap progress" sub="Q4 deliverables" index={29}>

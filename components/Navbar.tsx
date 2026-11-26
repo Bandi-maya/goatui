@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useTheme } from "next-themes"
+import { useTheme } from "@/components/theme-provider"
 import { Search, Sun, Moon, Laptop, Menu, X, Sparkles,  } from "lucide-react"
 import Button from "../app/components/ui/button"
 
@@ -79,7 +79,7 @@ export default function Navbar() {
 
           {/* Theme Switcher */}
           <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            onClick={() => setTheme(theme === "goat-light" || theme === "glass-frost" ? "leather-black" : "goat-light")}
             className="p-2 rounded-lg border border-border bg-card/40 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all cursor-pointer"
             aria-label="Toggle Theme"
           >

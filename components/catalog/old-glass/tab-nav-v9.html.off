@@ -1,0 +1,208 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;padding:0;width:800px;height:600px;overflow:hidden;}
+canvas{display:block;}
+</style></head><body>
+<canvas id="c" width="800" height="600"></canvas>
+<script>
+// Tab navigation v1 - dark glass blob over stadium bar, true-refraction engine (own code). Static.
+const W=800,H=600;
+const cv=document.getElementById('c'), ctx=cv.getContext('2d');
+const sc=document.createElement('canvas'); sc.width=W; sc.height=H;
+const s=sc.getContext('2d');
+
+// ---------- scene: measured gradient wall + grid + dark stadium bar + dim icons ----------
+{
+  let bg=s.createLinearGradient(0,0,800,0);
+  bg.addColorStop(0,'rgb(190,199,201)'); bg.addColorStop(1,'rgb(126,135,141)');
+  s.fillStyle=bg; s.fillRect(0,0,W,H);
+  let bv=s.createLinearGradient(0,0,0,600);
+  bv.addColorStop(0,'rgba(0,0,0,0)'); bv.addColorStop(1,'rgba(0,0,0,0.058)');
+  s.fillStyle=bv; s.fillRect(0,0,W,H);
+  { // contact shadow under the glass blob (measured: -13 at edge fading over ~50px, x-span ~300-500)
+    s.save(); s.translate(400,424); s.scale(2.2,0.55);
+    let vg=s.createRadialGradient(0,0,10,0,0,100);
+    vg.addColorStop(0,'rgba(0,0,0,0.085)'); vg.addColorStop(1,'rgba(0,0,0,0)');
+    s.fillStyle=vg; s.fillRect(-110,-110,220,220); s.restore(); }
+  // faint grid (measured spacing: vertical 121 from x87, horizontal 141.5 from y75)
+  s.strokeStyle='rgba(0,0,0,0.015)'; s.lineWidth=1;
+  s.beginPath();
+  for(let x=87;x<800;x+=121){ s.moveTo(x+0.5,0); s.lineTo(x+0.5,600); }
+  for(let y=75;y<600;y+=141.5){ s.moveTo(0,y+0.5); s.lineTo(800,y+0.5); }
+  s.stroke();
+  // dark stadium bar: capsule center (401.5,300) hw 249.5 r 81
+  s.fillStyle='rgb(10,10,10)';
+  s.save(); s.filter='blur(1.1px)';
+  s.beginPath();
+  (function(){const x=139,y=219.5,w=525,h=162,r=81;
+   s.moveTo(x+r,y); s.arcTo(x+w,y,x+w,y+h,r); s.arcTo(x+w,y+h,x,y+h,r); s.arcTo(x,y+h,x,y,r); s.arcTo(x,y,x+w,y,r); s.closePath();})();
+  s.fill(); s.restore();
+  // dim icons on the bar (own paths, gray ~83)
+  s.strokeStyle='rgb(83,83,83)'; s.fillStyle='rgb(83,83,83)'; s.lineWidth=2.6; s.lineJoin='round'; s.lineCap='round';
+  // home (filled house with door cut)
+  s.save(); s.translate(204,298);
+  s.beginPath();
+  s.moveTo(-11,-1); s.lineTo(0,-12); s.lineTo(11,-1); s.lineTo(11,11); s.lineTo(3.5,11); s.lineTo(3.5,3); s.lineTo(-3.5,3); s.lineTo(-3.5,11); s.lineTo(-11,11); s.closePath(); s.fill();
+  s.restore();
+  // people (two heads + shoulders)
+  s.save(); s.translate(596,298);
+  s.beginPath(); s.arc(-4.5,-4,5.2,0,7); s.fill();
+  s.beginPath(); s.arc(6.5,-3,4.2,0,7); s.fill();
+  s.beginPath(); s.arc(-4.5,12,8.4,Math.PI*1.05,Math.PI*1.95); s.closePath(); s.fill();
+  s.beginPath(); s.arc(6.5,11.5,6.6,Math.PI*1.05,Math.PI*1.95); s.closePath(); s.fill();
+  s.restore();
+}
+
+// ---------- glass engine (own): SDF shape refracts the actual scene ----------
+function blurred(img,down){
+  const b=document.createElement('canvas'); b.width=Math.max(2,Math.round(W/down)); b.height=Math.max(2,Math.round(H/down));
+  const bc=b.getContext('2d'); bc.drawImage(img,0,0,b.width,b.height);
+  const o=document.createElement('canvas'); o.width=W; o.height=H;
+  const oc=o.getContext('2d'); oc.imageSmoothingEnabled=true; oc.drawImage(b,0,0,W,H);
+  return oc.getImageData(0,0,W,H);
+}
+function glass4(shape){
+  const {sdf,x0,y0,x1,y1, et=6, rimPow=2.1, refrRim=34, refrBase=6, kR=1.12,kB=0.88,
+    tint=[20,20,24], tintMix=0.35, frost=8, frostMix=0.6,
+    fresPow=2.6, fresK=0.42, n3K=1.35,
+    sp1L=[-0.45,-0.75,0.55], sp1Pow=42, sp1K=0.95, sp2L=[0.55,0.68,0.48], sp2Pow=28, sp2K=0.65,
+    rimT=66, rimB=41, rimR=9, rimL=-31, rimW=1.1, brGlow=0, brGX=0, brGY=0, brGR=10,
+    menK=-8, menD0=1.2, menD1=4.5, glossK=0,
+    shadowK=0, shadowDX=0, shadowDY=0, shadowBlur=10}=shape;
+  // drop shadow pass (under the shape)
+  const sharp=s.getImageData(0,0,W,H), blur=blurred(sc,frost);
+  const out=s.getImageData(0,0,W,H);
+  const S=sharp.data, B=blur.data, O=out.data;
+  if(shadowK>0){
+    for(let py=Math.floor(Math.max(0,y0-30));py<=Math.min(H-1,Math.ceil(y1+30));py++)for(let px=Math.floor(Math.max(0,x0-30));px<=Math.min(W-1,Math.ceil(x1+30));px++){
+      const d=sdf(px-shadowDX,py-shadowDY);
+      if(d>=shadowBlur) continue;
+      const m=Math.max(0,1-Math.max(0,d)/shadowBlur)*shadowK*(d<0?0.4:1);
+      const idx=(py*W+px)*4;
+      O[idx]=S[idx]*(1-m); O[idx+1]=S[idx+1]*(1-m); O[idx+2]=S[idx+2]*(1-m);
+    }
+    s.putImageData(out,0,0);
+    for(let k=0;k<3;k++){ S.set(s.getImageData(0,0,W,H).data); break; }
+    const sh2=s.getImageData(0,0,W,H); S.set(sh2.data);
+    const bl2=blurred(sc,frost); B.set(bl2.data);
+  }
+  const L1=Math.hypot(...sp1L), l1=[sp1L[0]/L1,sp1L[1]/L1,sp1L[2]/L1];
+  const L2=Math.hypot(...sp2L), l2=[sp2L[0]/L2,sp2L[1]/L2,sp2L[2]/L2];
+  const sam=(data,sx,sy,ch)=>{
+    const x0=Math.max(0,Math.min(W-2,Math.floor(sx))), y0=Math.max(0,Math.min(H-2,Math.floor(sy)));
+    const fx=Math.min(1,Math.max(0,sx-x0)), fy=Math.min(1,Math.max(0,sy-y0));
+    const i00=(y0*W+x0)*4+ch, i10=i00+4, i01=i00+W*4, i11=i01+4;
+    return (data[i00]*(1-fx)+data[i10]*fx)*(1-fy)+(data[i01]*(1-fx)+data[i11]*fx)*fy;
+  };
+  for(let py=Math.floor(Math.max(0,y0));py<=Math.min(H-1,Math.ceil(y1));py++)for(let px=Math.floor(Math.max(0,x0));px<=Math.min(W-1,Math.ceil(x1));px++){
+    const d=sdf(px+0.5,py+0.5);
+    if(d>=2.2) continue;
+    const idx=(py*W+px)*4;
+    const depth=Math.max(0,-d);
+    const gx=(sdf(px+1.5,py+0.5)-sdf(px-1.5,py+0.5))*0.5;
+    const gy=(sdf(px+0.5,py+1.5)-sdf(px+0.5,py-1.5))*0.5;
+    const gl=Math.hypot(gx,gy)||1;
+    const nx=gx/gl, ny=gy/gl;
+    // Bandi's rim-slope method: edgeFactor/rimSlope drive bend + highlights
+    const edgeFactor=Math.min(1,Math.max(0,depth/et));
+    const rimSlope=Math.pow(1-edgeFactor,rimPow);
+    const n2x=nx*rimSlope, n2y=ny*rimSlope;
+    const baseRefract=refrRim*rimSlope+refrBase*(1-edgeFactor);
+    const sr=sam(S,px-n2x*baseRefract*kR,py-n2y*baseRefract*kR,0);
+    const sg=sam(S,px-n2x*baseRefract,py-n2y*baseRefract,1);
+    const sb2=sam(S,px-n2x*baseRefract*kB,py-n2y*baseRefract*kB,2);
+    const fr=sam(B,px-n2x*baseRefract,py-n2y*baseRefract,0), fg=sam(B,px-n2x*baseRefract,py-n2y*baseRefract,1), fb=sam(B,px-n2x*baseRefract,py-n2y*baseRefract,2);
+    const fm=frostMix*Math.min(1,Math.max(0,(depth-2)/6));
+    let rr_=sr*(1-fm)+fr*fm, gg=sg*(1-fm)+fg*fm, bb=sb2*(1-fm)+fb*fm;
+    // slight tint
+    rr_=rr_*(1-tintMix)+tint[0]*tintMix; gg=gg*(1-tintMix)+tint[1]*tintMix; bb=bb*(1-tintMix)+tint[2]*tintMix;
+    // meniscus inner band (signed; strongest at top, shallow on sides/bottom)
+    const men=Math.exp(-Math.pow((depth-(menD0+menD1)/2)/((menD1-menD0)/2),2))*(0.45+0.55*Math.max(0,ny));
+    rr_+=menK*men; gg+=menK*men; bb+=menK*men;
+    // 3D normal for shading
+    const n3x=n2x*n3K, n3y=n2y*n3K;
+    const n3z=Math.sqrt(Math.max(0.02,1-n3x*n3x-n3y*n3y));
+    const nl=Math.hypot(n3x,n3y,n3z);
+    const Nx=n3x/nl, Ny=n3y/nl, Nz=n3z/nl;
+    // fresnel
+    const fres=Math.pow(1-Nz,fresPow)*fresK;
+    rr_+=255*fres; gg+=255*fres; bb+=255*fres;
+    // dual speculars (half-vector)
+    const h1x=l1[0], h1y=l1[1], h1z=l1[2]+1, h1l=Math.hypot(h1x,h1y,h1z);
+    const d1=(Nx*h1x+Ny*h1y+Nz*h1z)/h1l;
+    const s1=Math.pow(Math.max(0,d1),sp1Pow)*sp1K*(0.15+0.85*Math.abs(nx));
+    const h2x=l2[0], h2y=l2[1], h2z=l2[2]+1, h2l=Math.hypot(h2x,h2y,h2z);
+    const d2=(Nx*h2x+Ny*h2y+Nz*h2z)/h2l;
+    const s2=Math.pow(Math.max(0,d2),sp2Pow)*sp2K*(0.15+0.85*Math.abs(nx));
+    rr_+=255*(s1+s2); gg+=255*(s1+s2); bb+=255*(s1+s2);
+    // directional outer rim line
+    const rimDir=rimT*(1-Math.min(1,Math.abs(nx)*1.4))*Math.max(0,-ny)+rimB*Math.max(0,ny)+rimL*Math.max(0,-nx)+rimR*Math.max(0,nx);
+    const brg=brGlow>0?brGlow*255*Math.exp(-(Math.pow(px-brGX,2)+Math.pow(py-brGY,2))/(brGR*brGR)):0;
+    const rimBand=Math.exp(-Math.pow((d+0.5)/rimW,2))*(d<0.4?1:0);
+    // top gloss sweep
+    if(glossK>0){ const gl2=glossK*Math.max(0,-ny)*Math.exp(-Math.max(0,depth-2)/et); rr_+=255*gl2*0.2; gg+=255*gl2*0.2; bb+=255*gl2*0.2; }
+    const cov=Math.min(1,Math.max(0,(0.2-d)/1.2));
+    rr_=S[idx]*(1-cov)+rr_*cov+rimDir*rimBand+brg;
+    gg=S[idx+1]*(1-cov)+gg*cov+rimDir*rimBand+brg;
+    bb=S[idx+2]*(1-cov)+bb*cov+rimDir*rimBand+brg;
+    O[idx]=Math.min(255,Math.max(0,rr_)); O[idx+1]=Math.min(255,Math.max(0,gg)); O[idx+2]=Math.min(255,Math.max(0,bb));
+  }
+  s.putImageData(out,0,0);
+}
+
+const bgc=document.createElement('canvas'); bgc.width=W; bgc.height=H;
+bgc.getContext('2d').drawImage(sc,0,0);
+function sdfSE(cx,cy,rx,ry,n){
+  return function(px,py){
+    const ax=Math.abs(px-cx)/rx, ay=Math.abs(py-cy)/ry;
+    const f=Math.pow(ax,n)+Math.pow(ay,n)-1;
+    const gx=n*Math.pow(ax,n-1)/rx*Math.sign(px-cx), gy=n*Math.pow(ay,n-1)/ry*Math.sign(py-cy);
+    const gl=Math.hypot(gx,gy)||1e-6;
+    return f/gl;
+  };
+}
+function sdfSE(cx,cy,a,b,n){
+  const f=(x,y)=>Math.pow(Math.pow(Math.abs(x-cx)/a,n)+Math.pow(Math.abs(y-cy)/b,n),1/n)-1;
+  return function(px,py){
+    const v=f(px,py), e=0.5;
+    const gx=(f(px+e,py)-f(px-e,py))/(2*e), gy=(f(px,py+e)-f(px,py-e))/(2*e);
+    return v/(Math.hypot(gx,gy)||1e-3);
+  };
+}
+function sdfRR(cx,cy,hw,hh,r){
+  return function(px,py){
+    const qx=Math.abs(px-cx)-(hw-r), qy=Math.abs(py-cy)-(hh-r);
+    const ax=Math.max(qx,0), ay=Math.max(qy,0);
+    return Math.hypot(ax,ay)+Math.min(Math.max(qx,qy),0)-r;
+  };
+}
+// dark glass blob: rounded rect a101 b117 r72 at (399.5,304) - measured from ref silhouette
+glass4({sdf:sdfSE(398.5,301.5,102.5,114.5,2.8),x0:280,y0:170,x1:520,y1:440,
+  tint:[8,8,8],tintMix:0.04,frost:2,frostMix:0.15,et:14,rimPow:2.1,refrRim:30,refrBase:5,
+  fresPow:2.6,fresK:0.15,sp1K:0.9,sp2K:0.5,
+  rimT:95,rimB:30,rimL:25,rimR:30,rimW:1.2,menK:60,menD0:2,menD1:14,
+  shadowK:0.05,shadowDX:0,shadowDY:10,shadowBlur:16});
+
+// ---------- selected-tab content on the glass face: chart icon + label ----------
+ctx.drawImage(sc,0,0);
+ctx.save();
+ctx.shadowColor='rgba(255,255,255,0.6)'; ctx.shadowBlur=12;
+ctx.fillStyle='rgb(255,255,255)';
+// white squircle tile (traced from ref silhouette: x385-417 y258-294, r~9)
+ctx.beginPath(); ctx.roundRect(382.5,262,29,41,10); ctx.fill(); ctx.beginPath(); ctx.arc(413,266,4.2,0,7); ctx.fill();
+// dark activity zigzag knocked out of the tile
+ctx.save(); ctx.shadowColor='rgba(0,0,0,0)'; ctx.shadowBlur=0;
+ctx.strokeStyle='rgb(150,152,156)'; ctx.lineWidth=2.6; ctx.translate(4,11); ctx.lineJoin='round'; ctx.lineCap='round';
+ctx.beginPath(); ctx.moveTo(388,282); ctx.lineTo(393.5,270); ctx.lineTo(399.5,281); ctx.lineTo(405,267); ctx.stroke();
+ctx.beginPath(); ctx.arc(409.5,257,0.01,0,7); ctx.fillStyle='rgb(150,152,156)'; ctx.fill();
+ctx.restore();
+ctx.restore();
+// label
+ctx.save();
+ctx.shadowColor='rgba(255,255,255,0.28)'; ctx.shadowBlur=3;
+ctx.fillStyle='rgb(255,255,255)';
+ctx.font='19px Arial, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+ctx.translate(399,328.5); ctx.scale(0.78,1);
+ctx.fillText('Analytics',0,0);
+ctx.restore();
+window.__draw=function(t){};
+</script></body></html>

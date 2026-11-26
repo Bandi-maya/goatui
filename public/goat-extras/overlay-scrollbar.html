@@ -1,0 +1,25 @@
+<!doctype html><meta charset=utf-8><title>Overlay scrollbar area (own code)</title>
+<style>@font-face{font-family:GOATText;src:url(/goat-extras/GOATText.woff2) format("woff2");font-weight:100 900}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;height:100vh;overflow:hidden;font-family:GOATText,system-ui,sans-serif;font-size:16px;line-height:1.5;color:#000;-webkit-font-smoothing:antialiased;text-rendering:geometricprecision}
+#r{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:400px;height:300px;background:#fff;border:1px solid rgb(228,228,231);overflow:hidden;position:fixed}
+#v{height:100%;overflow:auto;border-radius:6px;scrollbar-width:none;overscroll-behavior:auto}
+#c{display:flex;flex-direction:column;gap:8px;padding:24px}
+.it{display:flex;align-items:center;justify-content:center;padding:16px;height:56px;background:rgb(244,244,245);line-height:24px}
+#s{position:absolute;top:8px;bottom:8px;right:8px;width:4px;background:rgb(244,244,245);border-radius:6px;opacity:0;transition:opacity .15s .3s;touch-action:none;user-select:none}
+#s.h,#s.sc,#s.d{opacity:1;transition:opacity .075s}
+#t{width:4px;border-radius:6px;background:rgb(56,161,105);position:absolute;left:0;top:0}
+</style>
+<div id=r><div id=v><div id=c><div class=it>Item 1</div><div class=it>Item 2</div><div class=it>Item 3</div><div class=it>Item 4</div><div class=it>Item 5</div><div class=it>Item 6</div><div class=it>Item 7</div><div class=it>Item 8</div><div class=it>Item 9</div><div class=it>Item 10</div><div class=it>Item 11</div><div class=it>Item 12</div><div class=it>Item 13</div><div class=it>Item 14</div><div class=it>Item 15</div><div class=it>Item 16</div><div class=it>Item 17</div><div class=it>Item 18</div><div class=it>Item 19</div><div class=it>Item 20</div><div class=it>Item 21</div><div class=it>Item 22</div><div class=it>Item 23</div><div class=it>Item 24</div><div class=it>Item 25</div><div class=it>Item 26</div><div class=it>Item 27</div><div class=it>Item 28</div><div class=it>Item 29</div><div class=it>Item 30</div><div class=it>Item 31</div><div class=it>Item 32</div><div class=it>Item 33</div><div class=it>Item 34</div><div class=it>Item 35</div><div class=it>Item 36</div><div class=it>Item 37</div><div class=it>Item 38</div><div class=it>Item 39</div><div class=it>Item 40</div><div class=it>Item 41</div><div class=it>Item 42</div><div class=it>Item 43</div><div class=it>Item 44</div><div class=it>Item 45</div><div class=it>Item 46</div><div class=it>Item 47</div><div class=it>Item 48</div><div class=it>Item 49</div><div class=it>Item 50</div></div></div><div id=s data-part=scrollbar><div id=t data-part=thumb></div></div></div>
+<script>
+const v=document.getElementById('v'),s=document.getElementById('s'),t=document.getElementById('t'),r=document.getElementById('r');
+let sct=null,drag=null;
+const upd=()=>{const tr=s.clientHeight,th=Math.max(20,tr*v.clientHeight/v.scrollHeight),mx=v.scrollHeight-v.clientHeight;t.style.height=th+'px';t.style.transform='translate3d(0,'+(mx?v.scrollTop/mx*(tr-th):0)+'px,0)';return {tr,th,mx}};
+upd();
+v.addEventListener('scroll',()=>{upd();s.classList.add('sc');clearTimeout(sct);sct=setTimeout(()=>s.classList.remove('sc'),1000)});
+r.addEventListener('pointerenter',()=>s.classList.add('h'));r.addEventListener('pointerleave',()=>s.classList.remove('h'));
+const setTop=(y,off)=>{const {tr,th,mx}=upd();const rect=s.getBoundingClientRect();v.scrollTop=Math.min(1,Math.max(0,(y-rect.top-off)/(tr-th)))*mx};
+s.addEventListener('pointerdown',e=>{s.setPointerCapture(e.pointerId);const th=t.getBoundingClientRect();if(e.target===t){drag=e.clientY-th.top}else{drag=th.height/2;setTop(e.clientY,drag)}s.classList.add('d');e.preventDefault()});
+s.addEventListener('pointermove',e=>{if(drag!==null)setTop(e.clientY,drag)});
+const end=()=>{drag=null;s.classList.remove('d')};s.addEventListener('pointerup',end);s.addEventListener('pointercancel',end);
+</script>

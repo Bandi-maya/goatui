@@ -398,7 +398,7 @@ const cardTiles = [
   [IBox, "#0d9488", "Components", "Inputs, cards, tabs and more"],
   [ISpark, "#d97706", "Motion", "Spring presets and transitions"],
   [IFile, "#dc2626", "Templates", "Marketing and app starters"],
-  [ICompass, "#7c3aed", "Icons", "Two thousand crisp glyphs"],
+  [ICompass, "#1e6fe0", "Icons", "Two thousand crisp glyphs"],
   [IChat, "#0284c7", "Support", "Humans, not ticket queues"],
 ] as const;
 export function MegaMenuCards() {
@@ -529,7 +529,7 @@ export function MegaMenuMorph() {
    15 - MegaMenuSpotlight
    ============================================================ */
 const spotItems = [
-  { t: "Analytics", d: "Watch people flow through your product in real time, then zoom into any session.", g: "linear-gradient(135deg,#6366f1,#a5b4fc)" },
+  { t: "Analytics", d: "Watch people flow through your product in real time, then zoom into any session.", g: "linear-gradient(135deg,#3b82f6,#9cc4ff)" },
   { t: "Automations", d: "Trigger emails, webhooks and cleanups from any event, no cron jobs required.", g: "linear-gradient(135deg,#0d9488,#5eead4)" },
   { t: "Warehouses", d: "Sync every row to BigQuery or Snowflake on a fifteen minute cadence.", g: "linear-gradient(135deg,#d97706,#fcd34d)" },
   { t: "Edge API", d: "Sub-50ms reads from thirty regions with a single endpoint.", g: "linear-gradient(135deg,#dc2626,#fca5a5)" },

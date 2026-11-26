@@ -653,7 +653,7 @@ export function AppointmentBooking() {
 /* ------------------------------------------------------------------ */
 /* v09 · Profile form — avatar initials preview + banner swatches      */
 /* ------------------------------------------------------------------ */
-const BANNERS = ["#5b6cff", "#0ea5a5", "#e0637c", "#8a5cf6", "#d97706"];
+const BANNERS = ["#3b82f6", "#0ea5a5", "#4f9cf0", "#2f7bf0", "#d97706"];
 export function ProfileCardForm() {
   const reduce = useReducedMotion();
   const [first, setFirst] = useState("Meera");

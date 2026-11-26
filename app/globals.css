@@ -410,3 +410,18 @@ max-width: 1440px;
 margin-inline: auto;
 padding-inline: 2rem;
 }
+
+/* Liquid drawer (components sidebar below lg): spring overshoot, gooey edge, staggered items, blurred backdrop. */
+@media (max-width: 1023px) {
+  .liq-drawer { transform: translateX(-104%); transition: transform .7s cubic-bezier(.34,1.45,.5,1), border-radius .7s cubic-bezier(.34,1.45,.5,1); border-radius: 0 40px 40px 0; will-change: transform; }
+  .liq-drawer.is-open { transform: translateX(0); border-radius: 0 22px 22px 0; }
+  .liq-drawer:not(.is-open) { transition-duration: .45s; transition-timing-function: cubic-bezier(.6,-0.2,.7,.4); }
+  .liq-bulge { position: absolute; top: 50%; right: -18px; width: 36px; height: 160px; margin-top: -80px; border-radius: 999px; background: var(--card, hsl(var(--card))); background: hsl(var(--card)); pointer-events: none; transform-origin: left center; transform: scale(0, .4); }
+  .liq-drawer.is-open .liq-bulge { animation: liqBulge .9s cubic-bezier(.34,1.56,.64,1) .05s both; }
+  .liq-drawer.is-open .liq-item { animation: liqItem .75s cubic-bezier(.34,1.56,.64,1) both; animation-delay: calc(var(--i, 0) * 38ms + 120ms); }
+  .liq-backdrop { opacity: 0; backdrop-filter: blur(0); -webkit-backdrop-filter: blur(0); transition: opacity .45s ease, backdrop-filter .55s ease, -webkit-backdrop-filter .55s ease; }
+  .liq-backdrop.is-open { opacity: 1; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+}
+@keyframes liqBulge { 0% { transform: scale(0, .4); } 35% { transform: scale(1.5, 1.15); } 65% { transform: scale(.7, .9); } 100% { transform: scale(0, 1); } }
+@keyframes liqItem { 0% { opacity: 0; transform: translateX(-34px) scale(.9, 1.06); } 60% { opacity: 1; transform: translateX(6px) scale(1.02, .98); } 100% { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .liq-drawer, .liq-backdrop { transition-duration: .01s !important; } .liq-item, .liq-bulge { animation: none !important; } }
