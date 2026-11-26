@@ -1,0 +1,88 @@
+<!DOCTYPE html><html><head><title>Liquid glass tab bar</title><meta charset="utf-8"><style>
+html,body{margin:0;padding:0;width:800px;height:600px;overflow:hidden;}
+canvas{display:block;}
+</style></head><body>
+<canvas id="c" width="800" height="600"></canvas>
+<script src="/goat-glass/glass-engine.js"></script>
+<script>
+// Tab-bar "Ask AI" v3 - strict pass: measured weave (period-9 stripe waveforms + zone amplitude fields) + glass3 frosted pill and circle. Own code.
+const W=800,H=600;
+const cv=document.getElementById('c'), ctx=cv.getContext('2d');
+const sc=document.createElement('canvas'); sc.width=W; sc.height=H;
+const s=sc.getContext('2d');
+
+// ---------- measured woven backdrop ----------
+const ZONES=[[[92.3, 3.9, 8.9], [53.1, 18.3, 3.6], [36.7, 5.9, 2.2], [57.8, 7.4, 1.7], [36.7, 11.2, 0.7], [31.5, 1.4, 2.1], [47.4, 19.0, 13.9], [102.0, 15.6, 11.6]], [[106.7, 6.7, 2.6], [42.8, 23.8, 2.7], [35.7, 9.1, 4.7], [46.2, 3.6, 10.0], [37.2, 3.5, 1.5], [37.0, 2.4, 2.2], [40.0, 7.8, 2.9], [66.2, 12.0, 12.4]], [[130.4, 14.5, 4.7], [36.0, 22.6, 11.3], [17.4, 4.1, 9.9], [29.4, 1.8, 9.0], [28.7, 2.0, 8.7], [34.4, 7.2, 12.9], [34.4, 2.1, 4.8], [35.8, 8.0, 7.2]], [[137.7, 23.2, 4.2], [34.5, 20.0, 11.0], [16.4, 3.4, 7.3], [37.8, 6.0, 11.3], [26.3, 4.5, 7.1], [32.6, 6.4, 11.6], [27.9, 3.3, 4.8], [26.1, 3.5, 3.4]], [[129.9, 23.8, 14.8], [44.2, 18.7, 3.4], [27.2, 1.6, 7.5], [28.7, 0.7, 5.5], [33.3, 4.1, 8.5], [31.9, 3.7, 4.5], [29.9, 3.0, 5.1], [28.6, 2.8, 3.7]], [[33.3, 8.3, 22.8], [29.7, 4.3, 7.8], [33.1, 1.5, 3.2], [32.4, 1.8, 1.9], [48.7, 15.4, 2.1], [51.2, 8.6, 7.4], [43.6, 4.5, 4.4], [34.2, 1.6, 1.0]]];   // [gy][gx] = [mean, ampV, ampH] per 100px zone
+const WV=[0.52, 0.17, -0.14, -0.29, -0.26, -0.24, -0.21, 0.03, 0.44], PV=5;  // vertical stripe waveform (zero-mean), period 9
+const WH=[1.97, 1.96, 1.13, 0.62, -0.92, -2.3, -2.42, -0.97, 0.93], PH=2;  // horizontal stripe waveform
+function hash2(x,y){ let n=Math.sin(x*127.1+y*311.7)*43758.5453; return n-Math.floor(n); }
+function vnoise(x,y){ // smooth value noise
+  const xi=Math.floor(x), yi=Math.floor(y), fx=x-xi, fy=y-yi;
+  const sx=fx*fx*(3-2*fx), sy=fy*fy*(3-2*fy);
+  const a=hash2(xi,yi), b=hash2(xi+1,yi), c=hash2(xi,yi+1), d=hash2(xi+1,yi+1);
+  return a+(b-a)*sx+(c-a)*sy+(a-b-c+d)*sx*sy;
+}
+function patchV(x,y){ const n=vnoise(x/85+3.1,y/85+7.7)*0.65+vnoise(x/38+11.3,y/38+1.9)*0.35; return Math.min(1,Math.max(0,(n-0.32)*2.4)); }
+function patchH(x,y){ const n=vnoise(x/95+17.3,y/95+3.7)*0.65+vnoise(x/42+5.9,y/42+13.1)*0.35; return Math.min(1,Math.max(0,(n-0.34)*2.4)); }
+function zoneF(gx,gy,ch){ // bilinear over zone centers
+  const zx=Math.min(7,Math.max(0,gx)), zy=Math.min(5,Math.max(0,gy));
+  const x0=Math.floor(zx), y0=Math.floor(zy), fx=zx-x0, fy=zy-y0;
+  const x1=Math.min(7,x0+1), y1=Math.min(5,y0+1);
+  const a=ZONES[y0][x0][ch], b=ZONES[y0][x1][ch], c=ZONES[y1][x0][ch], d=ZONES[y1][x1][ch];
+  return a*(1-fx)*(1-fy)+b*fx*(1-fy)+c*(1-fx)*fy+d*fx*fy;
+}
+{
+  const img=s.createImageData(W,H), D=img.data;
+  for(let y=0;y<H;y++){
+    const gy=(y-50)/100+0.0;
+    const wvY=WH[((y+PH)%9+9)%9];
+    for(let x=0;x<W;x++){
+      const gx=(x-50)/100+0.0;
+      const base=zoneF(gx,gy,0), av=zoneF(gx,gy,1), ah=zoneF(gx,gy,2);
+      const sv=WV[((x+PV)%9+9)%9];
+      const pv2=patchV(x,y), ph2=patchH(x,y);
+      const v=base + av*pv2*sv*1.9 + ah*ph2*wvY*1.55 + 4.0*av*ah*pv2*ph2*sv*wvY/24;
+      const idx=(y*W+x)*4;
+      D[idx]=v; D[idx+1]=v; D[idx+2]=v; D[idx+3]=255;
+    }
+  }
+  // soften like the ref's fabric
+  const t=document.createElement('canvas'); t.width=W; t.height=H;
+  t.getContext('2d').putImageData(img,0,0);
+  s.filter='blur(1.1px)'; s.drawImage(t,0,0); s.filter='none';
+}
+// ---------- frosted dark glass: pill + circle (Bandi rim-slope method) ----------
+const frosty4={nearest:true,menMode:2,et:7,rimPow:2.1,refrRim:26,refrBase:4,tint:[30,30,34],tintMix:0.40,frost:8,frostMix:0.65,
+  fresPow:2.6,fresK:0.03,sp1K:1.2,sp2K:0.35,
+  rimT:60,rimB:44,rimR:18,rimL:-12,rimW:1.3,menK:-21,menD0:1.5,menD1:4.5};
+glass4(Object.assign({sdf:sdfRR(356.5,299.5,281.5,54.5,54.5),x0:60,y0:230,x1:660,y1:372,shadowK:0.3,shadowDX:0,shadowDY:3,shadowBlur:2.5,brGlow:0.22,brGX:618,brGY:346,brGR:12},frosty4));
+glass4(Object.assign({sdf:sdfRR(687.5,300,36.5,36.5,36.5),x0:640,y0:252,x1:735,y1:348},Object.assign({},frosty4,{tint:[24,24,28],tintMix:0.62,frostMix:0.45,rimT:56,rimB:30,rimR:9,rimL:17,fresK:0.03,sp1K:0.3,sp2K:0.2})));
+ctx.drawImage(sc,0,0);
+// ---------- content (traced v2) ----------
+ctx.save();
+ctx.lineCap='round';
+ctx.strokeStyle='rgb(255,255,255)';
+// plus
+ctx.lineWidth=3; ctx.beginPath();
+ctx.moveTo(127-14,300); ctx.lineTo(127+14,300); ctx.moveTo(127,300-14); ctx.lineTo(127,300+14); ctx.stroke();
+// mic: capsule + cradle + stem
+ctx.strokeStyle='rgb(238,238,240)'; ctx.lineWidth=2.2;
+ctx.beginPath(); ctx.roundRect(504.5,284.5,14,22,6.5); ctx.stroke();
+ctx.beginPath(); ctx.arc(511.5,300,14.5,0.12*Math.PI,0.88*Math.PI); ctx.stroke();
+ctx.beginPath(); ctx.moveTo(511.5,314.5); ctx.lineTo(511.5,317.5); ctx.stroke();
+// waveform 5 bars
+ctx.lineWidth=2.4; ctx.beginPath();
+const wb=[[572.5,297,302],[579,291,308.5],[586,285,314],[593,290,309],[598.5,297,302]];
+for(const [x,y0,y1] of wb){ ctx.moveTo(x,y0); ctx.lineTo(x,y1); }
+ctx.stroke();
+// X
+ctx.strokeStyle='rgb(209,209,211)'; ctx.lineWidth=2.6; ctx.beginPath();
+ctx.moveTo(687.5-8,300-8); ctx.lineTo(687.5+8,300+8); ctx.moveTo(687.5+8,300-8); ctx.lineTo(687.5-8,300+8); ctx.stroke();
+ctx.restore();
+// text
+ctx.save(); ctx.font='400 23px Arial, sans-serif'; ctx.fillStyle='rgb(185,186,188)';
+ctx.textAlign='left'; ctx.textBaseline='middle';
+ctx.translate(168,301); ctx.scale(0.62,1); ctx.fillText('Ask AI',0,0); ctx.restore();
+window.__draw=function(t){};
+window.__ready=true;
+</script></body></html>

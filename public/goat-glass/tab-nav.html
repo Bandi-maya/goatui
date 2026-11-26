@@ -1,0 +1,89 @@
+<!DOCTYPE html><html><head><title>Liquid glass tab nav</title><meta charset="utf-8"><style>
+html,body{margin:0;padding:0;width:800px;height:600px;overflow:hidden;}
+canvas{display:block;}
+</style></head><body>
+<canvas id="c" width="800" height="600"></canvas>
+<script src="/goat-glass/glass-engine.js"></script>
+<script>
+// Tab navigation v1 - dark glass blob over stadium bar, true-refraction engine (own code). Static.
+const W=800,H=600;
+const cv=document.getElementById('c'), ctx=cv.getContext('2d');
+const sc=document.createElement('canvas'); sc.width=W; sc.height=H;
+const s=sc.getContext('2d');
+
+// ---------- scene: measured gradient wall + grid + dark stadium bar + dim icons ----------
+{
+  let bg=s.createLinearGradient(0,0,800,0);
+  bg.addColorStop(0,'rgb(190,199,201)'); bg.addColorStop(1,'rgb(126,135,141)');
+  s.fillStyle=bg; s.fillRect(0,0,W,H);
+  let bv=s.createLinearGradient(0,0,0,600);
+  bv.addColorStop(0,'rgba(0,0,0,0)'); bv.addColorStop(1,'rgba(0,0,0,0.058)');
+  s.fillStyle=bv; s.fillRect(0,0,W,H);
+  { // contact shadow under the glass blob (measured: -13 at edge fading over ~50px, x-span ~300-500)
+    s.save(); s.translate(400,424); s.scale(2.2,0.55);
+    let vg=s.createRadialGradient(0,0,10,0,0,100);
+    vg.addColorStop(0,'rgba(0,0,0,0.085)'); vg.addColorStop(1,'rgba(0,0,0,0)');
+    s.fillStyle=vg; s.fillRect(-110,-110,220,220); s.restore(); }
+  // faint grid (measured spacing: vertical 121 from x87, horizontal 141.5 from y75)
+  s.strokeStyle='rgba(0,0,0,0.015)'; s.lineWidth=1;
+  s.beginPath();
+  for(let x=87;x<800;x+=121){ s.moveTo(x+0.5,0); s.lineTo(x+0.5,600); }
+  for(let y=75;y<600;y+=141.5){ s.moveTo(0,y+0.5); s.lineTo(800,y+0.5); }
+  s.stroke();
+  // dark stadium bar: capsule center (401.5,300) hw 249.5 r 81
+  s.fillStyle='rgb(10,10,10)';
+  s.save(); s.filter='blur(1.1px)';
+  s.beginPath();
+  (function(){const x=139,y=219.5,w=525,h=162,r=81;
+   s.moveTo(x+r,y); s.arcTo(x+w,y,x+w,y+h,r); s.arcTo(x+w,y+h,x,y+h,r); s.arcTo(x,y+h,x,y,r); s.arcTo(x,y,x+w,y,r); s.closePath();})();
+  s.fill(); s.restore();
+  // dim icons on the bar (own paths, gray ~83)
+  s.strokeStyle='rgb(83,83,83)'; s.fillStyle='rgb(83,83,83)'; s.lineWidth=2.6; s.lineJoin='round'; s.lineCap='round';
+  // home (filled house with door cut)
+  s.save(); s.translate(204,298);
+  s.beginPath();
+  s.moveTo(-11,-1); s.lineTo(0,-12); s.lineTo(11,-1); s.lineTo(11,11); s.lineTo(3.5,11); s.lineTo(3.5,3); s.lineTo(-3.5,3); s.lineTo(-3.5,11); s.lineTo(-11,11); s.closePath(); s.fill();
+  s.restore();
+  // people (two heads + shoulders)
+  s.save(); s.translate(596,298);
+  s.beginPath(); s.arc(-4.5,-4,5.2,0,7); s.fill();
+  s.beginPath(); s.arc(6.5,-3,4.2,0,7); s.fill();
+  s.beginPath(); s.arc(-4.5,12,8.4,Math.PI*1.05,Math.PI*1.95); s.closePath(); s.fill();
+  s.beginPath(); s.arc(6.5,11.5,6.6,Math.PI*1.05,Math.PI*1.95); s.closePath(); s.fill();
+  s.restore();
+}
+
+// ---------- glass engine (own): SDF shape refracts the actual scene ----------
+const bgc=document.createElement('canvas'); bgc.width=W; bgc.height=H;
+bgc.getContext('2d').drawImage(sc,0,0);
+// dark glass blob: rounded rect a101 b117 r72 at (399.5,304) - measured from ref silhouette
+glass4({menMode:1,sdf:sdfRRx(399.5,304,102.5,117,72),x0:280,y0:170,x1:520,y1:445,
+  tint:[8,8,8],tintMix:0.28,frost:2,frostMix:0.35,et:14,rimPow:2.1,refrRim:30,refrBase:5,
+  fresPow:2.6,fresK:0.15,sp1K:0.9,sp2K:0.5,
+  rimT:95,rimB:30,rimL:25,rimR:30,rimW:1.2,menK:95,menD0:2,menD1:14,
+  shadowK:0.35,shadowDX:0,shadowDY:10,shadowBlur:16});
+
+// ---------- selected-tab content on the glass face: chart icon + label ----------
+ctx.drawImage(sc,0,0);
+ctx.save();
+ctx.shadowColor='rgba(255,255,255,0.6)'; ctx.shadowBlur=12;
+ctx.fillStyle='rgb(255,255,255)';
+// white squircle tile (traced from ref silhouette: x385-417 y258-294, r~9)
+ctx.beginPath(); ctx.roundRect(382.5,258.5,31,35,9); ctx.fill();
+// dark activity zigzag knocked out of the tile
+ctx.save(); ctx.shadowColor='rgba(0,0,0,0)'; ctx.shadowBlur=0;
+ctx.strokeStyle='rgb(9,10,11)'; ctx.lineWidth=3.5; ctx.lineJoin='round'; ctx.lineCap='round';
+ctx.beginPath(); ctx.moveTo(388,282); ctx.lineTo(393.5,270); ctx.lineTo(399.5,281); ctx.lineTo(405,267); ctx.stroke();
+ctx.beginPath(); ctx.arc(409.5,265,2.4,0,7); ctx.fillStyle='rgb(9,10,11)'; ctx.fill();
+ctx.restore();
+ctx.restore();
+// label
+ctx.save();
+ctx.shadowColor='rgba(255,255,255,0.28)'; ctx.shadowBlur=3;
+ctx.fillStyle='rgb(255,255,255)';
+ctx.font='19px Arial, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+ctx.translate(399,328.5); ctx.scale(0.78,1);
+ctx.fillText('Analytics',0,0);
+ctx.restore();
+window.__draw=function(t){};
+</script></body></html>

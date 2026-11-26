@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { entryFor } from "@/components/catalog/overview-previews"
 import { useTheme } from "next-themes"
 import Link from "next/link"
+import { glassItems } from "@/components/catalog/glass-items"
 import { 
   Search, 
   Code, 
@@ -598,6 +599,32 @@ export default function Example() {
                 ))}
                 <span className="ml-auto text-xs text-muted-foreground">{filteredComponents.length} results</span>
               </div>
+
+              {/* Liquid glass items (own engine, previews are scaled live renders) */}
+              {selectedCategory === "All" && searchQuery === "" && (
+                <div className="mb-10">
+                  <div className="mb-3 flex items-baseline justify-between">
+                    <h3 className="text-lg font-semibold">Liquid glass</h3>
+                    <Link href="/glass" className="text-xs text-muted-foreground hover:text-foreground">View all →</Link>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                    {glassItems.map((g) => (
+                      <Link key={g.id} href={`/glass#${g.id}`} className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
+                        <div className="relative h-44 overflow-hidden border-b border-border bg-muted/30">
+                          <iframe src={`/goat-glass/${g.id}.html`} title={g.name} loading="lazy" tabIndex={-1} className="pointer-events-none absolute left-1/2 top-0 origin-top border-0" style={{ width: 800, height: 600, transform: "translateX(-50%) scale(0.5)", marginTop: -62 }} />
+                          <div className="absolute inset-0 flex items-end justify-between gap-2 bg-gradient-to-t from-background/80 via-transparent to-transparent p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                            <span className="rounded-md bg-foreground px-3 py-1.5 text-xs font-semibold text-background">Open</span>
+                          </div>
+                        </div>
+                        <div className="p-4">
+                          <h3 className="font-semibold leading-tight">{g.name}</h3>
+                          <p className="truncate text-xs text-muted-foreground">{g.blurb}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Component Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">

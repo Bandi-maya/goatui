@@ -1,0 +1,208 @@
+<!DOCTYPE html><html><head><title>Liquid glass camera toolbar</title><meta charset="utf-8"><style>
+html,body{margin:0;padding:0;width:800px;height:600px;overflow:hidden;}
+canvas{display:block;}
+</style></head><body>
+<canvas id="c" width="800" height="600"></canvas>
+<script src="/goat-glass/glass-engine.js"></script>
+<script>
+// Camera toolbar v5 - full animated sequence: zoom out, avatar + flip, mode strip slides PHOTO->PORTRAIT->PANORAMA->CINEMATIC, back to pair. Own code. Traced geometry.
+const W=800,H=600;
+const cv=document.getElementById('c'), ctx=cv.getContext('2d');
+const sc=document.createElement('canvas'); sc.width=W; sc.height=H;
+const s=sc.getContext('2d');
+
+const slat=document.createElement('canvas'); slat.width=W; slat.height=H;
+const sc2=slat.getContext('2d');
+{
+  // underlayer: pale blue-grey wash
+  let bg=s.createLinearGradient(800,0,0,600);
+  bg.addColorStop(0,'rgb(118,134,167)'); bg.addColorStop(0.5,'rgb(132,142,163)'); bg.addColorStop(1,'rgb(158,166,177)');
+  s.fillStyle=bg; s.fillRect(0,0,W,H);
+  // blue sky top-right
+  let g=s.createRadialGradient(760,-40,20,760,-40,420);
+  g.addColorStop(0,'rgba(130,155,195,0.9)'); g.addColorStop(1,'rgba(150,172,205,0)');
+  s.fillStyle=g; s.fillRect(0,0,W,H);
+  // big white glow bottom-left
+  g=s.createRadialGradient(150,620,20,150,620,440);
+  g.addColorStop(0,'rgba(238,243,246,0.85)'); g.addColorStop(1,'rgba(238,243,246,0)');
+  s.fillStyle=g; s.fillRect(0,0,W,H);
+  // strong orange blobs bottom center-right
+  for(const [gx,gy,gr,ga] of [[430,540,150,0.9],[620,500,130,0.85],[730,600,110,0.8]]){
+    g=s.createRadialGradient(gx,gy,10,gx,gy,gr);
+    g.addColorStop(0,'rgba(214,158,96,'+ga+')'); g.addColorStop(1,'rgba(214,158,96,0)');
+    s.fillStyle=g; s.fillRect(0,0,W,H);
+  }
+  // slats traced bar-by-bar from the reference (geometry+tone parameters), rotated frame
+  const BARS=[{"y": -235, "x0": -167, "x1": 6, "h": 26, "c": [217, 208, 207], "c3": [[216, 211, 217], [217, 208, 207], [164, 169, 184]]}, {"y": -203, "x0": -172, "x1": 81, "h": 26, "c": [178, 182, 193], "c3": [[158, 177, 201], [178, 182, 193], [191, 193, 198]]}, {"y": -164, "x0": -400, "x1": 400, "h": 26, "c": [188, 180, 185], "c3": [[153, 159, 174], [188, 180, 185], [153, 159, 174]]}, {"y": -125, "x0": -400, "x1": -11, "h": 26, "c": [182, 185, 205], "c3": [[170, 177, 194], [182, 185, 205], [136, 140, 166]]}, {"y": -80, "x0": -400, "x1": 25, "h": 30, "c": [190, 187, 198], "c3": [[198, 191, 197], [190, 187, 198], [122, 124, 135]]}, {"y": -31, "x0": -400, "x1": -49, "h": 26, "c": [208, 208, 209], "c3": [[153, 159, 180], [208, 208, 209], [180, 177, 180]]}, {"y": 6, "x0": -400, "x1": 146, "h": 26, "c": [136, 138, 151], "c3": [[183, 194, 220], [136, 138, 151], [120, 120, 129]]}, {"y": 65, "x0": -400, "x1": 400, "h": 34, "c": [86, 92, 97], "c3": [[179, 183, 197], [86, 92, 97], [233, 202, 151]]}, {"y": 120, "x0": -400, "x1": 345, "h": 34, "c": [170, 171, 175], "c3": [[216, 220, 223], [170, 171, 175], [152, 160, 165]]}];
+  sc2.save(); sc2.translate(400,300); sc2.rotate(34.6*Math.PI/180);
+  for(const b of BARS){
+    const w=b.x1-b.x0;
+    const cs=b.c3||[b.c,b.c,b.c];
+    const xg=sc2.createLinearGradient(b.x0,0,b.x1,0);
+    xg.addColorStop(0,'rgb('+cs[0][0]+','+cs[0][1]+','+cs[0][2]+')');
+    xg.addColorStop(0.5,'rgb('+cs[1][0]+','+cs[1][1]+','+cs[1][2]+')');
+    xg.addColorStop(1,'rgb('+cs[2][0]+','+cs[2][1]+','+cs[2][2]+')');
+    sc2.fillStyle=xg;
+    sc2.beginPath(); sc2.roundRect(b.x0,b.y-b.h/2,w,b.h,b.h/2); sc2.fill();
+    sc2.save(); sc2.beginPath(); sc2.roundRect(b.x0,b.y-b.h/2,w,b.h,b.h/2); sc2.clip();
+    const vg=sc2.createLinearGradient(0,b.y-b.h/2,0,b.y+b.h/2);
+    vg.addColorStop(0,'rgba(255,255,255,0.20)'); vg.addColorStop(0.45,'rgba(255,255,255,0)'); vg.addColorStop(1,'rgba(20,28,44,0.28)');
+    sc2.fillStyle=vg; sc2.fillRect(b.x0,b.y-b.h/2,w,b.h);
+    sc2.restore();
+    sc2.fillStyle='rgba(255,255,255,0.8)';
+    sc2.beginPath(); sc2.roundRect(b.x0,b.y-b.h/2,w,2.5,1.2); sc2.fill();
+    sc2.fillStyle='rgba(60,70,85,0.35)';
+    sc2.beginPath(); sc2.roundRect(b.x0,b.y+b.h/2-2.5,w,2.5,1.2); sc2.fill();
+  }
+  sc2.restore();
+
+
+  // blur slat layer through a temp, then composite once
+  const tmp=document.createElement('canvas'); tmp.width=W; tmp.height=H;
+  const tc=tmp.getContext('2d'); tc.filter='blur(2.6px)'; tc.drawImage(slat,0,0);
+  s.drawImage(tmp,0,0);
+  s.save(); s.filter='blur(1px)'; s.drawImage(sc,0,0); s.restore();
+}
+
+const bgc=document.createElement('canvas'); bgc.width=W; bgc.height=H;
+bgc.getContext('2d').drawImage(sc,0,0);
+function label(c,text,x,y,font,col,alpha){
+  c.save(); c.font=font; c.textAlign='center'; c.textBaseline='middle'; c.globalAlpha=alpha==null?1:alpha;
+  c.shadowColor='rgba(60,70,90,0.35)'; c.shadowBlur=2; c.shadowOffsetY=1;
+  c.fillStyle=col; c.fillText(text,x,y); c.restore();
+}
+// procedural neutral avatar placeholder (own art; ref shows a photo we do not reproduce)
+function avatar(c,cx,cy,r,alpha){
+  c.save(); c.globalAlpha=alpha;
+  c.beginPath(); c.arc(cx,cy,r,0,7); c.clip();
+  const g=c.createLinearGradient(cx-r,cy-r,cx+r,cy+r);
+  g.addColorStop(0,'rgb(226,214,205)'); g.addColorStop(1,'rgb(198,188,196)');
+  c.fillStyle=g; c.fillRect(cx-r,cy-r,r*2,r*2);
+  c.fillStyle='rgb(240,235,230)';
+  c.beginPath(); c.arc(cx,cy-r*0.25,r*0.34,0,7); c.fill();
+  c.beginPath(); c.arc(cx,cy+r*0.95,r*0.62,Math.PI,0); c.fill();
+  c.restore();
+  c.save(); c.globalAlpha=alpha;
+  c.strokeStyle='rgba(255,255,255,0.85)'; c.lineWidth=2;
+  c.beginPath(); c.arc(cx,cy,r-1,0,7); c.stroke(); c.restore();
+}
+function flipIcon(c,cx,cy,sz,col,alpha){
+  c.save(); c.translate(cx,cy); c.globalAlpha=alpha;
+  c.strokeStyle=col; c.lineWidth=2.6; c.lineCap='round'; c.lineJoin='round';
+  const u=sz/24;
+  c.scale(u,u);
+  c.beginPath(); c.arc(0,0,6.4,-2.6,0.9); c.stroke();
+  c.beginPath(); c.moveTo(4.9,-4.6); c.lineTo(6.6,-0.6); c.lineTo(2.8,0.3); c.stroke();
+  c.beginPath(); c.arc(0,0,6.4,0.55,4.05); c.stroke();
+  c.beginPath(); c.moveTo(-4.9,4.6); c.lineTo(-6.6,0.6); c.lineTo(-2.8,-0.3); c.stroke();
+  c.restore();
+}
+
+// ---------- world geometry at zoom=1 ----------
+const CY=299;
+const PAIR={L:{cx:303.6,hw:76.8},R:{cx:476.3,hw:95.9},hh:52};
+const STRIP={cx:400,hw:342,hh:48};
+const MODES=['CINEMATIC','VIDEO','PHOTO','PORTRAIT','PANORAMA'];
+const MODE_X={CINEMATIC:44,VIDEO:222,PHOTO:400,PORTRAIT:578,PANORAMA:756};
+const SEL_HW=105;
+const AVA={cx:107,cy:300,r:52};
+const FLIP={cx:688,cy:300,r:52};
+
+function easeIO(x){ x=Math.min(1,Math.max(0,x)); return x<0.5?2*x*x:1-Math.pow(-2*x+2,2)/2; }
+function lerp(a,b,u){ return a+(b-a)*u; }
+
+// timeline in frames (30fps): zoom 0-35, avatar/flip fade 34-44, expand 60-70, slide1 95-105, slide2 140-150, slide3 195-205, contract 258-270
+function stateAt(f){
+  const z=lerp(1.94,1.0,easeIO(f/35));
+  const uiA=f<34?0:(f<44?(f-34)/10:1);                 // avatar/flip alpha (pair phase)
+  const stripU=easeIO((f-60)/10);                      // 0 pair -> 1 strip
+  const contractU=easeIO((f-258)/12);                  // 1 strip -> back to pair
+  const strip=stripU*(1-contractU);
+  const uiA2=uiA*(1-stripU)+easeIO((f-262)/10)*1;      // avatar/flip: out during strip, back at end
+  // selection keyframes
+  const keys=[[0,'PHOTO'],[70,'PHOTO'],[95,'PORTRAIT'],[140,'PANORAMA'],[195,'CINEMATIC'],[258,'CINEMATIC'],[311,'CINEMATIC']];
+  let k0=keys[0],k1=keys[keys.length-1],u=0;
+  for(let i=0;i<keys.length-1;i++){
+    if(f>=keys[i][0]&&f<=keys[i+1][0]){ k0=keys[i]; k1=keys[i+1];
+      const span=Math.min(10,keys[i+1][0]-keys[i][0]);
+      u=f<keys[i+1][0]-span?0:easeIO((f-(keys[i+1][0]-span))/span);
+      break;
+    }
+  }
+  const selX=lerp(MODE_X[k0[1]],MODE_X[k1[1]],u);
+  return {z,strip,uiA:Math.min(1,uiA2),selX,selName:k1[1],selName0:u<0.5?k0[1]:k1[1],contractU};
+}
+
+window.__draw=function(t){
+  const f=Math.round(t*30);
+  const st=stateAt(f);
+  const z=st.z, zx=400, zy=CY;
+  const Z=(v,axis)=>axis==='x'?zx+(v-zx)*z:zy+(v-zy)*z;
+  // backdrop (zoomed with the scene)
+  s.save();
+  s.setTransform(1,0,0,1,0,0);
+  s.clearRect(0,0,W,H);
+  s.setTransform(z,0,0,z,zx*(1-z),zy*(1-z));
+  s.drawImage(bgc,0,0);
+  s.restore();
+  const cap={tint:[196,200,208],tintMix:0.08,frost:2,frostMix:0.22,et:12,rimPow:2.1,refrRim:40,refrBase:6,
+    fresPow:2.6,fresK:0.10,sp1K:0.9,sp2K:0.5,
+    rimT:110,rimB:42,rimL:40,rimR:50,rimW:1.0,menK:-6,menD0:2,menD1:6,
+    shadowK:0.10,shadowDX:-4,shadowDY:6,shadowBlur:9};
+  const capPair=Object.assign({},cap,{tint:[216,218,224],tintMix:0.48,frost:3,frostMix:0.7,sp1K:0.5,rimB:20});
+  const capSel=Object.assign({},cap,{tint:[150,155,165],tintMix:0.28,frostMix:0.12,rimT:150,rimB:56,rimW:1.4});
+  const hh=PAIR.hh*z;
+  if(st.strip<1){
+    // pair phase (also during expand/contract morph)
+    const a=1-st.strip;
+    const lw=lerp(PAIR.L.hw*z,STRIP.hw*z,st.strip), lc=lerp(Z(PAIR.L.cx,'x'),Z(STRIP.cx,'x'),st.strip);
+    const rw=lerp(PAIR.R.hw*z,STRIP.hw*z,st.strip), rc=lerp(Z(PAIR.R.cx,'x'),Z(STRIP.cx,'x'),st.strip);
+    const hh2=lerp(PAIR.hh*z,STRIP.hh*z,st.strip);
+    glass4(Object.assign({sdf:sdfRR(lc,CY,lw,hh2,hh2),x0:lc-lw-30,y0:CY-hh2-30,x1:lc+lw+30,y1:CY+hh2+30,et:12*z},capPair));
+    if(st.strip<0.98) glass4(Object.assign({sdf:sdfRR(rc,CY,rw,hh2,hh2),x0:rc-rw-30,y0:CY-hh2-30,x1:rc+rw+30,y1:CY+hh2+30,et:12*z},capPair));
+  }
+  if(st.strip>0.02){
+    // strip: long capsule + selector
+    const sw=STRIP.hw*z, sx=Z(STRIP.cx,'x'), sh=STRIP.hh*z;
+    glass4(Object.assign({sdf:sdfRR(sx,CY,sw,sh,sh),x0:sx-sw-30,y0:CY-sh-30,x1:sx+sw+30,y1:CY+sh+30,et:12*z,rimT:12,rimL:8,rimR:10,rimB:38,rimW:0.9,sp1K:0.25,sp2K:0.2,fresK:0.02,menK:-16,menD0:1,menD1:3.5,tint:[128,132,140],tintMix:0.10},cap));
+    const scw=SEL_HW*z;
+    glass4(Object.assign({sdf:sdfRR(400,CY,scw,sh,sh),x0:400-scw-30,y0:CY-sh-30,x1:400+scw+30,y1:CY+sh+30,et:12*z,refrRim:52,sp1K:1.1,rimW:1.2},capSel));
+  }
+  // avatar + flip (pair phases)
+  if(st.uiA>0.01){
+    const ar=AVA.r*z;
+    glass4(Object.assign({sdf:sdfCirc(Z(AVA.cx,'x'),CY,ar),x0:Z(AVA.cx,'x')-ar-24,y0:CY-ar-24,x1:Z(AVA.cx,'x')+ar+24,y1:CY+ar+24,et:10*z,refrRim:34},cap));
+    const fr=FLIP.r*z;
+    glass4(Object.assign({sdf:sdfCirc(Z(FLIP.cx,'x'),CY,fr),x0:Z(FLIP.cx,'x')-fr-24,y0:CY-fr-24,x1:Z(FLIP.cx,'x')+fr+24,y1:CY+fr+24,et:10*z,refrRim:34},cap));
+  }
+  ctx.clearRect(0,0,W,H);
+  ctx.drawImage(sc,0,0);
+  // labels
+  const fs=Math.round(26*z);
+  const font='700 '+fs+'px Arial, sans-serif';
+  if(st.strip<0.5){
+    const a=1-st.strip*2;
+    if(f<258){
+      label(ctx,'VIDEO',Z(PAIR.L.cx,'x'),CY,font,'rgb(246,247,248)',Math.max(0,a));
+      label(ctx,'PHOTO',Z(PAIR.R.cx,'x'),CY,font,'rgb(219,242,93)',Math.max(0,a));
+    } else {
+      label(ctx,'CINEMATIC',Z(PAIR.R.cx,'x'),CY,font,'rgb(219,242,93)',Math.max(0,a));
+    }
+  }
+  if(st.strip>0.02){
+    const scroll=400-st.selX;
+    for(const m of MODES){
+      const x=Z(MODE_X[m]+scroll,'x');
+      if(x<-80||x>W+80) continue;
+      const sel=(m===st.selName0);
+      label(ctx,m,x,CY,font,sel?'rgb(219,242,93)':'rgb(246,247,248)',st.strip);
+    }
+  }
+  if(st.uiA>0.01){
+    avatar(ctx,Z(AVA.cx,'x'),CY,AVA.r*z,st.uiA);
+    flipIcon(ctx,Z(FLIP.cx,'x'),CY,34*z,'rgb(246,247,248)',st.uiA);
+  }
+};
+window.__draw(0);
+window.__ready=true;
+</script></body></html>
