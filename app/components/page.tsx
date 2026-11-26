@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { entryFor } from "@/components/catalog/overview-previews"
 import { useTheme } from "next-themes"
+import Link from "next/link"
 import { 
   Search, 
   Code, 
@@ -439,15 +441,16 @@ export default function Example() {
       <aside className="w-[280px] border-r border-border bg-card flex flex-col">
         {/* Logo */}
         <div className="p-6 border-b border-border">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-              <Component className="w-5 h-5 text-primary-foreground" />
+          <Link href="/" className="flex items-center gap-3" aria-label="Back to home">
+            {/* old logo tile: <div className="w-10 h-10 rounded-xl bg-primary ..."><Component .../></div> */}
+            <div className="w-10 h-10 rounded-xl bg-neutral-950 border border-border flex items-center justify-center">
+              <img src="/goat-red/assets/goat-logo.png" alt="" className="w-6 h-6 object-contain" />
             </div>
             <div>
-              <h1 className="font-bold text-lg">Goat UI</h1>
+              <h1 className="font-bold text-lg tracking-wide">GOAT UI</h1>
               <p className="text-xs text-muted-foreground">v0.1.0</p>
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* Search */}
@@ -467,6 +470,25 @@ export default function Example() {
 
         {/* Categories */}
         <div className="flex-1 overflow-y-auto px-4 pb-4">
+          <div className="space-y-0.5">
+            <p className="px-3 pb-1 pt-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Categories</p>
+            {[["All", components.length] as [string, number], ...CATEGORIES.map(c => [c, components.filter(x => x.category === c).length] as [string, number])].map(([cat, n]) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+                  selectedCategory === cat ? "bg-muted font-semibold text-foreground" : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  {React.createElement(cat === "All" ? Grid : entryFor((components.find(x => x.category === cat) || { name: "" }).name).icon, { className: "w-4 h-4" })}
+                  {cat === "All" ? "All components" : cat}
+                </span>
+                <span className="text-xs opacity-60">{n}</span>
+              </button>
+            ))}
+          </div>
+          {/* old nested tree sidebar (disabled):
           <div className="space-y-1">
             <button
               onClick={() => setSelectedCategory("All")}
@@ -517,7 +539,8 @@ export default function Example() {
                               : "hover:bg-muted text-muted-foreground"
                           }`}
                         >
-                          <Component className="w-3.5 h-3.5" />
+                          { /* old generic icon: <Component className="w-3.5 h-3.5" /> * /}
+                          {React.createElement(entryFor(component.name).icon, { className: "w-3.5 h-3.5" })}
                           <span>{component.name}</span>
                         </button>
                       ))}
@@ -527,6 +550,7 @@ export default function Example() {
               </div>
             ))}
           </div>
+          */}
         </div>
 
         {/* Bottom Actions */}
@@ -554,15 +578,29 @@ export default function Example() {
         {!selectedComponent ? (
           <div className="p-8">
             <div className="max-w-6xl mx-auto">
-              <div className="mb-8">
+              <div className="mb-6">
                 <h2 className="text-3xl font-bold mb-2">Components</h2>
                 <p className="text-muted-foreground">
                   Explore {components.length} production-ready UI components for your next project.
                 </p>
               </div>
+              <div className="mb-6 flex flex-wrap items-center gap-2">
+                {["All", ...CATEGORIES].map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                      selectedCategory === cat ? "border-foreground bg-foreground text-background" : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/40"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+                <span className="ml-auto text-xs text-muted-foreground">{filteredComponents.length} results</span>
+              </div>
 
               {/* Component Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
                 {loading ? (
                   <div className="col-span-full text-center py-12">
                     <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -574,6 +612,7 @@ export default function Example() {
                   </div>
                 ) : (
                   filteredComponents.map((component: ComponentMeta) => (
+                    /* old plain card (generic icon):
                     <motion.div
                       key={component.name}
                       initial={{ opacity: 0, y: 20 }}
@@ -604,6 +643,41 @@ export default function Example() {
                             {tag}
                           </span>
                         ))}
+                      </div>
+                    </motion.div>
+                    */
+                    <motion.div
+                      key={component.name}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      whileHover={{ y: -3 }}
+                      onClick={() => selectComponent(component)}
+                      className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 cursor-pointer transition-all duration-300"
+                    >
+                      <div className="relative">
+                        <div className="flex h-44 items-center justify-center overflow-hidden border-b border-border bg-muted/30 p-4 pointer-events-none select-none transition-transform duration-300 group-hover:scale-[1.03]">
+                          {entryFor(component.name).preview}
+                        </div>
+                        <div className="absolute inset-0 flex items-end justify-between gap-2 bg-gradient-to-t from-background/80 via-transparent to-transparent p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                          <span className="rounded-md bg-foreground px-3 py-1.5 text-xs font-semibold text-background">Open</span>
+                          <span
+                            role="button"
+                            onClick={(e) => { e.stopPropagation(); navigator.clipboard?.writeText(`import { ${component.name} } from "@/components/ui/${component.name.toLowerCase()}"`) }}
+                            className="flex items-center gap-1 rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-muted"
+                          >
+                            <Copy className="h-3 w-3" /> Copy import
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-4">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                          {React.createElement(entryFor(component.name).icon, { className: "h-4 w-4" })}
+                        </div>
+                        <div className="min-w-0">
+                          <h3 className="font-semibold leading-tight">{component.name}</h3>
+                          <p className="truncate text-xs text-muted-foreground">{entryFor(component.name).blurb}</p>
+                        </div>
+                        <span className="ml-auto shrink-0 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">{component.category}</span>
                       </div>
                     </motion.div>
                   ))

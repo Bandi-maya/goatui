@@ -38,15 +38,15 @@ export function SearchDialog() {
     type: "Component"
   }));
 
-  const staticRoutes = [
-    { name: "Sandbox Playground", category: "Core Tooling", href: "/playground", type: "Page" },
-    { name: "Blocks Explorer", category: "Layout", href: "/blocks", type: "Page" },
-    { name: "Themes Configurator", category: "Customization", href: "/themes", type: "Page" },
-    { name: "Animation Engine Showcase", category: "Framer Motion", href: "/animations", type: "Page" },
-    { name: "Icons Registry", category: "Design System", href: "/icons", type: "Page" },
-    { name: "Pricing Tiers", category: "Pricing", href: "/pricing", type: "Page" },
-    { name: "Changelog & Updates", category: "Documentation", href: "/changelog", type: "Page" },
-    { name: "About GoatUI", category: "Overview", href: "/about", type: "Page" }
+  const staticRoutes: { name: string; category: string; href: string; type: string }[] = [
+    // { name: "Sandbox Playground", category: "Core Tooling", href: "/playground", type: "Page" },
+    // { name: "Blocks Explorer", category: "Layout", href: "/blocks", type: "Page" },
+    // { name: "Themes Configurator", category: "Customization", href: "/themes", type: "Page" },
+    // { name: "Animation Engine Showcase", category: "Framer Motion", href: "/animations", type: "Page" },
+    // { name: "Icons Registry", category: "Design System", href: "/icons", type: "Page" },
+    // { name: "Pricing Tiers", category: "Pricing", href: "/pricing", type: "Page" },
+    // { name: "Changelog & Updates", category: "Documentation", href: "/changelog", type: "Page" },
+    // { name: "About GoatUI", category: "Overview", href: "/about", type: "Page" }
   ];
 
   const searchItems = [...staticRoutes, ...registryItems];

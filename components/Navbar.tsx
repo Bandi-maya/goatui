@@ -15,10 +15,11 @@ export default function Navbar() {
   const navLinks = [
     { name: "Docs", href: "/docs" },
     { name: "Components", href: "/components" },
-    { name: "Blocks", href: "/blocks" },
-    { name: "Templates", href: "/templates" },
-    { name: "Pricing", href: "/pricing" },
-    { name: "Changelog", href: "/changelog" },
+    // disabled routes (page files renamed to page.tsx.off, restore to re-enable)
+    // { name: "Blocks", href: "/blocks" },
+    // { name: "Templates", href: "/templates" },
+    // { name: "Pricing", href: "/pricing" },
+    // { name: "Changelog", href: "/changelog" },
   ]
 
   const triggerSearch = () => {

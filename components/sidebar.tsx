@@ -14,17 +14,18 @@ export function Sidebar() {
         { name: "Introduction", href: "/docs" },
       ],
     },
-    {
-      title: "Core Ecosystem",
-      links: [
-        { name: "Sandbox Playground", href: "/playground" },
-        { name: "Blocks Explorer", href: "/blocks" },
-        { name: "Templates Showcase", href: "/templates" },
-        { name: "Theme Engine", href: "/themes" },
-        { name: "Animation Engine", href: "/animations" },
-        { name: "Design Icons", href: "/icons" },
-      ],
-    },
+    // disabled routes: Core Ecosystem section commented out
+    //     {
+    //       title: "Core Ecosystem",
+    //       links: [
+    //         { name: "Sandbox Playground", href: "/playground" },
+    //         { name: "Blocks Explorer", href: "/blocks" },
+    //         { name: "Templates Showcase", href: "/templates" },
+    //         { name: "Theme Engine", href: "/themes" },
+    //         { name: "Animation Engine", href: "/animations" },
+    //         { name: "Design Icons", href: "/icons" },
+    //       ],
+    //     },
     {
       title: "Components Library",
       links: [
