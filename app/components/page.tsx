@@ -611,7 +611,7 @@ export default function Example() {
                     {glassItems.map((g) => (
                       <Link key={g.id} href={`/glass#${g.id}`} className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
                         <div className="relative h-44 overflow-hidden border-b border-border bg-muted/30">
-                          <iframe src={`/goat-glass/${g.id}.html`} title={g.name} loading="lazy" tabIndex={-1} className="pointer-events-none absolute left-1/2 top-0 origin-top border-0" style={{ width: 800, height: 600, transform: "translateX(-50%) scale(0.5)", marginTop: -62 }} />
+                          <iframe src={`/goat-glass/${g.id}`} title={g.name} loading="lazy" tabIndex={-1} className="pointer-events-none absolute left-1/2 top-0 origin-top border-0" style={{ width: 800, height: 600, transform: "translateX(-50%) scale(0.5)", marginTop: -62 }} />
                           <div className="absolute inset-0 flex items-end justify-between gap-2 bg-gradient-to-t from-background/80 via-transparent to-transparent p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                             <span className="rounded-md bg-foreground px-3 py-1.5 text-xs font-semibold text-background">Open</span>
                           </div>

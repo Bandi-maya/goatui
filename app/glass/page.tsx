@@ -30,7 +30,7 @@ export default function GlassPage() {
         <h1 className="mb-1 text-3xl font-bold">{cur.name}</h1>
         <p className="mb-6 text-muted-foreground">{cur.blurb}</p>
         <div className="inline-block overflow-hidden rounded-xl border border-border">
-          <iframe key={cur.id} src={`/goat-glass/${cur.id}.html`} title={cur.name} width={800} height={600} className="block" />
+          <iframe key={cur.id} src={`/goat-glass/${cur.id}`} title={cur.name} width={800} height={600} className="block" />
         </div>
       </main>
     </div>
