@@ -52,13 +52,19 @@ const DEMOS: Record<string, (C: any) => React.ComponentType<any>> = {
   },
 }
 
+// Overlay previews start open inside the contained stage (see .gmf-stagewrap), so the card shows what the component really looks like.
+// Closing it (backdrop, Esc, buttons) brings the trigger back, which opens it again.
+function openStage(C: any): React.ComponentType<any> {
+  return function OpenStage() { return <C contained defaultOpen /> }
+}
+
 const cache = new Map<string, React.LazyExoticComponent<React.ComponentType<any>>>()
 
 export function familyComponent(family: string, name: string) {
   const key = `${family}.${name}`
   let c = cache.get(key)
   if (!c) {
-    c = React.lazy(() => loaders[family]().then((m) => ({ default: DEMOS[key] ? DEMOS[key](m[name]) : m[name] || (() => null) })))
+    c = React.lazy(() => loaders[family]().then((m) => ({ default: DEMOS[key] ? DEMOS[key](m[name]) : (family === "ModalFamily" || family === "MenuFamily") && m[name] ? openStage(m[name]) : m[name] || (() => null) })))
     cache.set(key, c)
   }
   return c
@@ -76,10 +82,12 @@ const ROOT: Record<string, string> = { NavbarFamily: "nf-root", TableFamily: "tf
 export function LiveFamily({ family, name }: { family: string; name: string }) {
   const C = familyComponent(family, name)
   return (
+    <div style={{ display: "contents" }} onClickCapture={(e) => { const a = (e.target as HTMLElement).closest?.("a"); if (a && (a.getAttribute("href") || "").startsWith("#")) e.preventDefault() }}>
     <Boundary>
       <React.Suspense fallback={<div className="h-6 w-6 animate-spin rounded-full border-2 border-muted border-t-primary" />}>
-        {ROOT[family] ? <div className={ROOT[family]} style={{ background: "transparent", minHeight: 0, padding: 0, width: "100%" }}><C /></div> : <C />}
+        {ROOT[family] ? <div className={ROOT[family]} style={family === "ButtonFamily" ? { background: "transparent", minHeight: 0, padding: 0, width: "100%", display: "flex", justifyContent: "center", alignItems: "center" } : { background: "transparent", minHeight: 0, padding: 0, width: "100%" }}><C /></div> : family === "ModalFamily" ? <div className="gmf gmf-stagewrap"><C /></div> : family === "MenuFamily" ? <div className="gm-card-stage" style={{ width: "100%", minHeight: 480, flex: "none", padding: "56px 0 0", alignItems: "flex-start" }}><C /></div> : <C />}
       </React.Suspense>
     </Boundary>
+    </div>
   )
 }

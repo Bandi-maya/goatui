@@ -435,7 +435,9 @@ function DockIcon({
   label,
   hue,
   instant,
+  base = 44,
 }: {
+  base?: number;
   mouseX: ReturnType<typeof useMotionValue<number>>;
   icon: React.ReactNode;
   label: string;
@@ -447,7 +449,7 @@ function DockIcon({
     const b = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
     return x - (b.x + b.width / 2);
   });
-  const target = useTransform(distance, [-110, 0, 110], [44, 76, 44]);
+  const target = useTransform(distance, [-110, 0, 110], [base, base + 32, base]);
   const size = useSpring(target, instant ? { duration: 0.01 } : { stiffness: 420, damping: 24, mass: 0.6 });
   const [hover, setHover] = useState(false);
 
@@ -485,6 +487,8 @@ function DockIcon({
 export function DockMagnifyMenu(_: VariantProps) {
   const mouseX = useMotionValue(Infinity);
   const instant = useInstant();
+  const [base, setBase] = useState(44);
+  useEffect(() => { const f = () => setBase(window.innerWidth <= 420 ? 34 : 44); f(); window.addEventListener("resize", f); return () => window.removeEventListener("resize", f); }, []);
   return (
     <div
       className="gm-dock"
@@ -494,7 +498,7 @@ export function DockMagnifyMenu(_: VariantProps) {
       onMouseLeave={() => mouseX.set(Infinity)}
     >
       {dockApps.map((a) => (
-        <DockIcon key={a.label} mouseX={mouseX} icon={a.icon} label={a.label} hue={a.hue} instant={instant} />
+        <DockIcon key={a.label} mouseX={mouseX} icon={a.icon} label={a.label} hue={a.hue} instant={instant} base={base} />
       ))}
     </div>
   );
@@ -632,7 +636,7 @@ export function CommandPalette({ defaultOpen = false }: VariantProps) {
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
                   onKeyDown={onKey}
-                  placeholder="Type a command or search…"
+                  placeholder="Type a command…"
                   aria-label="Search commands"
                   role="combobox"
                   aria-expanded="true"
@@ -685,7 +689,7 @@ const ctxItems: MenuItem[] = [
 ];
 
 export function ContextRippleMenu({ defaultOpen = false }: VariantProps) {
-  const [pos, setPos] = useState<{ x: number; y: number } | null>(defaultOpen ? { x: 110, y: 60 } : null);
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(defaultOpen ? { x: 20, y: 50 } : null);
   const instant = useInstant();
   const stageRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -696,7 +700,7 @@ export function ContextRippleMenu({ defaultOpen = false }: VariantProps) {
     e.preventDefault();
     const b = stageRef.current!.getBoundingClientRect();
     setPos({
-      x: Math.min(e.clientX - b.left, b.width - 216),
+      x: Math.max(8, Math.min(e.clientX - b.left, b.width - 232)),
       y: Math.min(e.clientY - b.top, b.height - 220),
     });
   };
@@ -2559,7 +2563,7 @@ export function OrbitalMenu({ defaultOpen = false }: VariantProps) {
         <motion.circle
           cx="100" cy="100" r={R}
           fill="none"
-          stroke="rgba(109,124,255,0.35)"
+          stroke="rgba(120, 165, 244,0.35)"
           strokeWidth="1.5"
           strokeDasharray="3 6"
           animate={open ? (instant ? { opacity: 1 } : { opacity: 1, rotate: 360 }) : { opacity: 0 }}
@@ -2622,7 +2626,7 @@ const spotItems = [
 ];
 
 export function SpotlightContextMenu({ defaultOpen = false }: VariantProps) {
-  const [pos, setPos] = useState<{ x: number; y: number } | null>(defaultOpen ? { x: 96, y: 56 } : null);
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(defaultOpen ? { x: 12, y: 56 } : null);
   const instant = useInstant();
   const stageRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);

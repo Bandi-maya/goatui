@@ -391,13 +391,13 @@ export function SendSplitButton() {
 
 /* ---------- B9 - toolbar icon buttons ---------- */
 export function ToolbarIconButton({
-  icon,
-  tip,
+  icon = "star",
+  tip = "Star thread",
   pressed,
   onToggle,
 }: {
-  icon: "archive" | "snooze" | "star";
-  tip: string;
+  icon?: "archive" | "snooze" | "star";
+  tip?: string;
   pressed?: boolean;
   onToggle?: () => void;
 }) {

@@ -265,7 +265,7 @@ export function GradientHBars() {
 /* ------------------------------------------------------------------ */
 export function DonutCenter() {
   const parts = [
-    { k: "Starter", v: 38, c: "#818cf8" },
+    { k: "Starter", v: 38, c: "#84adf5" },
     { k: "Pro", v: 34, c: "#38bdf8" },
     { k: "Scale", v: 28, c: "#7db1ff" },
   ];
@@ -321,7 +321,7 @@ export function DonutCenter() {
 export function SegmentedDonut() {
   const parts = [
     { k: "Design", v: 30, c: "#60a5fa" },
-    { k: "Eng", v: 42, c: "#818cf8" },
+    { k: "Eng", v: 42, c: "#84adf5" },
     { k: "Ops", v: 16, c: "#34d399" },
     { k: "G&A", v: 12, c: "#fbbf24" },
   ];
@@ -567,14 +567,14 @@ export function StackedBars() {
             <div className="gf-stack-bars">
               {seg(r.c, "#7db1ff", i * 90 + 180, true)}
               {seg(r.b, "#38bdf8", i * 90 + 90, false)}
-              {seg(r.a, "#818cf8", i * 90, false)}
+              {seg(r.a, "#84adf5", i * 90, false)}
             </div>
             <span className="gf-vbar-lab">{r.k}</span>
           </div>
         ))}
       </div>
       <ul className="gf-legend">
-        <li><i style={{ background: "#818cf8" }} />Product</li>
+        <li><i style={{ background: "#84adf5" }} />Product</li>
         <li><i style={{ background: "#38bdf8" }} />Services</li>
         <li><i style={{ background: "#7db1ff" }} />Other</li>
       </ul>

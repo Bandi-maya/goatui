@@ -27,21 +27,23 @@ const blockFiles = ["404-1","app-download-1","banner-1","billing-page-1","blog-c
 const pretty = (s: string) => s.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/-/g, " ").replace(/\b1$/, "").trim().replace(/^\w/, (c) => c.toUpperCase())
 // Families whose pieces are big get a smaller scale in grid thumbnails.
 // Stages follow the theme: card surface and foreground ink from the active theme. Button designs keep their warm paper stage in light mode.
-const STAGE_BG: Record<string, string> = { ButtonFamily: "#efece6" }
-const FULL = new Set(["SectionsFamily"])
+const STAGE_BG: Record<string, string> = { ButtonFamily: "var(--stage-btn)", NavbarFamily: "var(--stage-nav)" }
+const FULL = new Set(["SectionsFamily", "ModalFamily", "NavbarFamily", "NavFlowFamily", "TableFamily", "TabBatchA", "TabBatchB", "TabBatchC", "TabBatchD", "AccordionFamily"])
 const BIG = new Set(["SectionsFamily", "NavbarFamily", "TableFamily", "ChartFamily", "CardFamily", "NavFlowFamily", "DataDisplayFamily"])
 const UP: Record<string, number> = { ModalFamily: 1.15, ButtonFamily: 1.1, FormsFamily: 0.9, MenuFamily: 1, InputFamily: 0.9, AccordionFamily: 0.9 }
 
 const bsrc = (it: Item) => (String(it.ref).startsWith("/") ? it.ref : `/goat-blocks/${it.ref}`)
-const bw = (it: Item) => (it.category === EXTRA ? 640 : 1280)
+const bw = (it: Item) => (it.category === EXTRA ? (/inline-edit|rolling-countdown/.test(String(it.ref)) ? 400 : 640) : 1280)
 const bh = (it: Item) => (it.category === EXTRA ? 260 : 800)
 
 function Thumb({ it }: { it: Item }) {
   if (it.kind === "prim") {
     return <div className="flex h-full items-center justify-center p-4 pointer-events-none select-none">{renderComponentDemo(it.ref.component, it.name, "default")}</div>
   }
-  if (it.kind === "glass") return <ScaledFrame src={`/goat-glass/${it.ref.id}`} title={it.name} w={800} h={600} interactive={false} lazy />
+  if (it.kind === "glass") return <ScaledFrame src={`/goat-glass/${it.ref.id}.html`} title={it.name} w={800} h={600} interactive={false} lazy />
+  if (it.kind === "block" && it.category === EXTRA) return <WhenVisible className="flex h-full w-full items-center bg-white"><div className="w-full"><ScaledFrame src={bsrc(it)} title={it.name} w={bw(it)} h={bh(it)} interactive={false} maxScale={1} /></div></WhenVisible>
   if (it.kind === "block") return <WhenVisible className="h-full"><ScaledFrame src={bsrc(it)} title={it.name} w={bw(it)} h={bh(it)} interactive={false} maxScale={it.category === EXTRA ? 1 : 0.3} /></WhenVisible>
+  if (it.family === "ModalFamily") return <WhenVisible className="h-full overflow-hidden"><ModalThumb it={it} /></WhenVisible>
   const s = UP[it.family!] ?? (BIG.has(it.family!) ? 0.5 : 0.8)
   return (
     <WhenVisible className="h-full overflow-hidden">
@@ -91,6 +93,28 @@ export function useCenterShift(frame: React.RefObject<HTMLElement | null>, conte
   return d
 }
 
+// Modal, dialog and drawer cards show the component open, in a 480x360 frame scaled to the card, so you see its real content.
+function ModalThumb({ it }: { it: Item }) {
+  const ref = React.useRef<HTMLDivElement>(null)
+  const [k, setK] = useState(0.6)
+  useEffect(() => {
+    const o = ref.current
+    if (!o) return
+    const fit = () => setK(Math.min(o.clientWidth / 480, o.clientHeight / 360))
+    fit()
+    const ro = new ResizeObserver(fit)
+    ro.observe(o)
+    return () => ro.disconnect()
+  }, [])
+  return (
+    <div ref={ref} className="pointer-events-none relative h-full w-full overflow-hidden">
+      <div className="absolute left-1/2 top-0 [&_.gmf-stagewrap]:!h-[360px]" style={{ width: 480, height: 360, transform: `translateX(-50%) scale(${k})`, transformOrigin: "top center" }}>
+        <LiveFamily family="ModalFamily" name={it.name} />
+      </div>
+    </div>
+  )
+}
+
 // Centres the live render in the card and shrinks it only as far as needed so nothing is cropped.
 function FitStage({ it, base }: { it: Item; base: number }) {
   const outer = React.useRef<HTMLDivElement>(null)
@@ -121,7 +145,7 @@ function FitStage({ it, base }: { it: Item; base: number }) {
   }, [base])
   const d = useCenterShift(outer, inner, `${k}|${w}`)
   return (
-    <div ref={outer} style={{ background: STAGE_BG[it.family!] || "hsl(var(--card))", color: STAGE_BG[it.family!] ? "#1b1b18" : "hsl(var(--foreground))" }} className="pointer-events-none relative h-full select-none overflow-hidden">
+    <div ref={outer} style={{ background: STAGE_BG[it.family!] || "hsl(var(--card))", color: STAGE_BG[it.family!] ? "var(--stage-fg)" : "hsl(var(--foreground))" }} className="pointer-events-none relative h-full select-none overflow-hidden">
       <div style={{ position: "absolute", inset: 0, transform: `translate(${d.x}px,${d.y}px)` }}>
         <div ref={inner} style={{ position: "absolute", left: "50%", top: "50%", width: w || `${100 / base}%`, transform: `translate(-50%,-50%) scale(${k})`, transformOrigin: "center" }} className="flex justify-center [contain:layout]">
           <div className={`flex w-full justify-center ${FULL.has(it.family!) ? "[&>*]:w-full" : ""}`}><LiveFamily family={it.family!} name={it.name} /></div>
@@ -131,6 +155,16 @@ function FitStage({ it, base }: { it: Item; base: number }) {
   )
 }
 
+
+// Wraps a self-contained HTML page into a copy-paste React component (TSX and JSX), so no code tab shows raw HTML.
+const esc = (h: string) => h.replace(/\\/g, "\\\\").replace(/`/g, "\\`").replace(/\$\{/g, "\\${")
+function htmlToReact(name: string, html: string, w: number, h: number) {
+  let comp0 = name.replace(/\.html$/, "").split(/[^A-Za-z0-9]+/).filter(Boolean).map((p) => p[0].toUpperCase() + p.slice(1)).join("") || "GoatItem"
+  const comp = /^[0-9]/.test(comp0) ? "Block" + comp0 : comp0
+  const body = `const HTML = \`${esc(html)}\`\n\nexport default function ${comp}() {\n  return (\n    <iframe\n      title="${comp}"\n      srcDoc={HTML}\n      style={{ width: "100%", maxWidth: ${w}, aspectRatio: "${w} / ${h}", border: 0, display: "block", background: "#fff" }}\n    />\n  )\n}\n`
+  return { name: `${comp}.tsx`, altName: `${comp}.jsx`, code: `import React from "react"\n\n${body}`, alt: `import React from "react"\n\n${body}` }
+}
+
 function useSource(it: Item | null) {
   const [files, setFiles] = useState<DetailFile[]>([])
   useEffect(() => {
@@ -138,7 +172,11 @@ function useSource(it: Item | null) {
     if (!it) return
     let live = true
     const done = (f: DetailFile[]) => live && setFiles(f)
-    if (it.kind === "prim") done([{ name: `${it.name.toLowerCase()}.tsx`, code: it.ref.source || "" }])
+    if (it.kind === "prim") {
+      const base = { name: `${it.name.toLowerCase()}.tsx`, code: it.ref.source || "" }
+      done([base])
+      fetch("/catalog-src/prims-jsx.json").then((r) => r.json()).then((j) => { const alt = j[it.name]; if (alt) done([{ ...base, altName: `${it.name.toLowerCase()}.jsx`, alt }]) }).catch(() => {})
+    }
     else if (it.kind === "cat") {
       Promise.all([fetch(`/catalog-src/${it.family}.json`).then((r) => r.json()), fetch(`/catalog-src/${it.family}.css`).then((r) => (r.ok ? r.text() : ""))])
         .then(async ([j, css]) => {
@@ -149,11 +187,11 @@ function useSource(it: Item | null) {
         })
         .catch(() => done([{ name: "source.tsx", code: "// source unavailable" }]))
     } else if (it.kind === "glass") {
-      Promise.all([`/goat-glass/${it.ref.id}`, "/goat-glass/glass-engine.js"].map((u) => fetch(u).then((r) => r.text())))
-        .then(([h, e]) => done([{ name: `${it.ref.id}.html`, code: h }, { name: "glass-engine.js", code: e }]))
+      Promise.all([`/goat-glass/${it.ref.id}.html`, "/goat-glass/glass-engine.js"].map((u) => fetch(u).then((r) => r.text())))
+        .then(([h, e]) => done([htmlToReact(String(it.ref.id), h.replace(/<script src="\/goat-glass\/glass-engine\.js"><\/script>/, () => "<script>" + e + "<\/script>"), 800, 600)]))
         .catch(() => {})
     } else {
-      fetch(bsrc(it)).then((r) => r.text()).then((h) => done([{ name: String(it.ref).split("/").pop() + (String(it.ref).endsWith(".html") ? "" : ".html"), code: h }])).catch(() => {})
+      fetch(bsrc(it)).then((r) => r.text()).then((h) => done([htmlToReact(String(it.ref).split("/").pop() || "block", h, bw(it), bh(it))])).catch(() => {})
     }
     return () => { live = false }
   }, [it])
@@ -174,7 +212,7 @@ export default function ComponentsExplorer() {
     const cats: Item[] = catalogItems.map((c) => ({ key: c.id, kind: "cat", name: c.name, category: c.category, family: c.family, blurb: pretty(c.name) + " · " + c.category }))
     const gl: Item[] = glassItems.map((g) => ({ key: `glass.${g.id}`, kind: "glass", name: g.name, category: GLASS, blurb: g.blurb, ref: g }))
     const bl: Item[] = blockFiles.map((f) => ({ key: `block.${f}`, kind: "block", name: pretty(f.replace(/\.html$/, "")), category: BLOCKS, blurb: "Full page block", ref: `${f}.html` }))
-    const ex: Item[] = [["inline-edit", "Inline edit", "Click to edit text, Enter saves, Esc cancels."], ["rolling-countdown", "Rolling countdown", "Digits roll like a counter, with pause and resume."], ["scrolling-strip", "Scrolling strip", "Endless marquee strip."], ["overlay-scrollbar", "Overlay scrollbar", "Scroll area with a thin overlay scrollbar."], ["floating-panel", "Floating panel", "Draggable, resizable panel with minimize and close."]].map(([f, n, b]) => ({ key: `extra.${f}`, kind: "block", name: n, category: EXTRA, blurb: b, ref: `/goat-extras/${f}` }))
+    const ex: Item[] = [["inline-edit", "Inline edit", "Click to edit text, Enter saves, Esc cancels."], ["rolling-countdown", "Rolling countdown", "Digits roll like a counter, with pause and resume."], ["scrolling-strip", "Scrolling strip", "Endless marquee strip."], ["overlay-scrollbar", "Overlay scrollbar", "Scroll area with a thin overlay scrollbar."], ["floating-panel", "Floating panel", "Draggable, resizable panel with minimize and close."]].map(([f, n, b]) => ({ key: `extra.${f}`, kind: "block", name: n, category: EXTRA, blurb: b, ref: `/goat-extras/${f}.html` }))
     return [...gl, ...ex, ...cats, ...prim, ...bl]
   }, [])
 
@@ -235,7 +273,7 @@ export default function ComponentsExplorer() {
   const preview = (it: Item): { node: React.ReactNode; fill?: boolean } => {
     if (it.kind === "prim") return { node: renderComponentDemo(it.ref.component, it.name, variant) }
     if (it.kind === "cat") return { node: <DetailStage it={it} /> }
-    if (it.kind === "glass") return { node: <div className="mx-auto w-full max-w-[800px] overflow-hidden rounded-xl border border-border"><ScaledFrame src={`/goat-glass/${it.ref.id}`} title={it.name} w={800} h={600} /></div>, fill: true }
+    if (it.kind === "glass") return { node: <div className="mx-auto w-full max-w-[800px] overflow-hidden rounded-xl border border-border"><ScaledFrame src={`/goat-glass/${it.ref.id}.html`} title={it.name} w={800} h={600} /></div>, fill: true }
     return it.category === EXTRA ? { node: <div className="w-full overflow-hidden rounded-xl border border-border bg-white"><ScaledFrame src={bsrc(it)} title={it.name} w={bw(it)} h={300} maxScale={1.6} /></div>, fill: true } : { node: <ScaledFrame src={bsrc(it)} title={it.name} w={1280} h={800} />, fill: true }
   }
 
@@ -293,7 +331,7 @@ export default function ComponentsExplorer() {
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
                   {filtered.slice(0, shown).map((it) => (
                     <button key={it.key} onClick={() => open(it)} className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card text-left transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
-                      <div className="relative h-44 w-full overflow-hidden border-b border-border bg-muted/30">
+                      <div className={`relative w-full overflow-hidden border-b border-border bg-muted/30 ${it.family === "ModalFamily" ? "h-56" : "h-44"}`}>
                         <Thumb it={it} />
                         <div className="absolute inset-0 flex items-end bg-gradient-to-t from-background/80 via-transparent to-transparent p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100"><span className="rounded-md bg-foreground px-3 py-1.5 text-xs font-semibold text-background">Open</span></div>
                       </div>
@@ -349,16 +387,17 @@ function DetailStage({ it }: { it: Item }) {
       let ul = 1e9, ur = -1e9
       ce.querySelectorAll("*").forEach((el) => { const e = el as HTMLElement; if (e.children.length) return; const q = e.getBoundingClientRect(); if (q.width < 2 || q.height < 2) return; ul = Math.min(ul, q.left); ur = Math.max(ur, q.right) })
       const natural = ur > ul ? (ur - ul) / sc : 0
-      const kk = natural > avail && avail > 0 ? Math.max(0.3, avail / natural) : 1
+      const kk = !FULL.has(it.family!) && !/Marquee|AvatarV04/.test(it.name) && natural > avail && avail > 0 ? Math.max(0.3, avail / natural) : 1
       setK((p) => (Math.abs(p - kk) > 0.01 ? kk : p))
       setHh((p) => (p === undefined ? ce.offsetHeight * kk : p))
     }
     const ts = [200, 800].map((ms) => setTimeout(fit, ms))
     return () => { ts.forEach(clearTimeout) }
   }, [it.name])
-  const d = useCenterShift(f, c, `${it.name}|${k}`)
+  const d0 = useCenterShift(f, c, `${it.name}|${k}`)
+  const d = (it.family === "MenuFamily" || it.family === "ModalFamily" || it.family === "NavbarFamily" || it.family === "NavFlowFamily" || it.family === "TableFamily" || it.family === "AccordionFamily" || it.family === "SectionsFamily" || /Marquee|AvatarV04/.test(it.name) || /^TabBatch/.test(it.family || "")) ? { x: 0, y: 0 } : d0
   return (
-    <div ref={f} style={{ background: STAGE_BG[it.family!] || "hsl(var(--card))", color: STAGE_BG[it.family!] ? "#1b1b18" : "hsl(var(--foreground))" }} className={`flex w-full min-w-0 items-center justify-center overflow-hidden rounded-lg p-3 sm:p-6 ${OVERLAY_FAMILIES.has(it.family!) ? "min-h-[620px]" : "min-h-[320px]"}`}>
+    <div ref={f} style={{ background: STAGE_BG[it.family!] || "hsl(var(--card))", color: STAGE_BG[it.family!] ? "var(--stage-fg)" : "hsl(var(--foreground))" }} className={`flex w-full min-w-0 items-center justify-center overflow-hidden rounded-lg p-3 sm:p-6 ${OVERLAY_FAMILIES.has(it.family!) ? "min-h-[620px]" : it.family === "NavFlowFamily" ? "min-h-[440px]" : /^MegaMenu/.test(it.name) ? "min-h-[580px] items-start" : "min-h-[320px]"}`}>
       <div style={{ minHeight: hh, width: "100%" }} className="flex items-start justify-center">
         <div ref={c} style={{ transform: `translate(${d.x}px,${d.y}px) scale(${k})`, transformOrigin: "center" }} className={`flex w-full flex-none justify-center ${FULL.has(it.family!) ? "[&>*]:w-full" : ""}`}><LiveFamily family={it.family!} name={it.name} /></div>
       </div>

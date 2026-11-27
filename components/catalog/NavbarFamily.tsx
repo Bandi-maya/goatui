@@ -394,7 +394,7 @@ export function MegaMenuColumns() {
    12 - MegaMenuCards
    ============================================================ */
 const cardTiles = [
-  [IGrid, "#5b5bd6", "Blocks", "Sections and full page shells"],
+  [IGrid, "#5b88d6", "Blocks", "Sections and full page shells"],
   [IBox, "#0d9488", "Components", "Inputs, cards, tabs and more"],
   [ISpark, "#d97706", "Motion", "Spring presets and transitions"],
   [IFile, "#dc2626", "Templates", "Marketing and app starters"],
@@ -579,7 +579,7 @@ export function MegaMenuSpotlight() {
    16 - DockMagnify (macOS-style distance scaling)
    ============================================================ */
 const dockApps = [
-  [IGrid, "#5b5bd6", "Apps"], [ISearch, "#0d9488", "Find"], [IChat, "#d97706", "Chat"],
+  [IGrid, "#5b88d6", "Apps"], [ISearch, "#0d9488", "Find"], [IChat, "#d97706", "Chat"],
   [IMail, "#dc2626", "Mail"], [ICompass, "#0284c7", "Maps"], [IHeart, "#e11d78", "Health"],
 ] as const;
 function DockIcon({ Icon, color, label, mouseX, on, onPick }:

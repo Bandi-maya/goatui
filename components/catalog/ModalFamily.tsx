@@ -60,7 +60,7 @@ function useAutofocus<T extends HTMLElement>(active: boolean) {
   const ref = useRef<T | null>(null);
   useEffect(() => {
     if (active) {
-      const t = window.setTimeout(() => ref.current?.focus(), 60);
+      const t = window.setTimeout(() => ref.current?.focus({ preventScroll: true }), 60);
       return () => window.clearTimeout(t);
     }
   }, [active]);
@@ -90,6 +90,7 @@ function Overlay({
       role="dialog"
       aria-modal="true"
       aria-label={label}
+      onClick={(e) => { if (e.target === e.currentTarget) onBackdrop?.(); }}
     >
       <div
         className={`gmf-backdrop ${plain ? "plain" : ""}`}
@@ -399,9 +400,9 @@ export function CommandPalette({ contained, defaultOpen }: ModalVariantProps) {
    06 - LightboxGallery
    ============================================================ */
 const LB_SLIDES = [
-  { cap: "Nebula study - render 04", bg: "radial-gradient(120% 90% at 20% 10%, #3b2f6e 0%, transparent 55%), radial-gradient(100% 100% at 85% 80%, #1d4e5f 0%, transparent 50%), linear-gradient(160deg, #171a26, #0b0e15)" },
-  { cap: "Chrome dunes - v2", bg: "radial-gradient(110% 90% at 80% 15%, #7a3b5f 0%, transparent 55%), radial-gradient(90% 90% at 15% 85%, #2e4a7a 0%, transparent 55%), linear-gradient(200deg, #1a1626, #0c0b12)" },
-  { cap: "Solar field - print A", bg: "radial-gradient(100% 100% at 50% 100%, #7a5a2e 0%, transparent 60%), radial-gradient(80% 80% at 80% 10%, #3d2e6e 0%, transparent 55%), linear-gradient(160deg, #161420, #0b0a10)" },
+  { cap: "Nebula study - render 04", bg: "radial-gradient(120% 90% at 20% 10%, #2f466e 0%, transparent 55%), radial-gradient(100% 100% at 85% 80%, #1d4e5f 0%, transparent 50%), linear-gradient(160deg, #141c29, #0b0e15)" },
+  { cap: "Chrome dunes - v2", bg: "radial-gradient(110% 90% at 80% 15%, #7a3b5f 0%, transparent 55%), radial-gradient(90% 90% at 15% 85%, #2e4a7a 0%, transparent 55%), linear-gradient(200deg, #131b29, #0c0b12)" },
+  { cap: "Solar field - print A", bg: "radial-gradient(100% 100% at 50% 100%, #7a5a2e 0%, transparent 60%), radial-gradient(80% 80% at 80% 10%, #2e456e 0%, transparent 55%), linear-gradient(160deg, #111823, #0b0a10)" },
   { cap: "Iris bloom - macro", bg: "radial-gradient(90% 90% at 30% 30%, #2e6e54 0%, transparent 55%), radial-gradient(100% 100% at 85% 85%, #6e2e4d 0%, transparent 55%), linear-gradient(140deg, #141a1e, #0a0d10)" },
 ];
 export function LightboxGallery({ contained, defaultOpen }: ModalVariantProps) {
@@ -419,6 +420,7 @@ export function LightboxGallery({ contained, defaultOpen }: ModalVariantProps) {
         <div
           className={`gmf-overlay gmf-lb ${contained ? "is-contained" : ""} ${pres.closing ? "is-closing" : ""}`}
           role="dialog" aria-modal="true" aria-label="Image lightbox"
+          onClick={(e) => { if (e.target === e.currentTarget) close(); }}
         >
           <div className="gmf-lb-frame" ref={ref} tabIndex={-1}>
             <CloseBtn onClose={close} className="gmf-lb-close" />
@@ -559,7 +561,7 @@ export function FullScreenTakeover({ contained, defaultOpen }: ModalVariantProps
     <>
       <Trigger onOpen={() => setOpen(true)}><Maximize2 size={14} /> Launch takeover</Trigger>
       {pres.mounted && (
-        <div className={`gmf-overlay gmf-fst ${contained ? "is-contained" : ""} ${pres.closing ? "is-closing" : ""}`} role="dialog" aria-modal="true" aria-label="Welcome to GOAT UI Pro">
+        <div className={`gmf-overlay gmf-fst ${contained ? "is-contained" : ""} ${pres.closing ? "is-closing" : ""}`} role="dialog" onClick={(e) => { if (e.target === e.currentTarget) close(); }} aria-modal="true" aria-label="Welcome to GOAT UI Pro">
           <div className="gmf-fst-inner">
             <CloseBtn onClose={close} className="gmf-fst-close" />
             <span className="gmf-fst-eyebrow">Introducing Pro</span>
@@ -569,10 +571,10 @@ export function FullScreenTakeover({ contained, defaultOpen }: ModalVariantProps
               support and a consistent 4px grid. Copy, paste, ship.
             </p>
             <div className="gmf-fst-feats">
-              <span className="gmf-fst-feat"><Zap size={13} color="#9d8cff" /> Spring motion</span>
-              <span className="gmf-fst-feat"><Keyboard size={13} color="#9d8cff" /> Full keyboard nav</span>
-              <span className="gmf-fst-feat"><Check size={13} color="#9d8cff" /> axe clean</span>
-              <span className="gmf-fst-feat"><Copy size={13} color="#9d8cff" /> Zero install</span>
+              <span className="gmf-fst-feat"><Zap size={13} color="#95b8f6" /> Spring motion</span>
+              <span className="gmf-fst-feat"><Keyboard size={13} color="#95b8f6" /> Full keyboard nav</span>
+              <span className="gmf-fst-feat"><Check size={13} color="#95b8f6" /> axe clean</span>
+              <span className="gmf-fst-feat"><Copy size={13} color="#95b8f6" /> Zero install</span>
             </div>
             <div className="gmf-fst-cta">
               <button type="button" className="gmf-btn primary" style={{ padding: "12px 22px" }} onClick={close}>Start free <ArrowRight size={15} /></button>
@@ -654,7 +656,7 @@ export function AnchoredPopover({ contained, defaultOpen }: ModalVariantProps) {
           <div className="gmf-pop-anchor">
             <div className="gmf-pop-panel">
               {[
-                ["BM", "Bandi Maya", "Owner - online", "#4d8dff,#b16cff", true],
+                ["BM", "Bandi Maya", "Owner - online", "#4d8dff,#77a5f4", true],
                 ["AR", "Ananya Rao", "Design - 2h ago", "#34d399,#5cc8ff", false],
                 ["VK", "Vikram K", "Engineering - 5m ago", "#fbbf24,#fb923c", false],
               ].map(([ini, name, meta, grad, dot]) => (
@@ -898,7 +900,7 @@ export function CinemaVideoModal({ contained, defaultOpen }: ModalVariantProps) 
     <>
       <Trigger onOpen={() => setOpen(true)}><Play size={14} /> Watch intro</Trigger>
       {pres.mounted && (
-        <div className={`gmf-overlay gmf-cin ${contained ? "is-contained" : ""} ${pres.closing ? "is-closing" : ""}`} role="dialog" aria-modal="true" aria-label="Video player">
+        <div className={`gmf-overlay gmf-cin ${contained ? "is-contained" : ""} ${pres.closing ? "is-closing" : ""}`} role="dialog" onClick={(e) => { if (e.target === e.currentTarget) close(); }} aria-modal="true" aria-label="Video player">
           <div className="gmf-cin-panel">
             <div className="gmf-cin-screen">
               <button type="button" className="gmf-cin-play" aria-label="Play video" onClick={close}>
@@ -939,7 +941,7 @@ export function SpotlightSearch({ contained, defaultOpen }: ModalVariantProps) {
         <Overlay closing={pres.closing} contained={contained} className="gmf-spt" label="Spotlight search" onBackdrop={close}>
           <div className="gmf-spt-panel">
             <div className="gmf-spt-field">
-              <Search size={19} color="#9d8cff" />
+              <Search size={19} color="#95b8f6" />
               <input ref={ref} placeholder="Search components, docs, tokens..." aria-label="Spotlight search" />
               <span className="gmf-kbd">esc</span>
             </div>
@@ -959,7 +961,7 @@ export function SpotlightSearch({ contained, defaultOpen }: ModalVariantProps) {
    19 - ShareSheet
    ============================================================ */
 const SHARE_APPS = [
-  { n: "Copy link", g: "linear-gradient(135deg,#4d8dff,#9d8cff)", icon: <Link2 size={20} /> },
+  { n: "Copy link", g: "linear-gradient(135deg,#4d8dff,#95b8f6)", icon: <Link2 size={20} /> },
   { n: "Messages", g: "linear-gradient(135deg,#34d399,#0ea5e9)", icon: <MessageCircle size={20} /> },
   { n: "Mail", g: "linear-gradient(135deg,#5cc8ff,#4d8dff)", icon: <Mail size={20} /> },
   { n: "X / Post", g: "linear-gradient(135deg,#334155,#0f172a)", icon: <Share2 size={20} /> },
@@ -1085,7 +1087,7 @@ export function GlassOrbitModal({ contained, defaultOpen }: ModalVariantProps) {
     <>
       <Trigger onOpen={() => setOpen(true)}><Gem size={14} /> Glass stats</Trigger>
       {pres.mounted && (
-        <div className={`gmf-overlay gmf-gls ${contained ? "is-contained" : ""} ${pres.closing ? "is-closing" : ""}`} role="dialog" aria-modal="true" aria-label="Workspace stats">
+        <div className={`gmf-overlay gmf-gls ${contained ? "is-contained" : ""} ${pres.closing ? "is-closing" : ""}`} role="dialog" onClick={(e) => { if (e.target === e.currentTarget) close(); }} aria-modal="true" aria-label="Workspace stats">
           <div className="gmf-backdrop" onClick={close} aria-hidden="true" />
           <div className="gmf-gls-stage">
             <div className="gmf-gls-blob" aria-hidden="true" />
@@ -1195,7 +1197,7 @@ export function MorphFabModal({ contained, defaultOpen }: ModalVariantProps) {
               <h3 className="gmf-fab-title">Quick create</h3>
               <p className="gmf-fab-sub">Morphed from the FAB - same origin, new shape.</p>
               <div className="gmf-fab-rows">
-                <button type="button" className="gmf-fab-row" onClick={close}><Plus size={13} color="#9d8cff" /> New component</button>
+                <button type="button" className="gmf-fab-row" onClick={close}><Plus size={13} color="#95b8f6" /> New component</button>
                 <button type="button" className="gmf-fab-row" onClick={close}><Folder size={13} color="#5cc8ff" /> New project</button>
                 <button type="button" className="gmf-fab-row" onClick={close}><Users size={13} color="#34d399" /> Invite teammate</button>
               </div>
@@ -1220,7 +1222,7 @@ const NTC = [
   ]},
   { g: "Earlier", items: [
     { ini: "GH", grad: "#94a3b8,#475569", b: "Build succeeded", s: "goatui.vercel.app deployed in 41s.", t: "3h ago", unread: false },
-    { ini: "BM", grad: "#4d8dff,#b16cff", b: "You shipped v2.3", s: "Tabs family - 30 variants.", t: "1d ago", unread: false },
+    { ini: "BM", grad: "#4d8dff,#77a5f4", b: "You shipped v2.3", s: "Tabs family - 30 variants.", t: "1d ago", unread: false },
   ]},
 ];
 export function NotificationCenter({ contained, defaultOpen }: ModalVariantProps) {
@@ -1288,7 +1290,7 @@ export function ShortcutsDialog({ contained, defaultOpen }: ModalVariantProps) {
         <Overlay closing={pres.closing} contained={contained} className="gmf-kb" label="Keyboard shortcuts" onBackdrop={close}>
           <div className="gmf-kb-panel" ref={ref} tabIndex={-1}>
             <div className="gmf-kb-head">
-              <h3><Keyboard size={16} color="#9d8cff" /> Keyboard shortcuts</h3>
+              <h3><Keyboard size={16} color="#95b8f6" /> Keyboard shortcuts</h3>
               <CloseBtn onClose={close} />
             </div>
             <div className="gmf-kb-cols">

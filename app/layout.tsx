@@ -32,6 +32,11 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("goat-theme")||"leather-black";var r=document.documentElement;r.classList.add("theme-"+t);r.classList.add(t==="goat-light"||t==="glass-frost"?"light":"dark")}catch(e){}`,
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />

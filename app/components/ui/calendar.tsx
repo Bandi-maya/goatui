@@ -501,7 +501,7 @@ function Calendar({
                               ? 'var(--calendar-text-dim, var(--text-dim, #94a3b8))'
                               : 'var(--calendar-text, var(--text-main, #0f172a))',
                           background: selected
-                            ? 'var(--calendar-selected-bg, linear-gradient(to right, #2563eb, #4f46e5))'
+                            ? 'var(--calendar-selected-bg, linear-gradient(to right, #2563eb, #4680e5))'
                             : 'transparent',
                           boxShadow: selected ? '0 4px 12px -1px var(--calendar-selected-shadow, rgba(37, 99, 235, 0.4))' : 'none',
                           border: isToday && !selected ? '2px solid var(--calendar-today-border, #2563eb)' : 'none'

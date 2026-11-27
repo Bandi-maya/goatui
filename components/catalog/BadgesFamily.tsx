@@ -442,7 +442,7 @@ export function StoryRingAvatar() {
             <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" stopColor="#ff7a3d" />
               <stop offset=".55" stopColor="#e5307a" />
-              <stop offset="1" stopColor="#7b3df5" />
+              <stop offset="1" stopColor="#4282f0" />
             </linearGradient>
           </defs>
           <g className={reduce ? "" : "gb-story-spin"}>

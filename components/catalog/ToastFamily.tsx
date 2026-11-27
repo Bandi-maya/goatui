@@ -190,7 +190,7 @@ export function ToastAuroraGlass() {
    02 — Slide Stack
    ============================================================ */
 const STACK_SEED = [
-  { id: "a", color: "#5b5bd6", title: "New comment", text: "Riya replied in #goat-ui" },
+  { id: "a", color: "#5b88d6", title: "New comment", text: "Riya replied in #goat-ui" },
   { id: "b", color: "#17a05e", title: "Deploy passed", text: "goatui.vercel.app is live" },
   { id: "c", color: "#f5a524", title: "Review needed", text: "PR #128 is waiting on you" },
 ];
@@ -490,7 +490,7 @@ export function ToastExpandPill() {
    12 — Notification Center
    ============================================================ */
 const NC_SEED = [
-  { id: 1, icon: I.chat, bg: "#eef0ff", color: "#5b5bd6", title: "New comment", text: "Aarav: “Ship it.”", time: "2m", read: false },
+  { id: 1, icon: I.chat, bg: "#eef4ff", color: "#5b88d6", title: "New comment", text: "Aarav: “Ship it.”", time: "2m", read: false },
   { id: 2, icon: I.check, bg: "#e8f7ef", color: "#17a05e", title: "Build passed", text: "main @ 9f3c2d1 deployed", time: "18m", read: false },
   { id: 3, icon: I.warn, bg: "#fff4dd", color: "#d98e04", title: "Usage at 80%", text: "Bandwidth resets Dec 1", time: "1h", read: false },
   { id: 4, icon: I.info, bg: "#e8f0fe", color: "#1f7ae0", title: "New follower", text: "@pixelpriya started following", time: "3h", read: true },
@@ -592,16 +592,16 @@ export function InlineFieldAlert() {
    15 — Confetti Success
    ============================================================ */
 const CONFETTI = [
-  { c: "#5b5bd6", tx: "-92px", ty: "-64px", rot: "220deg", d: "0s" },
+  { c: "#5b88d6", tx: "-92px", ty: "-64px", rot: "220deg", d: "0s" },
   { c: "#17a05e", tx: "-70px", ty: "-96px", rot: "-160deg", d: "0.03s" },
   { c: "#f5a524", tx: "-36px", ty: "-112px", rot: "300deg", d: "0.06s" },
   { c: "#ef5da8", tx: "0px", ty: "-120px", rot: "-240deg", d: "0s" },
   { c: "#1f7ae0", tx: "38px", ty: "-110px", rot: "180deg", d: "0.05s" },
   { c: "#e5484d", tx: "72px", ty: "-92px", rot: "-300deg", d: "0.02s" },
-  { c: "#7c6cf0", tx: "94px", ty: "-60px", rot: "260deg", d: "0.07s" },
+  { c: "#4d7cf0", tx: "94px", ty: "-60px", rot: "260deg", d: "0.07s" },
   { c: "#17a05e", tx: "-98px", ty: "-18px", rot: "-200deg", d: "0.04s" },
   { c: "#f5a524", tx: "100px", ty: "-14px", rot: "140deg", d: "0.01s" },
-  { c: "#5b5bd6", tx: "-52px", ty: "-132px", rot: "320deg", d: "0.08s" },
+  { c: "#5b88d6", tx: "-52px", ty: "-132px", rot: "320deg", d: "0.08s" },
   { c: "#ef5da8", tx: "56px", ty: "-128px", rot: "-280deg", d: "0.06s" },
   { c: "#1f7ae0", tx: "8px", ty: "-88px", rot: "200deg", d: "0.09s" },
 ];

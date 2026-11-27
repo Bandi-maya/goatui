@@ -1,9 +1,12 @@
 "use client"
 import React from "react"
+import { renderOverlayPrimitive } from "./overlay-primitive-demos"
 
 export const renderComponentDemo = (Component: React.ComponentType<any>, name: string, variant: string) => {
   try {
     const nameLower = name.toLowerCase();
+    const ov = renderOverlayPrimitive(nameLower, Component, {})
+    if (ov) return ov
     
     if (nameLower === 'accordion') {
       return (

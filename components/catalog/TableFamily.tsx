@@ -172,7 +172,7 @@ const KANBAN_INIT: KanbanTask[] = [
 ];
 const KANBAN_COLS = [
   { name: "Backlog", color: "#8a8a94" },
-  { name: "In progress", color: "#4f46e5" },
+  { name: "In progress", color: "#4680e5" },
   { name: "Done", color: "#16a34a" },
 ];
 
@@ -914,7 +914,7 @@ const FILE_ICONS: Record<string, { icon: React.ReactNode; bg: string; fg: string
   },
   code: {
     icon: <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden><path d="M6 4.5L2.5 8 6 11.5M10 4.5L13.5 8 10 11.5" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" /></svg>,
-    bg: "#eef0fe", fg: "#4f46e5",
+    bg: "#eef4fe", fg: "#4680e5",
   },
   doc: {
     icon: <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden><path d="M4 1.5h4.5L12.5 5.5v9H4v-13z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" /><path d="M6 7h4M6 9.5h4" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" /></svg>,
@@ -977,7 +977,7 @@ export function FileManagerTable() {
 /* v22 DirectoryRosterTable - avatars, presence, role chips            */
 /* ------------------------------------------------------------------ */
 
-const AVA_COLORS = ["#4f46e5", "#0891b2", "#be185d", "#15803d", "#b45309"];
+const AVA_COLORS = ["#4680e5", "#0891b2", "#be185d", "#15803d", "#b45309"];
 
 export function DirectoryRosterTable() {
   return (

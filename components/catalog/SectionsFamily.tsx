@@ -155,7 +155,7 @@ export function MagneticHero() {
 /* v02 — Orbit ring with drag inertia */
 const ORBIT = [
   ["Ada", "Design Eng", "#f97316"], ["Linus", "Platform", "#22d3ee"], ["Grace", "Compilers", "#a3e635"], ["Dan", "Motion", "#60a5fa"],
-  ["Mae", "Research", "#facc15"], ["Ken", "Infra", "#818cf8"], ["Ivy", "Brand", "#34d399"], ["Raj", "Growth", "#fb7185"],
+  ["Mae", "Research", "#facc15"], ["Ken", "Infra", "#84adf5"], ["Ivy", "Brand", "#34d399"], ["Raj", "Growth", "#fb7185"],
 ];
 export function OrbitHero() {
   const ok = useMotionOK();
@@ -362,7 +362,7 @@ export function CommandHero() {
 /* v06 — Draggable stickers */
 const STICKERS = [
   ["Ship it", 6, 8, -8, "#facc15"], ["Spring", 72, 8, 6, "#60a5fa"], ["No lock-in", 4, 80, 5, "#34d399"],
-  ["Tiny", 78, 78, -6, "#60a5fa"], ["A11y", 32, 86, 4, "#fb923c"], ["Free", 56, 88, -4, "#c4b5fd"], ["Copy me", 40, 2, 3, "#f87171"],
+  ["Tiny", 78, 78, -6, "#60a5fa"], ["A11y", 32, 86, 4, "#fb923c"], ["Free", 56, 88, -4, "#b9d0f9"], ["Copy me", 40, 2, 3, "#f87171"],
 ] as const;
 function Sticker({ label, left, top, rot, color }: { label: string; left: number; top: number; rot: number; color: string }) {
   const x = useMotionValue(0), y = useMotionValue(0);

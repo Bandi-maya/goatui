@@ -233,7 +233,7 @@ const PopoverContent = React.forwardRef<HTMLDivElement, PopoverContentProps>((
           exit={{ opacity: 0, scale: 0.95, y: side === "bottom" ? 4 : -4 }}
           transition={{ type: "spring", stiffness: 450, damping: 28 }}
           className={clsx(
-            "fixed z-50 w-72 rounded-2xl border p-4 text-sm font-medium outline-none shadow-xl relative",
+            "fixed z-50 w-72 rounded-2xl border p-4 text-sm font-medium outline-none shadow-xl",
             className
           )}
           style={{

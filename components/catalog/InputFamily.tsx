@@ -837,9 +837,9 @@ export function StarRating() {
 /* ------------------------------------------------------------------ */
 /* 13 · Color picker — swatches + validated hex + live preview         */
 /* ------------------------------------------------------------------ */
-const SWATCH_HEX = ["#17171c", "#0033ff", "#0e7490", "#15803d", "#b45309", "#dc2626", "#1e6fe0", "#db2777"];
+const SWATCH_HEX = ["#17171c", "#1363ec", "#0e7490", "#15803d", "#b45309", "#dc2626", "#1e6fe0", "#db2777"];
 export function ColorPicker() {
-  const [hex, setHex] = useState("#0033FF");
+  const [hex, setHex] = useState("#1363ec");
   const [input, setInput] = useState("0033FF");
   const [bad, setBad] = useState(false);
 
