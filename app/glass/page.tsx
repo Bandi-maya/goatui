@@ -34,7 +34,7 @@ export default function GlassPage() {
   const cur = glassItems.find((g) => g.id === id) || glassItems[0]
   useEffect(() => {
     let live = true
-    Promise.all([`/goat-glass/${cur.id}.html`, "/goat-glass/glass-engine.js"].map((u) => fetch(u).then((r) => r.text()))).then(([html, eng]) => {
+    Promise.all([`/goat-glass/${cur.id}`, "/goat-glass/glass-engine.js"].map((u) => fetch(u).then((r) => r.text()))).then(([html, eng]) => {
       if (live) setFiles([{ name: `${cur.id}.html`, code: html }, { name: "glass-engine.js", code: eng }])
     }).catch(() => {})
     return () => { live = false }
@@ -64,9 +64,9 @@ export default function GlassPage() {
           description={cur.blurb}
           status="stable"
           fillPreview
-          preview={<ScaledFrame src={`/goat-glass/${cur.id}.html`} title={cur.name} />}
+          preview={<ScaledFrame src={`/goat-glass/${cur.id}`} title={cur.name} />}
           files={files}
-          usage={`<iframe src="/goat-glass/${cur.id}.html" width="800" height="600" />\n\n// shared engine, loaded once by every glass item:\n<script src="/goat-glass/glass-engine.js"></script>`}
+          usage={`<iframe src="/goat-glass/${cur.id}" width="800" height="600" />\n\n// shared engine, loaded once by every glass item:\n<script src="/goat-glass/glass-engine.js"></script>`}
           onBack={() => (window.location.href = "/components")}
           backLabel="All components"
           meta={[["Category", "Liquid glass"], ["Engine", "glass-engine.js"], ["Canvas", "800 x 600"]]}

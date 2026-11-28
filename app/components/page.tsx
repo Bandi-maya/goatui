@@ -40,7 +40,7 @@ function Thumb({ it }: { it: Item }) {
   if (it.kind === "prim") {
     return <div className="flex h-full items-center justify-center p-4 pointer-events-none select-none">{renderComponentDemo(it.ref.component, it.name, "default")}</div>
   }
-  if (it.kind === "glass") return <ScaledFrame src={`/goat-glass/${it.ref.id}.html`} title={it.name} w={800} h={600} interactive={false} lazy />
+  if (it.kind === "glass") return <ScaledFrame src={`/goat-glass/${it.ref.id}`} title={it.name} w={800} h={600} interactive={false} lazy />
   if (it.kind === "block" && it.category === EXTRA) return <WhenVisible className="flex h-full w-full items-center bg-white"><div className="w-full"><ScaledFrame src={bsrc(it)} title={it.name} w={bw(it)} h={bh(it)} interactive={false} maxScale={1} /></div></WhenVisible>
   if (it.kind === "block") return <WhenVisible className="h-full"><ScaledFrame src={bsrc(it)} title={it.name} w={bw(it)} h={bh(it)} interactive={false} maxScale={it.category === EXTRA ? 1 : 0.3} /></WhenVisible>
   if (it.family === "ModalFamily") return <WhenVisible className="h-full overflow-hidden"><ModalThumb it={it} /></WhenVisible>
@@ -187,7 +187,7 @@ function useSource(it: Item | null) {
         })
         .catch(() => done([{ name: "source.tsx", code: "// source unavailable" }]))
     } else if (it.kind === "glass") {
-      Promise.all([`/goat-glass/${it.ref.id}.html`, "/goat-glass/glass-engine.js"].map((u) => fetch(u).then((r) => r.text())))
+      Promise.all([`/goat-glass/${it.ref.id}`, "/goat-glass/glass-engine.js"].map((u) => fetch(u).then((r) => r.text())))
         .then(([h, e]) => done([htmlToReact(String(it.ref.id), h.replace(/<script src="\/goat-glass\/glass-engine\.js"><\/script>/, () => "<script>" + e + "<\/script>"), 800, 600)]))
         .catch(() => {})
     } else {
@@ -273,7 +273,7 @@ export default function ComponentsExplorer() {
   const preview = (it: Item): { node: React.ReactNode; fill?: boolean } => {
     if (it.kind === "prim") return { node: renderComponentDemo(it.ref.component, it.name, variant) }
     if (it.kind === "cat") return { node: <DetailStage it={it} /> }
-    if (it.kind === "glass") return { node: <div className="mx-auto w-full max-w-[800px] overflow-hidden rounded-xl border border-border"><ScaledFrame src={`/goat-glass/${it.ref.id}.html`} title={it.name} w={800} h={600} /></div>, fill: true }
+    if (it.kind === "glass") return { node: <div className="mx-auto w-full max-w-[800px] overflow-hidden rounded-xl border border-border"><ScaledFrame src={`/goat-glass/${it.ref.id}`} title={it.name} w={800} h={600} /></div>, fill: true }
     return it.category === EXTRA ? { node: <div className="w-full overflow-hidden rounded-xl border border-border bg-white"><ScaledFrame src={bsrc(it)} title={it.name} w={bw(it)} h={300} maxScale={1.6} /></div>, fill: true } : { node: <ScaledFrame src={bsrc(it)} title={it.name} w={1280} h={800} />, fill: true }
   }
 
