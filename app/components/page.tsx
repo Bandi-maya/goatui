@@ -211,8 +211,8 @@ export default function ComponentsExplorer() {
     const prim: Item[] = componentsRegistry.map((c: any) => ({ key: `prim.${c.name}`, kind: "prim", name: c.name, category: PRIM, blurb: entryFor(c.name).blurb, ref: c }))
     const cats: Item[] = catalogItems.map((c) => ({ key: c.id, kind: "cat", name: c.name, category: c.category, family: c.family, blurb: pretty(c.name) + " · " + c.category }))
     const gl: Item[] = glassItems.map((g) => ({ key: `glass.${g.id}`, kind: "glass", name: g.name, category: GLASS, blurb: g.blurb, ref: g }))
-    const bl: Item[] = blockFiles.map((f) => ({ key: `block.${f}`, kind: "block", name: pretty(f.replace(/\.html$/, "")), category: BLOCKS, blurb: "Full page block", ref: `${f}.html` }))
-    const ex: Item[] = [["inline-edit", "Inline edit", "Click to edit text, Enter saves, Esc cancels."], ["rolling-countdown", "Rolling countdown", "Digits roll like a counter, with pause and resume."], ["scrolling-strip", "Scrolling strip", "Endless marquee strip."], ["overlay-scrollbar", "Overlay scrollbar", "Scroll area with a thin overlay scrollbar."], ["floating-panel", "Floating panel", "Draggable, resizable panel with minimize and close."]].map(([f, n, b]) => ({ key: `extra.${f}`, kind: "block", name: n, category: EXTRA, blurb: b, ref: `/goat-extras/${f}.html` }))
+    const bl: Item[] = blockFiles.map((f) => ({ key: `block.${f}`, kind: "block", name: pretty(f.replace(/\.html$/, "")), category: BLOCKS, blurb: "Full page block", ref: `${f}` }))
+    const ex: Item[] = [["inline-edit", "Inline edit", "Click to edit text, Enter saves, Esc cancels."], ["rolling-countdown", "Rolling countdown", "Digits roll like a counter, with pause and resume."], ["scrolling-strip", "Scrolling strip", "Endless marquee strip."], ["overlay-scrollbar", "Overlay scrollbar", "Scroll area with a thin overlay scrollbar."], ["floating-panel", "Floating panel", "Draggable, resizable panel with minimize and close."]].map(([f, n, b]) => ({ key: `extra.${f}`, kind: "block", name: n, category: EXTRA, blurb: b, ref: `/goat-extras/${f}` }))
     return [...gl, ...ex, ...cats, ...prim, ...bl]
   }, [])
 
