@@ -22,7 +22,7 @@ const GLASS = "Liquid glass"
 const BLOCKS = "Blocks"
 const EXTRA = "Standalone"
 
-const blockFiles = ["404-1","app-download-1","banner-1","billing-page-1","blog-cards-1","checkout-1","coming-soon-1","comparison-1","contact-1","content-1","cta-1","cta-split-1","dashboard-1","dashboard-page-1","developer-tool-1","faq-1","feature-grid-1","footer-1","footer-2","gallery-1","hero-1","integrations-1","login-1","logo-cloud-1","newsletter-1","poll-1","portfolio-1","portfolio-2","press-logos-1","pricing-1","pricing-page-1","profile-1","saas-landing-1","settings-1","signup-1","stats-1","stats-chart-1","steps-1","storefront-1","storefront-2","support-inbox-1","support-inbox-2","team-1","testimonial-1","timeline-1"]
+const blockFiles = ["404-1","banner-1","billing-page-1","blog-cards-1","checkout-1","coming-soon-1","comparison-1","contact-1","content-1","cta-1","cta-split-1","dashboard-1","dashboard-page-1","developer-tool-1","faq-1","feature-grid-1","footer-1","footer-2","gallery-1","hero-1","integrations-1","login-1","logo-cloud-1","newsletter-1","poll-1","portfolio-1","portfolio-2","press-logos-1","pricing-1","pricing-page-1","profile-1","saas-landing-1","settings-1","signup-1","stats-1","stats-chart-1","steps-1","storefront-1","storefront-2","support-inbox-1","support-inbox-2","team-1","testimonial-1","timeline-1"]
 
 const pretty = (s: string) => s.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/-/g, " ").replace(/\b1$/, "").trim().replace(/^\w/, (c) => c.toUpperCase())
 // Families whose pieces are big get a smaller scale in grid thumbnails.
